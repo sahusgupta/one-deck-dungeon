@@ -1,0 +1,5 @@
+class Floor {
+    constructor(parameters) {
+        
+    }
+}
