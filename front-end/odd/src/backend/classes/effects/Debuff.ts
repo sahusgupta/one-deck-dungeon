@@ -1,4 +1,0 @@
-class Debuff {
-
-}
-export {Debuff};
