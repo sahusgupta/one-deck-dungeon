@@ -1,7 +1,15 @@
 import React from 'react';
+import { HiChevronDoubleRight } from "react-icons/hi";
+import { useNavigate } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
-  
+  const userName = "Daniel Rupawalla" //pull from db
+  const navigate = useNavigate();
+  const reRoute = (playerCount: string) => {
+    console.log(playerCount);
+    const url = "/" + playerCount;
+    navigate(url)
+};
   return (
     <div
       className="relative w-full h-screen bg-cover bg-center"
@@ -14,18 +22,14 @@ const HomePage: React.FC = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
         {/* Username Input */}
-        <input
-          type="text"
-          placeholder="Username"
-          className="bg-black bg-opacity-70 text-lg px-4 py-2 rounded-md text-center focus:outline-none"
-        />
+        <div className="bg-black bg-opacity-70 text-lg px-4 py-2 rounded-md text-center focus:outline-none"> {userName} </div>
 
         {/* Player Options */}
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 w-250">
           {/* 1 Player Button */}
-          <button className="bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80">
+          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => reRoute("one-player")}>
             <span className="text-xl font-bold">1 Player</span>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -34,19 +38,15 @@ const HomePage: React.FC = () => {
                 stroke="currentColor"
                 strokeWidth={2}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14.752 11.168l-6.187 3.52c-.677.385-1.565-.008-1.565-.841V9.153c0-.833.888-1.226 1.565-.841l6.187 3.52a1 1 0 010 1.682z"
-                />
+                <HiChevronDoubleRight size="20px"/>
               </svg>
             </div>
           </button>
 
           {/* 2 Player Button */}
-          <button className="bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80">
+          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80">
             <span className="text-xl font-bold">2 Player</span>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -55,11 +55,7 @@ const HomePage: React.FC = () => {
                 stroke="currentColor"
                 strokeWidth={2}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14.752 11.168l-6.187 3.52c-.677.385-1.565-.008-1.565-.841V9.153c0-.833.888-1.226 1.565-.841l6.187 3.52a1 1 0 010 1.682z"
-                />
+                <HiChevronDoubleRight size="20px"/>
               </svg>
             </div>
           </button>
