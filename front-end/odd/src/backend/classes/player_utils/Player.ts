@@ -1,7 +1,7 @@
 import { Skill } from "../cards/Skill";
 import { Item } from "../cards/Item";
 import { Hero } from "./Hero";
-import { app } from "../../firebase/firebase_utils";
+import { db } from "../../firebase/firebase_utils";
 
 class Player {
     private _masterDie: Array<string>;
