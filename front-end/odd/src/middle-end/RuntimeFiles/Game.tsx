@@ -9,7 +9,6 @@ class Game {
         this.dungeon = new Dungeon();
         this.gameId = gameId;
         this.potions = 0;
-        console.log("Hello world");
     }
     
     public get getPlayerList() : Array<Player> {
@@ -43,6 +42,3 @@ class Game {
     }
     
 }
-  
-//   const person = new Person("Jane");
-//   console.log(person.getName()); // person.name isn't accessible from outside the class since it's private

@@ -1,4 +1,0 @@
-class Hero {
-
-}
-export {Hero}
