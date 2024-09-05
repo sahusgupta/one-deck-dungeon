@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { googleLogout, GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
