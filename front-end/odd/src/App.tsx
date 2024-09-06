@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import SelectPlayerPage from "./pages/SelectChar.tsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function PageTrackingApp() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/homepage" element ={<HomePage/>} />
+        <Route path="/select-char" element = {<SelectPlayerPage/>} />
       </Routes>
     </div>
   );
