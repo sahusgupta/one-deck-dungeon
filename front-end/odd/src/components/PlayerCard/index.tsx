@@ -1,9 +1,9 @@
-interface DungeonProps{
+interface PlayerCardProps{
     imgURL: string;
     onClick: () => void;
 }
 
-const Dungeon: React.FC<DungeonProps> = ({
+const PlayerCard: React.FC<PlayerCardProps> = ({
     imgURL, 
     onClick,
 }) =>{
@@ -14,4 +14,4 @@ const Dungeon: React.FC<DungeonProps> = ({
             </button>
     )
 }
-export default Dungeon
+export default PlayerCard

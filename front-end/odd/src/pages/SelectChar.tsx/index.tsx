@@ -1,6 +1,7 @@
 import React from 'react';
 import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
+import PlayerCard from '../../components/PlayerCard';
 
 const SelectPlayerPage: React.FC = () => {
   const userName = "Daniel Rupawalla" //pull from db
@@ -27,46 +28,38 @@ const SelectPlayerPage: React.FC = () => {
         {/* Player Options */}
         <div className="flex space-x-4 w-250">
           {/* Select Char */}
-          <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-              <img src="Aquamancer1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-          </button>
-
-          {/* Select Char*/}
-          <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-            <img src="Archer1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-        </button>
-                    {/* Select Char */}
-                    <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-            <img src="Dragoon1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-        </button>
-                    {/* Select Char */}
-                    <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-            <img src="Mage1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-        </button>
-                    {/* Select Char */}
-                    <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-            <img src="Paladin1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-        </button>
-                            {/* Select Char */}
-                            <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-            <img src="Rogue1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-        </button>
-                            {/* Select Char */}
-                            <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-            <img src="Warrior1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-        </button>
-                            {/* Select Char */}
-                            <button className="w-56 h-56 bg-black " onClick={() => reRoute("one-player")}>
-            
-            <img src="Witch1P.jpg" className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
-        </button>
+          <PlayerCard
+            imgURL='Aquamancer1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
+            <PlayerCard
+            imgURL='Archer1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
+            <PlayerCard
+            imgURL='Dragoon1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
+            <PlayerCard
+            imgURL='Mage1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
+            <PlayerCard
+            imgURL='Paladin1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
+            <PlayerCard
+            imgURL='Rogue1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
+            <PlayerCard
+            imgURL='Warrior1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
+            <PlayerCard
+            imgURL='Witch1P.jpg'
+            onClick={() => reRoute("one-player")}
+            />
         </div>
 
         {/* Profile Icons */}

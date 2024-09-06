@@ -3,6 +3,7 @@ import './App.css'
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SelectPlayerPage from "./pages/SelectChar.tsx";
+import SelectDungeon from "./pages/SelectDungeon";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function PageTrackingApp() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/homepage" element ={<HomePage/>} />
         <Route path="/select-char" element = {<SelectPlayerPage/>} />
+        <Route path="/dungeon-select" element = {<SelectDungeon/>} />
       </Routes>
     </div>
   );
