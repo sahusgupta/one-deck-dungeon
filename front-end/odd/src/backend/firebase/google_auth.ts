@@ -1,4 +1,4 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider } from 'firebase/auth'
 import { db, app } from './firebase_utils'
 import { collection, setDoc, getDocs, getDoc, doc } from 'firebase/firestore';
 
@@ -26,7 +26,7 @@ let authCheck = signInWithPopup(auth, provider).then((result) => {
         name = user.displayName;    
     }
     if (cred?.accessToken){
-        token = cred?.accessToken;
+        token = cred.accessToken;
     }
     let dict: Dict = {
         email: email,
@@ -34,6 +34,11 @@ let authCheck = signInWithPopup(auth, provider).then((result) => {
         token: token
     }
     return dict;
+}).catch((error) => {
+    if (error.message.includes('Cross-Origin-Opener-Policy')) {
+        // Fall back to redirect method or another sign-in approach
+        return signInWithRedirect(auth, provider);
+      }
 })
 
 async function verifAuth(email: string, name: string, token: string){
@@ -41,15 +46,26 @@ async function verifAuth(email: string, name: string, token: string){
         const docs = await getDocs(collection(db, 'users'));
         let exists = false;
         docs.forEach((doc) => {
-            console.log(doc);
+            console.log(name);
             const id = name;
             if (doc.id == id){
                 exists = true;
-                return {email: email, user: name, token: token}
+                let dict: Dict = {
+                    email: email,
+                    name: name,
+                    token: token
+                }
+                console.log('exists')
+                return dict;
             } 
         })
         if (exists) {
-            return token;
+            let dict: Dict = {
+                email: email,
+                name: name,
+                token: token
+            }
+            return dict;
         } else {
             let n = "";
             if (name != null){
@@ -61,18 +77,40 @@ async function verifAuth(email: string, name: string, token: string){
                 token: token
             })
         }
-    
-        return {email: email, user: name, token: token}
-    
+        let dict: Dict = {
+            email: email,
+            name: name,
+            token: token
+        }
+        return dict;
+        
     } catch (e){
+        console.log('something went wrong')
         throw e;
     }
-
+    
 }
 
 const authExport = async () => {
     const ac = await authCheck;
-    return verifAuth(ac.email, ac.name, ac.token);
+    if (ac)
+        return verifAuth(ac.email, ac.name, ac.token);
+    else {
+        let dict: Dict = {
+            name: '',
+            email: '',
+            token: ''
+
+        }
+        return dict
+    }
 }
 
-export {authExport}
+
+async function signInFlow () {
+    const auth = await authExport();
+    console.log('sign in worked?')
+    return auth;
+}
+export {signInFlow}
+export type { Dict };

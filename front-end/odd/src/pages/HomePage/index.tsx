@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
     console.log(playerCount);
     const url = "/" + playerCount;
     navigate(url)
-};
+  };
   return (
     <div
       className="relative w-full h-screen bg-cover bg-center"
