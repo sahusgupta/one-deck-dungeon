@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { googleLogout, GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
-import { signInFlow, Dict } from '../../backend/firebase/google_auth';
+import { googleLogin } from '../../backend/firebase/google_auth';
 let a = null;
 
 function LoginPage() {
@@ -23,18 +23,12 @@ function LoginPage() {
             <br />
             <br />
             <button onClick={async () => {
-                console.log('hi')
-                let auth = await signInFlow();
-                
-                if (auth != null){
-                    a = auth;
-                    console.log(auth)
-                    updateAuth(auth.email, auth.name, auth.token);
+                if ((await googleLogin())[0]){
+                    responseMessage(null);
                 } else {
-                    navigate('/') 
+                    console.log('bad login')
                 }
-
-            }}/>
+            }}>Login with Google</button>
         </div>
     )
 }
