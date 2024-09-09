@@ -39,4 +39,11 @@ class Encounter {
         this._boxes = boxes;
     }
 
+    public static readonly Bandit1Encounter : Encounter = new Encounter(3, "Bandit1", 1, 
+        new Item("Bandit1", [0, 0, 1, 0]),
+        new Skill("Bandit1", [0, 0, 1, 0]),
+        new Debuff(),
+        new Array<DiceBox>
+    );
+
 }

@@ -7,7 +7,7 @@ class Item {
         this._name = value;
     }
 
-    private _values: Array<number>; //str = 0, speed = 1, magic = 2, health = 3
+    private _values: Array<number>; //strength = 0, speed = 1, magic = 2, health = 3
 
     public get values(): Array<number> {
         return this._values;
