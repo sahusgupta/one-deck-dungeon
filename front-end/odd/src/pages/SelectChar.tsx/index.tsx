@@ -6,10 +6,11 @@ import PlayerCard from '../../components/PlayerCard';
 const SelectPlayerPage: React.FC = () => {
   const userName = "Daniel Rupawalla" //pull from db
   const navigate = useNavigate();
-  const reRoute = (playerCount: string) => {
-    console.log(playerCount);
-    const url = "/" + playerCount;
-    navigate(url)
+  const playerUrl = "/homepage";
+  console.log(playerUrl);
+  const reRoute = (characterSelected: string) => {
+    localStorage.setItem('characterSelected', characterSelected)
+    navigate(playerUrl)
 };
   return (
     <div
@@ -30,35 +31,35 @@ const SelectPlayerPage: React.FC = () => {
           {/* Select Char */}
           <PlayerCard
             imgURL='Aquamancer1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Aquamancer")}
             />
             <PlayerCard
             imgURL='Archer1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Archer")}
             />
             <PlayerCard
             imgURL='Dragoon1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Dragoon")}
             />
             <PlayerCard
             imgURL='Mage1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Mage")}
             />
             <PlayerCard
             imgURL='Paladin1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Paladin")}
             />
             <PlayerCard
             imgURL='Rogue1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Rogue")}
             />
             <PlayerCard
             imgURL='Warrior1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Warrior")}
             />
             <PlayerCard
             imgURL='Witch1P.jpg'
-            onClick={() => reRoute("one-player")}
+            onClick={() => reRoute("Witch")}
             />
         </div>
 

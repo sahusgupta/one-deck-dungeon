@@ -8,7 +8,7 @@ const Dungeon: React.FC<DungeonProps> = ({
     onClick,
 }) =>{
     return(
-        <button className="w-56 h-56 bg-black " onClick={onClick}>
+        <button className="w-80 h-56 bg-black " onClick={onClick}>
               
                 <img src={imgURL} className="w-1500 h-1500 object-cover rounded-t-lg mb-4"/>
             </button>

@@ -7,8 +7,13 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const reRoute = (playerCount: string) => {
     localStorage.setItem('playerCount', playerCount)
-    const url = "/dungeon-select";
-    navigate(url)
+    if(!localStorage.getItem('characterSelected')){
+      navigate("/select-char")
+    }
+    else{
+      const url = "/dungeon-select";
+      navigate(url)
+    }
 };
   return (
     <div

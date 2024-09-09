@@ -5,8 +5,10 @@ const SelectDungeon: React.FC = () => {
 
     const userName = "Daniel Rupawalla" //pull from db
     const navigate = useNavigate();
-    const reRoute = (playerCount: string) => {
+    const playerUrl = localStorage.getItem('playerCount')!;
+    const reRoute = (playerCount: string, dungeon: string) => {
       console.log(playerCount);
+      localStorage.setItem("dungeon", dungeon)
       const url = "/" + playerCount;
       navigate(url)
   };
@@ -28,36 +30,24 @@ const SelectDungeon: React.FC = () => {
         <div className="flex space-x-4 w-250">
           {/* Select Char */}
           <Dungeon
-            imgURL='Aquamancer1P.jpg'
-            onClick={() => reRoute("one-player")}
+            imgURL='Dragon1.jpg'
+            onClick={() => reRoute(playerUrl, "dragon")}
             />
             <Dungeon
-            imgURL='Archer1P.jpg'
-            onClick={() => reRoute("one-player")}
+            imgURL='Hydra1.jpg'
+            onClick={() => reRoute(playerUrl, "hydra")}
             />
             <Dungeon
-            imgURL='Dragoon1P.jpg'
-            onClick={() => reRoute("one-player")}
+            imgURL='Lich1.jpg'
+            onClick={() => reRoute(playerUrl, "lich")}
             />
             <Dungeon
-            imgURL='Mage1P.jpg'
-            onClick={() => reRoute("one-player")}
+            imgURL='Minotaur1.jpg'
+            onClick={() => reRoute(playerUrl, "minotaur")}
             />
             <Dungeon
-            imgURL='Paladin1P.jpg'
-            onClick={() => reRoute("one-player")}
-            />
-            <Dungeon
-            imgURL='Rogue1P.jpg'
-            onClick={() => reRoute("one-player")}
-            />
-            <Dungeon
-            imgURL='Warrior1P.jpg'
-            onClick={() => reRoute("one-player")}
-            />
-            <Dungeon
-            imgURL='Witch1P.jpg'
-            onClick={() => reRoute("one-player")}
+            imgURL='Yeti1.jpg'
+            onClick={() => reRoute(playerUrl, "yeti")}
             />
         </div>
 
