@@ -1,6 +1,7 @@
 import { DiceBox } from "../Dice/DiceBox";
+import { Encounter } from "../Encounter/Encounter";
 
-class Floor {
+export class Floor {
 
     private _debuff: Debuff;
     private _perilBoxes: Array<DiceBox>;

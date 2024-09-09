@@ -1,6 +1,6 @@
 import { DiceBox } from "../Dice/DiceBox";
 
-class Encounter {
+export class Encounter {
     private _xp: number;
     public get xp(): number {return this._xp;}
     public set xp(value: number) {this._xp = value;}
@@ -43,7 +43,7 @@ class Encounter {
         new Item("Bandit1", [0, 0, 1, 0]),
         new Skill("Bandit1", [0, 0, 1, 0]),
         new Debuff(),
-        new Array<DiceBox>
+        new Array<DiceBox>()
     );
 
 }
