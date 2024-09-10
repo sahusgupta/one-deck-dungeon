@@ -1,9 +1,22 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../backend/firebase/firebase_utils';
+import { getDoc, collection, doc } from 'firebase/firestore';
 
 const HomePage: React.FC = () => {
+  const info = async () => {
+    const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return docSnap.data().name;
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
   const userName = "Daniel Rupawalla" //pull from db
   const navigate = useNavigate();
   const reRoute = (playerCount: string) => {

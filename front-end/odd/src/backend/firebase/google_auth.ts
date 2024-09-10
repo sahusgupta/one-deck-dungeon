@@ -2,43 +2,40 @@ import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, signO
 import { db, app } from './firebase_utils'
 import { collection, setDoc, getDocs, getDoc, doc } from 'firebase/firestore';
 
-const chars ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-function generateToken(length: number) {
-    let result = ' ';
-    const charactersLength = chars.length;
-    for ( let i = 0; i < length; i++ ) {
-        result += chars.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-}
 const provider = new GoogleAuthProvider();
-let name: string;
-let email: string;
-let token: string;
+
+interface Dict {
+    name: string,
+    email: string,
+    token: string,
+    imageURL: string,
+    login: boolean
+}
 const googleLogin = async () => {
+    let creds: Dict = {name: '', email: '', token: '', imageURL: '', login: false}
     try {
         const auth = getAuth(app);
         const res = await signInWithPopup(auth, provider);
         const user = res.user;
         if (user.displayName != null && user.email != null && await user.getIdToken() != null){
-            name = user.displayName;
-            email = user.email;
-            token =  await user.getIdToken(true);
+            creds.name = user.displayName;
+            creds.email = user.email;
+            creds.token =  await user.getIdToken(true);
+            creds.imageURL = user.photoURL ? user.photoURL : '';
         }
-        if ((await getDoc(doc(db, 'users/', token))).exists()){
-            console.log('logged in')
-            return [true, name];
+        if ((await getDoc(doc(db, 'users', creds.token))).exists()){
+            creds.login = true
+            return creds;
         } else {
-            console.log('new user type crap')
-            setDoc(doc(db, 'users', token), {})
-            return [true, name];
+            setDoc(doc(db, 'users', creds.token), {name: creds.name, email: creds.email, imageURL: creds.imageURL, gamesPlayed: 0})
+            creds.login = true
+            return creds;
         }
-        return [false, name];
     } catch (err){
+        creds.login = false;
         console.warn('Error w log in:', err);
-        return [false, name];
+        return creds;
     }
 }
 
-export { googleLogin }
+export { googleLogin, type Dict };
