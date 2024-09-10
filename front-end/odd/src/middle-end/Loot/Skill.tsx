@@ -73,6 +73,7 @@ class Skill {
     public static readonly LuckyFamiliar : Skill = new Skill("LuckyFamiliar");
     public static readonly Flurry : Skill = new Skill("Flurry");
     public static readonly ChaoticAura : Skill = new Skill("ChaoticAura");
+    public static readonly BruteForce : Skill = new Skill("BruteForce");
     public static readonly SteadyHands : Skill = new Skill("SteadyHands");
     public static readonly TripleStrike : Skill = new Skill("TripleStrike");
     public static readonly Dexterity : Skill = new Skill("Dexterity");
