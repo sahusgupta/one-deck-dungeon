@@ -1,12 +1,4 @@
 class Item {
-    private _name: string;
-
-    public get name(): string {return this._name;}
-
-    public set name(value: string) {
-        this._name = value;
-    }
-
     private _values: Array<number>; //strength = 0, speed = 1, magic = 2, health = 3
 
     public get values(): Array<number> {
@@ -17,8 +9,7 @@ class Item {
         this._values = value;
     }
 
-    public constructor(name: string, statsArr: number[]) {
-        this._name = name;
+    public constructor(statsArr: number[]) {
         this._values = new Array<number>();
         for (let num = 0; num < statsArr.length; num++) {
             for (let i = 0; i < statsArr[num]; i++) {

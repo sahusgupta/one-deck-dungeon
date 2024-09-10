@@ -5,12 +5,16 @@ class DiceBox {
     _constrainedToOne: boolean;
     _requiredToFill: boolean;
     _heldDice: number
+    _punishmentTime: number;
+    _punishmentHearts: number;
 
-    constructor(need: number, constrained: boolean, required: boolean){
+    constructor(need: number, constrained: boolean, required: boolean, punishmentTime: number, punishmentHearts : number){
         this._neededRoll = need;
         this._constrainedToOne = constrained;
         this._requiredToFill = required;
         this._heldDice = 0;
+        this._punishmentTime = punishmentTime;
+        this._punishmentHearts = punishmentHearts;
     }
 
     getNeededRoll(): number{return this._neededRoll;}

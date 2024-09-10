@@ -1,9 +1,11 @@
+import { Hero } from "../Hero/Hero";
+
 export class Player {
     private _id: string;
     
     private _skills: Array<Skill>;
 
-    private _item: Array<Item>;
+    private _items: Array<Item>;
 
     private _activeDebuff: Debuff;
 
@@ -12,5 +14,8 @@ export class Player {
     public constructor(id: string, hero: Hero) {
         this._id = id;
         this._hero = hero;
+        this._skills = new Array<Skill>(hero.feat, hero.basicSkill);
+        this._items = new Array<Item>(hero.basicItem);
+        this._activeDebuff
     }
 }
