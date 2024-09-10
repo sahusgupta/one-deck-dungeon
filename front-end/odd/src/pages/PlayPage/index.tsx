@@ -3,7 +3,7 @@ import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../backend/firebase/firebase_utils';
 
-const HomePage: React.FC = () => {
+const PlayPage: React.FC = () => {
   const userName = "Daniel Rupawalla" //pull from db
   const navigate = useNavigate();
   const reRoute = (playerCount: string) => {
@@ -72,4 +72,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default PlayPage;
