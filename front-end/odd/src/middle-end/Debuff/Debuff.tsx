@@ -11,5 +11,15 @@ class Debuff {
         this._name = name; 
     }
 
+    public static readonly Null : Debuff = new Debuff("Null");
     public static readonly Dodge : Debuff = new Debuff("Dodge");
+    public static readonly Survivor : Debuff = new Debuff("Survivor");
+    public static readonly Flames : Debuff = new Debuff("Flames");
+    public static readonly Split : Debuff = new Debuff("Split");
+    public static readonly Swarm : Debuff = new Debuff("Swarm");
+    public static readonly Frost : Debuff = new Debuff("Frost");
+    public static readonly Ethereal : Debuff = new Debuff("Ethereal");
+    public static readonly Fade : Debuff = new Debuff("Fade");
+    public static readonly Undying : Debuff = new Debuff("Undying");
+    public static readonly Drain : Debuff = new Debuff("Drain");
 }

@@ -1,29 +1,27 @@
 import { Dice } from "./Dice";
 
 class DiceBox {
-    _neededRoll: number;
-    _constrainedToOne: boolean;
-    _requiredToFill: boolean;
-    _heldDice: number
-    _punishmentTime: number;
-    _punishmentHearts: number;
+    private _neededRoll: number;
+    private _constrainedToOne: boolean;
+    private _heldDice: number
+    private _punishmentTime: number; //for bosses, any number > 0 means skull box
+    private _punishmentHearts: number; //for other cards, 0 punishment means required
+    private _type: number; //0 is strength, 1 is speed, 2 is magic 
 
-    constructor(need: number, constrained: boolean, required: boolean, punishmentTime: number, punishmentHearts : number){
+    constructor(need: number, type: number, constrained: boolean, punishmentTime: number, punishmentHearts : number){
         this._neededRoll = need;
         this._constrainedToOne = constrained;
-        this._requiredToFill = required;
         this._heldDice = 0;
         this._punishmentTime = punishmentTime;
         this._punishmentHearts = punishmentHearts;
+        this._type = type;
     }
 
     getNeededRoll(): number{return this._neededRoll;}
     getConstrainedToOne(): boolean{return this._constrainedToOne}
-    getRequiredToFill(): boolean{return this._requiredToFill}
     getheldDice(): number{return this._heldDice;}
     setNeededRoll(n: number): void {this._neededRoll = n}
     setConstrainedToOne(b: boolean): void {this._constrainedToOne = b}
-    setRequiredToFill(b: boolean): void {this._requiredToFill = b}
     setHeldDice(n: number): void {this._heldDice = n}
 
     addDice(dice: Dice){

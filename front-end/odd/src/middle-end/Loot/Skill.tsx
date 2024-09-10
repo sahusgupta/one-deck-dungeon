@@ -10,6 +10,7 @@ class Skill {
     public constructor(name: string) {
         this._name = name; 
     }
+    
     //Aquamancer
     public static readonly Tsunami1P : Skill = new Skill("Tsunami1P");
     public static readonly Tsunami2P : Skill = new Skill("Tsunami2P");
@@ -51,5 +52,31 @@ class Skill {
     public static readonly InnerFire : Skill = new Skill("InnerFire");
     public static readonly AntiHex : Skill = new Skill("AntiHex");
 
+    public static readonly Dodge : Skill = new Skill("Dodge");
+    public static readonly Mana : Skill = new Skill("Mana");
     public static readonly Backstab : Skill = new Skill("Backstab");
+    public static readonly Cleave : Skill = new Skill("Cleave");
+    public static readonly Invisibility : Skill = new Skill("Invisibility");
+    public static readonly Accuracy : Skill = new Skill("Accuracy");
+    public static readonly CrushingBlow : Skill = new Skill("CrushingBlow");
+    public static readonly Valor : Skill = new Skill("Valor");
+    public static readonly CriticalStrikes : Skill = new Skill("CriticalStrikes");
+    public static readonly Flameweave : Skill = new Skill("Flameweave");
+    public static readonly Consistency : Skill = new Skill("Consistency");
+    public static readonly ManaFountain : Skill = new Skill("ManaFountain");
+    public static readonly Haste : Skill = new Skill("Haste");
+    public static readonly CrushingFist : Skill = new Skill("CrushingFist");
+    public static readonly Poison : Skill = new Skill("Poison");
+    public static readonly ArmorCrush : Skill = new Skill("ArmorCrush");
+    public static readonly Heroism : Skill = new Skill("Heroism");
+    public static readonly Shimmerblast : Skill = new Skill("Shimmerblast");
+    public static readonly LuckyFamiliar : Skill = new Skill("LuckyFamiliar");
+    public static readonly Flurry : Skill = new Skill("Flurry");
+    public static readonly ChaoticAura : Skill = new Skill("ChaoticAura");
+    public static readonly SteadyHands : Skill = new Skill("SteadyHands");
+    public static readonly TripleStrike : Skill = new Skill("TripleStrike");
+    public static readonly Dexterity : Skill = new Skill("Dexterity");
+    public static readonly Persistence : Skill = new Skill("Persistence");
+    public static readonly Clarity : Skill = new Skill("Clarity");
+    public static readonly StaticBurst : Skill = new Skill("StaticBurst");
 }
