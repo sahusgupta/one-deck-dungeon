@@ -39,11 +39,30 @@ export class Encounter {
         this._boxes = boxes;
     }
 
-    public static readonly Bandit1Encounter : Encounter = new Encounter(3, "Bandit1", 1, 
-        new Item("Bandit1", [0, 0, 1, 0]),
-        new Skill("Bandit1", [0, 0, 1, 0]),
-        new Debuff(),
-        new Array<DiceBox>()
+    public static readonly Bandit1Encounter : Encounter = new Encounter(3, "Bandit1", 1, //type 0 is boss, 1 is combat, 2 is peril
+        new Item([0, 0, 1, 0]),
+        Skill.Backstab,
+        Debuff.Dodge,
+        new Array<DiceBox>(
+            new DiceBox(8, false, false, 0, 2),
+            new DiceBox(3, true, false, 0, 1),
+            new DiceBox(4, true, false, 1, 0),
+            new DiceBox(5, true, false, 2, 0),
+            new DiceBox(5, true, false, 1, 1)
+        )
+    );
+
+    public static readonly Bandit2Encounter : Encounter = new Encounter(3, "Bandit2", 1, 
+        new Item("Bandit2", [0, 1, 0, 0]),
+        Skill.Backstab,
+        Debuff.Dodge,
+        new Array<DiceBox>(
+            new DiceBox(8, false, false, 0, 2),
+            new DiceBox(3, true, false, 0, 1),
+            new DiceBox(4, true, false, 1, 0),
+            new DiceBox(5, true, false, 2, 0),
+            new DiceBox(5, true, false, 1, 1)
+        )
     );
 
 }
