@@ -6,7 +6,7 @@ class DiceBox {
     private _heldDice: number
     private _punishmentTime: number; //for bosses, any number > 0 means skull box
     private _punishmentHearts: number; //for other cards, 0 punishment means required
-    private _type: number; //0 is strength, 1 is speed, 2 is magic 
+    private _type: number; //0 is strength, 1 is speed, 2 is magic, 3 is anything
 
     constructor(need: number, type: number, constrained: boolean, punishmentTime: number, punishmentHearts : number){
         this._neededRoll = need;

@@ -17,6 +17,15 @@ export class Floor {
 
         this._discard = new Array<Encounter>();
         this._workspace = new Array<[Encounter, boolean]>();
-        //needs to initialize deck,
+        this._deck = Array.from<Encounter>(Encounter.encounterList);
+        this.shuffle(this._deck);
+    }
+
+    private shuffle(array : Array<Encounter>) {
+        for (let i = array.length - 1; i > 0; i--) { 
+            const j = Math.floor(Math.random() * (i + 1)); 
+            [array[i], array[j]] = [array[j], array[i]]; 
+          } 
+          return array; 
     }
 }

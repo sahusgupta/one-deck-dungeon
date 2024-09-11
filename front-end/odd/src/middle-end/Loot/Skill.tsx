@@ -80,4 +80,6 @@ class Skill {
     public static readonly Persistence : Skill = new Skill("Persistence");
     public static readonly Clarity : Skill = new Skill("Clarity");
     public static readonly StaticBurst : Skill = new Skill("StaticBurst");
+
+    public static readonly Null : Skill = new Skill("Null");
 }

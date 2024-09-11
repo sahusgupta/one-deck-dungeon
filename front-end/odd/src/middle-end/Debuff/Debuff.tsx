@@ -22,4 +22,9 @@ class Debuff {
     public static readonly Fade : Debuff = new Debuff("Fade");
     public static readonly Undying : Debuff = new Debuff("Undying");
     public static readonly Drain : Debuff = new Debuff("Drain");
+
+    //dungeon debuffs
+    public static readonly HallOfStatues : Debuff = new Debuff("HallOfStatues");
+    public static readonly FlameAura : Debuff = new Debuff("FlameAura");
+    public static readonly Dragonskin : Debuff = new Debuff("Dragonskin");
 }

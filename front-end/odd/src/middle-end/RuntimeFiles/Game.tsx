@@ -1,44 +1,20 @@
-class Game {
-    private playerList: Array<Player>;
-    private dungeon: Dungeon;
-    public gameId: string;
-    private potions: number;
-  
-    public constructor(gameId: string) {
-        this.playerList = new Array<Player>();
-        this.dungeon = new Dungeon();
-        this.gameId = gameId;
-        this.potions = 0;
-    }
-    
-    public get getPlayerList() : Array<Player> {
-        return this.playerList;
-    }
-    
-    public set setPlayerList(v : Array<Player>) {
-        this.playerList = v;
-    }
-    
-    public get getDungeon() : Dungeon {
-        return this.dungeon;
-    }
-  
-    public set setDungeon(v : Dungeon) {
-        this.dungeon = v;
-    }
-    
-    
-    public get getPotions() : number {
-        return this.potions;
-    }
+import { Dungeon } from "../Dungeon/Dungeon";
+import { Player } from "./Player";
 
-    
-    public set setPotions(v : number) {
-        this.potions = v;
-    }
-
-    public incrementPotions() : void {
-        this.potions++;
+export class Game {
+    private _playerList: Array<Player>;
+    private _dungeon: Dungeon;
+    private _gameId: string;
+    private _potions: number;
+  
+    public constructor(gameId: string, dungeon: Dungeon, players: Array<string>) {
+        this._playerList = new Array<Player>();
+        players.forEach(player  => {
+            this._playerList.concat(Player.getFromId(player));
+        });
+        this._dungeon = dungeon;
+        this._gameId = gameId;
+        this._potions = 1;
     }
     
 }

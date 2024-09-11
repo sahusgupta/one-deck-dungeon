@@ -1,3 +1,4 @@
+import { DiceBox } from "../Dice/DiceBox";
 import { Encounter } from "../Encounter/Encounter";
 import { Floor } from "../Floor/Floor";
 
@@ -20,5 +21,23 @@ export class Dungeon {
         this._boss = boss;
         this._floors = new Array<Floor>(floor0, floor1, floor2);
     }
+
+    public static readonly DragonsCave = new Dungeon(Encounter.Dragon1, 
+        new Floor(Debuff.HallOfStatues, [
+            new DiceBox(2, 3, true, 0, 0)
+        ],[
+            new DiceBox(3, 0, true, 0, 1)
+        ]),
+        new Floor(Debuff.FlameAura, [
+            new DiceBox(6, 3, true, 0, 1)
+        ],[
+            new DiceBox(5, 2, true, 0, 2)
+        ]),
+        new Floor(Debuff.Dragonskin, [
+            new DiceBox(5, 3, true, 0, 0)
+        ],[
+            new DiceBox(10, 0, false, 0, 0)
+        ])
+    )
 
 }
