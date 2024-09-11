@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SelectPlayerPage from "./pages/SelectChar.tsx";
 import SelectDungeon from "./pages/SelectDungeon";
+import PlayPage from "./pages/PlayPage";
 
 function App() {
   return (
@@ -22,8 +23,9 @@ function PageTrackingApp() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/homepage" element ={<HomePage/>} />
-        <Route path="/select-char" element = {<SelectPlayerPage/>} />
+        <Route path="/char-select" element = {<SelectPlayerPage/>} />
         <Route path="/dungeon-select" element = {<SelectDungeon/>} />
+        <Route path="/play" element = {<PlayPage/>} />
       </Routes>
     </div>
   );

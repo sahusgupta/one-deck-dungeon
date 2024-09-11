@@ -21,9 +21,13 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const reRoute = (playerCount: string) => { //parameter should be "1P" or "2P"
     console.log(playerCount);
-    localStorage.setItem('playerCount', playerCount)
-    const url = "/" + playerCount;
-    navigate(url)
+    localStorage.setItem("playerCount", playerCount)
+    if(!localStorage.getItem("characterSelected")){
+      navigate("/char-select")
+    }
+    else{
+      navigate("/dungeon-select")
+    }
   };
   return (
     <div

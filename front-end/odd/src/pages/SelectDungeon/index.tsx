@@ -6,14 +6,14 @@ import { Game } from '../../middle-end/RuntimeFiles/Game';
 import { Player } from '../../middle-end/RuntimeFiles/Player';
 const SelectDungeon: React.FC = () => {
 
-  const userName = "Daniel Rupawalla" //pull from db
-  const navigate = useNavigate();
-  const playerUrl = localStorage.getItem('playerCount')!;
-  const reRoute = (playerCount: string, dungeon: string) => {
-    console.log(playerCount);
-    localStorage.setItem("dungeon", dungeon)
-    const url = "/" + playerCount;
-    navigate(url)
+    const userName = "Daniel Rupawalla" //pull from db
+    const navigate = useNavigate();
+    const playerUrl = localStorage.getItem('playerCount')!;
+    const reRoute = (playerCount: string, dungeon: string) => {
+      console.log(playerCount);
+      localStorage.setItem("dungeon", dungeon)
+      const url = "/play";
+      navigate(url)
   };
 
   const startGame = () => {
