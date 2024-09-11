@@ -1,4 +1,7 @@
+import { Debuff } from "../Debuff/Debuff";
 import { Hero } from "../Hero/Hero";
+import { Item } from "../Loot/Item";
+import { Skill } from "../Loot/Skill";
 
 export class Player {
     private _id: string;

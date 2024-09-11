@@ -1,4 +1,4 @@
-class Skill {
+export class Skill {
     private _name: string;
 
     public get name(): string {return this._name;}

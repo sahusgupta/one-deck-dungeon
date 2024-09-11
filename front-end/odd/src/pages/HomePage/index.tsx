@@ -6,18 +6,19 @@ import { db } from '../../backend/firebase/firebase_utils';
 import { getDoc, collection, doc } from 'firebase/firestore';
 
 const HomePage: React.FC = () => {
+  let n: string = ""
   const info = async () => {
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
     const docSnap = await getDoc(docRef);
-    
     if (docSnap.exists()) {
-      return docSnap.data().name;
+      n = docSnap.data().name;
     } else {
       // docSnap.data() will be undefined in this case
-      console.log("No such document!");
+      console.log("No user");
     }
   }
-  const userName = "Daniel Rupawalla" //pull from db
+  info();
+  const userName = n; //pull from db
   const navigate = useNavigate();
   const reRoute = (playerCount: string) => { //parameter should be "1P" or "2P"
     console.log(playerCount);

@@ -1,4 +1,7 @@
+import { Debuff } from "../Debuff/Debuff";
 import { DiceBox } from "../Dice/DiceBox";
+import { Item } from "../Loot/Item";
+import { Skill } from "../Loot/Skill";
 
 export class Encounter {
     private _xp: number;
@@ -6,28 +9,28 @@ export class Encounter {
     public set xp(value: number) {this._xp = value;}
 
     private _name: string;
-    public get name(): number {return this._xp;}
-    public set name(value: number) {this._xp = value;}
+    public get name(): string {return this._name;}
+    public set name(value: string) {this._name = value;}
 
     private _type: number; //0 is boss, 1 is combat, 2+ is peril w/ time for worse option being (x - 2)
-    public get type(): number {return this._xp;}
-    public set type(value: number) {this._xp = value;}
+    public get type(): number {return this._type;}
+    public set type(value: number) {this._type = value;}
 
     private _item: Item;
-    public get item(): number {return this._xp;}
-    public set item(value: number) {this._xp = value;}
+    public get item(): Item {return this._item;}
+    public set item(value: Item) {this._item = value;}
 
     private _skill: Skill;
-    public get skill(): number {return this._xp;}
-    public set skill(value: number) {this._xp = value;}
+    public get skill(): Skill {return this._skill;}
+    public set skill(value: Skill) {this.skill = value;}
 
     private _tempDebuff: Debuff;
-    public get tempDebuff(): number {return this._xp;}
-    public set tempDebuff(value: number) {this._xp = value;}
+    public get tempDebuff(): Debuff {return this._tempDebuff;}
+    public set tempDebuff(value: Debuff) {this._tempDebuff = value;}
 
     private _boxes: Array<DiceBox>; //boxes should always be left to right, top to bottom
-    public get boxes(): number {return this._xp;}
-    public set boxes(value: number) {this._xp = value;}
+    public get boxes(): Array<DiceBox> {return this._boxes;}
+    public set boxes(value: Array<DiceBox>) {this._boxes = value;}
 
     public constructor(xp: number, name: string, type: number, item: Item, skill: Skill, tempDebuff: Debuff, boxes: Array<DiceBox>) {
         this._xp = xp;

@@ -1,4 +1,4 @@
-class Debuff {
+export class Debuff {
     private _name: string;
 
     public get name(): string {return this._name;}

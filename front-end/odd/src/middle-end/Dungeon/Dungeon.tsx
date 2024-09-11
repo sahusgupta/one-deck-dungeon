@@ -1,3 +1,4 @@
+import { Debuff } from "../Debuff/Debuff";
 import { DiceBox } from "../Dice/DiceBox";
 import { Encounter } from "../Encounter/Encounter";
 import { Floor } from "../Floor/Floor";

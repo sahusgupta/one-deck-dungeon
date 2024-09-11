@@ -1,4 +1,6 @@
 import { Campaign } from "../Campaign/Campaign";
+import { Item } from "../Loot/Item";
+import { Skill } from "../Loot/Skill";
 
 export class Hero {
     private _feat: Skill;
