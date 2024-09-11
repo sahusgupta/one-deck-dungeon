@@ -9,7 +9,7 @@ const SelectDungeon: React.FC = () => {
     const reRoute = (playerCount: string, dungeon: string) => {
       console.log(playerCount);
       localStorage.setItem("dungeon", dungeon)
-      const url = "/" + playerCount;
+      const url = "/play";
       navigate(url)
   };
   return (
