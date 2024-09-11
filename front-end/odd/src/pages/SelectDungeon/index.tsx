@@ -1,17 +1,25 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Dungeon from '../../components/Dungeon';
+import DungeonTag from '../../components/Dungeon';
+import { Dungeon } from '../../middle-end/Dungeon/Dungeon';
+import { Game } from '../../middle-end/RuntimeFiles/Game';
+import { Player } from '../../middle-end/RuntimeFiles/Player';
 const SelectDungeon: React.FC = () => {
 
-    const userName = "Daniel Rupawalla" //pull from db
-    const navigate = useNavigate();
-    const playerUrl = localStorage.getItem('playerCount')!;
-    const reRoute = (playerCount: string, dungeon: string) => {
-      console.log(playerCount);
-      localStorage.setItem("dungeon", dungeon)
-      const url = "/" + playerCount;
-      navigate(url)
+  const userName = "Daniel Rupawalla" //pull from db
+  const navigate = useNavigate();
+  const playerUrl = localStorage.getItem('playerCount')!;
+  const reRoute = (playerCount: string, dungeon: string) => {
+    console.log(playerCount);
+    localStorage.setItem("dungeon", dungeon)
+    const url = "/" + playerCount;
+    navigate(url)
   };
+
+  const startGame = () => {
+    let game = new Game("testId", Dungeon.getFromBossName(localStorage.getItem("dungeon")), ["testId, testId"], localStorage.getItem("playerCount") == "1P" ? 1 : 2);
+  }
+
   return (
     <div
       className="relative w-full h-screen bg-cover bg-center"
@@ -29,25 +37,25 @@ const SelectDungeon: React.FC = () => {
         {/* Player Options */}
         <div className="flex space-x-4 w-250">
           {/* Select Char */}
-          <Dungeon
+          <DungeonTag
             imgURL='Dragon1.jpg'
-            onClick={() => reRoute(playerUrl, "dragon")}
+            onClick={() => reRoute(playerUrl, "Dragon1")}
             />
-            <Dungeon
+            <DungeonTag
             imgURL='Hydra1.jpg'
-            onClick={() => reRoute(playerUrl, "hydra")}
+            onClick={() => reRoute(playerUrl, "Hydra1")}
             />
-            <Dungeon
+            <DungeonTag
             imgURL='Lich1.jpg'
-            onClick={() => reRoute(playerUrl, "lich")}
+            onClick={() => reRoute(playerUrl, "Lich1")}
             />
-            <Dungeon
+            <DungeonTag
             imgURL='Minotaur1.jpg'
-            onClick={() => reRoute(playerUrl, "minotaur")}
+            onClick={() => reRoute(playerUrl, "Minotaur1")}
             />
-            <Dungeon
+            <DungeonTag
             imgURL='Yeti1.jpg'
-            onClick={() => reRoute(playerUrl, "yeti")}
+            onClick={() => reRoute(playerUrl, "Yeti1")}
             />
         </div>
 

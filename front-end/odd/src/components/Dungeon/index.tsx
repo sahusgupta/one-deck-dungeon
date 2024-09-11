@@ -3,7 +3,7 @@ interface DungeonProps{
     onClick: () => void;
 }
 
-const Dungeon: React.FC<DungeonProps> = ({
+const DungeonTag: React.FC<DungeonProps> = ({
     imgURL, 
     onClick,
 }) =>{
@@ -14,4 +14,4 @@ const Dungeon: React.FC<DungeonProps> = ({
             </button>
     )
 }
-export default Dungeon
+export default DungeonTag

@@ -22,6 +22,10 @@ export class Dungeon {
         this._floors = new Array<Floor>(floor0, floor1, floor2);
     }
 
+    public static getFromBossName(bossName : string | null) : Dungeon {
+        return Dungeon.DragonsCave;
+    }
+
     public static readonly DragonsCave = new Dungeon(Encounter.Dragon1, 
         new Floor(Debuff.HallOfStatues, [
             new DiceBox(2, 3, true, 0, 0)

@@ -11,7 +11,8 @@ const SelectPlayerPage: React.FC = () => {
   const reRoute = (characterSelected: string) => {
     localStorage.setItem('characterSelected', characterSelected)
     navigate(playerUrl)
-};
+  };
+  
   return (
     <div
       className="relative w-full h-screen bg-cover bg-center"

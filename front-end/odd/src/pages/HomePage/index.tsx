@@ -19,8 +19,9 @@ const HomePage: React.FC = () => {
   }
   const userName = "Daniel Rupawalla" //pull from db
   const navigate = useNavigate();
-  const reRoute = (playerCount: string) => {
+  const reRoute = (playerCount: string) => { //parameter should be "1P" or "2P"
     console.log(playerCount);
+    localStorage.setItem('playerCount', playerCount)
     const url = "/" + playerCount;
     navigate(url)
   };

@@ -6,8 +6,10 @@ export class Game {
     private _dungeon: Dungeon;
     private _gameId: string;
     private _potions: number;
+    private _level: number;
+    private _playerNum: number;
   
-    public constructor(gameId: string, dungeon: Dungeon, players: Array<string>) {
+    public constructor(gameId: string, dungeon: Dungeon, players: Array<string>, playerNum: number) {
         this._playerList = new Array<Player>();
         players.forEach(player  => {
             this._playerList.concat(Player.getFromId(player));
@@ -15,6 +17,10 @@ export class Game {
         this._dungeon = dungeon;
         this._gameId = gameId;
         this._potions = 1;
+        this._level = 1;
+        this._playerNum = playerNum;
     }
+
+    //HANDLES ALL NETWORKING AND CROSS COMMUNICATION
     
 }
