@@ -5,20 +5,31 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../../backend/firebase/firebase_utils';
 import { getDoc, collection, doc } from 'firebase/firestore';
 
+const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+function generateGameCode(len: number){
+  let res = ''
+  for (let i = 0; i < len; i++){
+    res += chars.charAt(Math.floor(Math.random()*chars.length) + 1)
+  }
+  return res;
+}
+
 const HomePage: React.FC = () => {
-  let n: string = ""
   const info = async () => {
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      n = docSnap.data().name;
+      let data = docSnap.data();
+      localStorage.setItem('userdata', data.name)
     } else {
+      userName = 'Couldn\'t find display name'
       // docSnap.data() will be undefined in this case
       console.log("No user");
     }
   }
+  let userName = localStorage.getItem('userdata');
   info();
-  const userName = n; //pull from db
+  console.log(userName)
   const navigate = useNavigate();
   const reRoute = (playerCount: string) => { //parameter should be "1P" or "2P"
     console.log(playerCount);
