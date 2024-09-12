@@ -20,8 +20,9 @@ const googleLogin = async () => {
         if (user.displayName != null && user.email != null && await user.getIdToken() != null){
             creds.name = user.displayName;
             creds.email = user.email;
-            creds.token =  await user.getIdToken(true);
+            creds.token =  user.uid;
             creds.imageURL = user.photoURL ? user.photoURL : '';
+            console.log(creds)
         }
         if ((await getDoc(doc(db, 'users', creds.token))).exists()){
             creds.login = true
