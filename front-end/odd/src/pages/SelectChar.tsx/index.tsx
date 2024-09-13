@@ -2,9 +2,23 @@ import React from 'react';
 import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import PlayerCard from '../../components/PlayerCard';
-
+import { db } from '../../backend/firebase/firebase_utils';
+import { getDoc, doc } from 'firebase/firestore';
 const SelectPlayerPage: React.FC = () => {
-  const userName = "Daniel Rupawalla" //pull from db
+  const info = async () => {
+    const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      let data = docSnap.data();
+      localStorage.setItem('userdata', data.name)
+    } else {
+      userName = 'Couldn\'t find display name'
+      // docSnap.data() will be undefined in this case
+      console.log("No user");
+    }
+  }
+  info();
+  let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
   const playerUrl = "/homepage";
   console.log(playerUrl);

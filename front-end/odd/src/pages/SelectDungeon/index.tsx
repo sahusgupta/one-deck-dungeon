@@ -4,9 +4,24 @@ import DungeonTag from '../../components/Dungeon';
 import { Dungeon } from '../../middle-end/Dungeon/Dungeon';
 import { Game } from '../../middle-end/RuntimeFiles/Game';
 import { Player } from '../../middle-end/RuntimeFiles/Player';
+import { db } from '../../backend/firebase/firebase_utils';
+import {getDoc, doc} from 'firebase/firestore'
 const SelectDungeon: React.FC = () => {
 
-    const userName = "Daniel Rupawalla" //pull from db
+  const info = async () => {
+    const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      let data = docSnap.data();
+      localStorage.setItem('userdata', data.name)
+    } else {
+      userName = 'Couldn\'t find display name'
+      // docSnap.data() will be undefined in this case
+      console.log("No user");
+    }
+  }
+  info();
+  let userName = localStorage.getItem('userdata');
     const navigate = useNavigate();
     const playerUrl = localStorage.getItem('playerCount')!;
     const reRoute = (playerCount: string, dungeon: string) => {

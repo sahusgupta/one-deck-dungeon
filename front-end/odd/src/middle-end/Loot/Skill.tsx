@@ -1,14 +1,17 @@
 export class Skill {
     private _name: string;
-
+    
     public get name(): string {return this._name;}
 
     public set name(value: string) {
         this._name = value;
     }
+    
+    private _function: CallableFunction = () => {}
 
-    public constructor(name: string) {
+    public constructor(name: string, func?: CallableFunction) {
         this._name = name; 
+        this._function = func ? func: () => {};
     }
     
     //Aquamancer

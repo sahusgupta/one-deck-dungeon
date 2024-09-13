@@ -1,3 +1,5 @@
+import React from "react";
+
 interface DungeonProps{
     imgURL: string;
     onClick: () => void;

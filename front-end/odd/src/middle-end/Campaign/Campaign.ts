@@ -3,6 +3,7 @@ import { getDoc, getDocs, collection, doc, setDoc } from 'firebase/firestore';
 import { db, app } from "../../backend/firebase/firebase_utils";
 import { Hero } from "../Hero/Hero";
 import { MapLike } from "typescript";
+import { CampaignSkill } from "./CampaignSkill";
 interface Map {
     
 }
@@ -15,14 +16,14 @@ export class Campaign {
     public set checks(value: number) {
         this._checks = value;
     }
-    private _skills: Array<Skill>;
-    public get skills(): Array<Skill> {
+    private _skills: Array<CampaignSkill>;
+    public get skills(): Array<CampaignSkill> {
         return this._skills;
     }
-    public set skills(value: Array<Skill>) {
+    public set skills(value: Array<CampaignSkill>) {
         this._skills = value;
     }
-    public constructor(skills: Array<Skill>, checks: number) {
+    public constructor(skills: Array<CampaignSkill>, checks: number) {
         this._skills = skills;
         this._checks = checks
     }

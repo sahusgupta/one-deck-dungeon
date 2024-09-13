@@ -28,8 +28,8 @@ const HomePage: React.FC = () => {
       console.log("No user");
     }
   }
-  let userName = localStorage.getItem('userdata');
   info();
+  let userName = localStorage.getItem('userdata');
   console.log(userName)
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
