@@ -1,3 +1,4 @@
+import React from "react";
 interface PlayerCardProps{
     imgURL: string;
     onClick: () => void;

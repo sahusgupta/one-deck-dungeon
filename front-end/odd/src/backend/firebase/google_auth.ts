@@ -22,13 +22,12 @@ const googleLogin = async () => {
             creds.email = user.email;
             creds.token =  user.uid;
             creds.imageURL = user.photoURL ? user.photoURL : '';
-            console.log(creds)
         }
         if ((await getDoc(doc(db, 'users', creds.token))).exists()){
             creds.login = true
             return creds;
         } else {
-            setDoc(doc(db, 'users', creds.token), {name: creds.name, email: creds.email, imageURL: creds.imageURL, gamesPlayed: 0})
+            setDoc(doc(db, 'users', creds.token), {name: creds.name, email: creds.email, imageURL: creds.imageURL, gamesPlayed: 0, checks: 0, Campaign: ""})
             creds.login = true
             return creds;
         }
