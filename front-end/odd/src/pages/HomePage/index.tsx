@@ -21,7 +21,9 @@ const HomePage: React.FC = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       let data = docSnap.data();
+      console.log(data)
       localStorage.setItem('userdata', data.name)
+      localStorage.setItem('imageURL', data.imageURL)
     } else {
       userName = 'Couldn\'t find display name'
       // docSnap.data() will be undefined in this case
@@ -29,6 +31,7 @@ const HomePage: React.FC = () => {
     }
   }
   let userName = localStorage.getItem('userdata');
+  const imageURL = localStorage.getItem('imageURL') || "null"
   info();
   console.log(userName)
   const [isModalOpen, setModalOpen] = useState(false);
@@ -39,13 +42,14 @@ const HomePage: React.FC = () => {
     setModalContent(message);
     setModalOpen(true);
   };
-
+  const onAction = () => {
+    console.log("onAction clicked")
+  }
   const closeModal = () => {
     setModalOpen(false);
   };
   const navigate = useNavigate();
   const reRoute = (playerCount: string) => { //parameter should be "1P" or "2P"
-    console.log(playerCount);
     localStorage.setItem("playerCount", playerCount)
     if(!localStorage.getItem("characterSelected")){
       navigate("/char-select")
@@ -104,10 +108,18 @@ const HomePage: React.FC = () => {
             </div>
           </button>
         </div>
-
+        {isModalOpen && (<MultiplayerModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={modalTitle}
+        content={modalContent}
+        onAction={onAction}
+        actionLabel = "test"
+        />
+        )}
         {/* Profile Icons */}
         <div className="absolute top-4 right-4 flex space-x-2">
-          <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
+          <div className="w-10 h-10 rounded-full bg-gray-500"><img src={imageURL}/></div> {/* Replace with actual profile image */}
           <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
         </div>
       </div>

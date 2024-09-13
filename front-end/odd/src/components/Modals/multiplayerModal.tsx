@@ -17,6 +17,7 @@ const MultiplayerModal: React.FC<MultiplayerModal> = ({ isOpen, onClose, title, 
     return (
       <Modal isOpen={isOpen} onClose={onClose} title={title} content={content}>
         <div className="mt-4">
+          <input className="inline-flex justify-center bg-white bg-opacity-70 text-lg px-4 py-2 rounded-md text-center focus:outline-none"></input>
           <button
             type="button"
             className={`inline-flex justify-center rounded-md border border-transparent
