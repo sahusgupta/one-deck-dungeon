@@ -30,6 +30,7 @@ const HomePage: React.FC = () => {
       console.log("No user");
     }
   }
+  info();
   let userName = localStorage.getItem('userdata');
   const imageURL = localStorage.getItem('imageURL') || "null"
   info();
