@@ -43,8 +43,8 @@ const HomePage: React.FC = () => {
     setModalContent(message);
     setModalOpen(true);
   };
-  const onAction = () => {
-    console.log("onAction clicked")
+  const onAction = (inputValue: string) => {
+    console.log(inputValue) //handle logic for code joining
   }
   const closeModal = () => {
     setModalOpen(false);
@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
           </button>
 
           {/* 2 Player Button */}
-          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => showModal("test1", "test2")}>
+          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => showModal("Submit Your Join Code Here", "")}>
             <span className="text-xl font-bold">2 Player</span>
             <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
               <svg
@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
         title={modalTitle}
         content={modalContent}
         onAction={onAction}
-        actionLabel = "test"
+        actionLabel = "Submit"
         />
         )}
         {/* Profile Icons */}
