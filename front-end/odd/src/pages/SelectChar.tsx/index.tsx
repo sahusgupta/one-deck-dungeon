@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PlayerCard from '../../components/PlayerCard';
 import { db } from '../../backend/firebase/firebase_utils';
 import { getDoc, doc } from 'firebase/firestore';
+import PageLayout from '../../components/PageLayout';
 const SelectPlayerPage: React.FC = () => {
   const info = async () => {
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
@@ -28,12 +29,7 @@ const SelectPlayerPage: React.FC = () => {
   };
   
   return (
-    <div
-      className="relative w-full h-screen bg-cover bg-center"
-      style={{
-        backgroundImage: 'url("dragonwallpaper.jpg")',
-      }}
-    >
+    <PageLayout>
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       {/* Content */}
@@ -84,7 +80,7 @@ const SelectPlayerPage: React.FC = () => {
           <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

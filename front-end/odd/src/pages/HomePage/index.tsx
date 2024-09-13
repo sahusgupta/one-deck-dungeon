@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../../backend/firebase/firebase_utils';
 import { getDoc, collection, doc } from 'firebase/firestore';
 import MultiplayerModal from '../../components/Modals/multiplayerModal';
+import PageLayout from '../../components/PageLayout';
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
 function generateGameCode(len: number){
@@ -32,7 +33,6 @@ const HomePage: React.FC = () => {
   }
   info();
   let userName = localStorage.getItem('userdata');
-  const imageURL = localStorage.getItem('imageURL') || "null"
   info();
   console.log(userName)
   const [isModalOpen, setModalOpen] = useState(false);
@@ -60,12 +60,7 @@ const HomePage: React.FC = () => {
     }
   };
   return (
-    <div
-      className="relative w-full h-screen bg-cover bg-center"
-      style={{
-        backgroundImage: 'url("dragonwallpaper.jpg")',
-      }}
-    >
+    <PageLayout>
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       {/* Content */}
@@ -93,7 +88,7 @@ const HomePage: React.FC = () => {
           </button>
 
           {/* 2 Player Button */}
-          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => showModal("Submit Your Join Code Here", "")}>
+          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => showModal("Submit Your Join Code Here", "test2")}>
             <span className="text-xl font-bold">2 Player</span>
             <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
               <svg
@@ -118,13 +113,8 @@ const HomePage: React.FC = () => {
         actionLabel = "Submit"
         />
         )}
-        {/* Profile Icons */}
-        <div className="absolute top-4 right-4 flex space-x-2">
-          <div className="w-10 h-10 rounded-full bg-gray-500"><img src={imageURL}/></div> {/* Replace with actual profile image */}
-          <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
-        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

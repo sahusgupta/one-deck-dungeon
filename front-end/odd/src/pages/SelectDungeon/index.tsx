@@ -6,6 +6,7 @@ import { Game } from '../../middle-end/RuntimeFiles/Game';
 import { Player } from '../../middle-end/RuntimeFiles/Player';
 import { db } from '../../backend/firebase/firebase_utils';
 import {getDoc, doc} from 'firebase/firestore'
+import PageLayout from '../../components/PageLayout';
 const SelectDungeon: React.FC = () => {
 
   const info = async () => {
@@ -36,13 +37,8 @@ const SelectDungeon: React.FC = () => {
   }
 
   return (
-    <div
-      className="relative w-full h-screen bg-cover bg-center"
-      style={{
-        backgroundImage: 'url("dragonwallpaper.jpg")',
-      }}
-    >
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+    <PageLayout>
+           <div className="absolute inset-0 bg-black opacity-50"></div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
@@ -74,13 +70,9 @@ const SelectDungeon: React.FC = () => {
             />
         </div>
 
-        {/* Profile Icons */}
-        <div className="absolute top-4 right-4 flex space-x-2">
-          <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
-          <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
         </div>
-      </div>
-    </div>
+        </PageLayout>
+
   );
 };
 export default SelectDungeon
