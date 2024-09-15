@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3000, "192.168.0.103", () => {
+server.listen(3000, "10.0.0.92", () => {
   //try changing up this line to specify IP for communication
-  console.log("server running at http://localhost:3000");
+  console.log("server running at http://10.0.0.92:3000");
 });
