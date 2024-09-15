@@ -6,17 +6,10 @@ import { db } from '../../backend/firebase/firebase_utils';
 import { getDoc, collection, doc } from 'firebase/firestore';
 import MultiplayerModal from '../../components/Modals/multiplayerModal';
 import PageLayout from '../../components/PageLayout';
-
-const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
-function generateGameCode(len: number){
-  let res = ''
-  for (let i = 0; i < len; i++){
-    res += chars.charAt(Math.floor(Math.random()*chars.length) + 1)
-  }
-  return res;
-}
+import { Util } from '../../middle-end/Util/Util';
 
 const HomePage: React.FC = () => {
+
   const info = async () => {
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
     const docSnap = await getDoc(docRef);
@@ -42,16 +35,21 @@ const HomePage: React.FC = () => {
     setModalTitle(title);
     setModalContent(message);
     setModalOpen(true);
+    localStorage.setItem("gameId", title.split(": ")[1]);
+    // localStorage.setItem("playerCount", "2P")
   };
   const onAction = (inputValue: string) => {
     console.log(inputValue) //handle logic for code joining
+    //should either take to waiting for teammate screen or char 
+    reRoute("2P", inputValue.length == 6 ? inputValue : modalTitle.split(": ")[1]);
   }
   const closeModal = () => {
     setModalOpen(false);
   };
   const navigate = useNavigate();
-  const reRoute = (playerCount: string) => { //parameter should be "1P" or "2P"
+  const reRoute = (playerCount: string, gameCode?: string) => { //parameter should be "1P" or "2P"
     localStorage.setItem("playerCount", playerCount)
+    localStorage.setItem("gameId", gameCode ? gameCode : Util.generateRandCode(6));
     if(!localStorage.getItem("characterSelected")){
       navigate("/char-select")
     }
@@ -71,7 +69,7 @@ const HomePage: React.FC = () => {
         {/* Player Options */}
         <div className="flex space-x-4 w-250">
           {/* 1 Player Button */}
-          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => reRoute("one-player")}>
+          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => reRoute("1P")}>
             <span className="text-xl font-bold">1 Player</span>
             <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
               <svg
@@ -88,7 +86,7 @@ const HomePage: React.FC = () => {
           </button>
 
           {/* 2 Player Button */}
-          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => showModal("Submit Your Join Code Here", "test2")}>
+          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => showModal("Your Generated Game Code: " + Util.generateRandCode(6), "Join Another Game")}>
             <span className="text-xl font-bold">2 Player</span>
             <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
               <svg

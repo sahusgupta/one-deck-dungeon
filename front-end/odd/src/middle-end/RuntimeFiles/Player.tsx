@@ -5,6 +5,8 @@ import { Skill } from "../Loot/Skill";
 
 export class Player {
     private _id: string;
+    public get id(): string {return this._id;}
+    public set id(value: string) {this._id = value;}
     
     private _skills: Array<Skill>;
 
@@ -22,7 +24,7 @@ export class Player {
         this._activeDebuff = Debuff.Null;
     }
 
-    public static getFromId (Id: string) : Player {
-        return new Player(Id, Hero.Aquamancer1P);
+    public static getFromId (id: string) : Player {
+        return new Player(id, Hero.Aquamancer1P);
     }
 }

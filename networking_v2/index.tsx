@@ -22,6 +22,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3008, () => { //try changing up this line to specify IP for communication
-  console.log('server running at http://localhost:3008');
+server.listen(3000, () => {
+  console.log('server running at http://localhost:3000');
 });

@@ -28,12 +28,14 @@ const SelectDungeon: React.FC = () => {
     const reRoute = (playerCount: string, dungeon: string) => {
       console.log(playerCount);
       localStorage.setItem("dungeon", dungeon)
+      startGame();
       const url = "/play";
       navigate(url)
   };
 
   const startGame = () => {
-    let game = new Game("testId", Dungeon.getFromBossName(localStorage.getItem("dungeon")), ["testId, testId"], localStorage.getItem("playerCount") == "1P" ? 1 : 2);
+    Game.createGame(localStorage.getItem("gameId"), Dungeon.getFromBossName(localStorage.getItem("dungeon")), localStorage.getItem("playerCount") == "1P" ? ["testId1"] : ["testId1", "testId2"]);
+    Game.getInstance().printSetup();
   }
 
   return (

@@ -8,6 +8,12 @@ export class Floor {
     private _perilBoxes: Array<DiceBox>;
     private _combatBoxes: Array<DiceBox>;
     private _deck: Array<Encounter>;
+    public get deck(): Array<Encounter> {
+        return this._deck;
+    }
+    public set deck(value: Array<Encounter>) {
+        this._deck = value;
+    }
     private _discard: Array<Encounter>;
     private _workspace: Array<[Encounter, boolean]>;
 

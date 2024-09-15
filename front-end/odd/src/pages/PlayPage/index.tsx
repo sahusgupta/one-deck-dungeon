@@ -10,7 +10,7 @@ const PlayPage: React.FC = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       let data = docSnap.data();
-      localStorage.setItem('userdata', data.name)
+      localStorage.setItem('userdata', data.name);
     } else {
       userName = 'Couldn\'t find display name'
       // docSnap.data() will be undefined in this case
