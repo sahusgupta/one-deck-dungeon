@@ -1,11 +1,10 @@
 export class Util {
-    public static generateRandCode(len: number) {
-        const chars = "1234567890";
-        let res = ''
-        for (let i = 0; i < len; i++){
-          res += chars.charAt(Math.floor(Math.random()*chars.length) + 1)
-        }
-        return res;
+    public static generateRandCode(len: number) : string {
+      let res = '';
+      for (let i = 0; i < len; i++){
+        res += Math.round(Math.random() * 8);
+      }
+      return res;
   
     }
 }
