@@ -3,7 +3,7 @@ const io = require('socket.io-client');
 const readline = require('readline');
 
 // Connect to the Socket.IO server
-const socket = io('http://localhost:3000');
+const socket = io('http://localhost:3000'); //gotta put in ip of host computer
 
 console.log('Connecting to the server...');
 
