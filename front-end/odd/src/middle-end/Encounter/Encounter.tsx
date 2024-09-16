@@ -626,4 +626,64 @@ export class Encounter {
             new DiceBox(6, 0, true, 1, 1),
         )
     );
+
+    public static readonly Lich1 : Encounter = new Encounter(0, "Lich1", 0, 
+        new Item([0, 0, 0, 0]),
+        Skill.Null,
+        Debuff.Null,
+        new Array<DiceBox>(
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(6, 1, true, 1, 1),
+            new DiceBox(16, 2, false, 0, 4),
+            new DiceBox(6, 2, true, 1, 1),
+            new DiceBox(17, 0, false, 0, 4),
+            new DiceBox(6, 0, true, 1, 1),
+        )
+    );
+
+    public static readonly Hydra1 : Encounter = new Encounter(0, "Hydra1", 0, 
+        new Item([0, 0, 0, 0]),
+        Skill.Null,
+        Debuff.Null,
+        new Array<DiceBox>(
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(6, 1, true, 1, 1),
+            new DiceBox(16, 2, false, 0, 4),
+            new DiceBox(6, 2, true, 1, 1),
+            new DiceBox(17, 0, false, 0, 4),
+            new DiceBox(6, 0, true, 1, 1),
+        )
+    );
+
+    public static readonly Minotaur1 : Encounter = new Encounter(0, "Minotaur1", 0, 
+        new Item([0, 0, 0, 0]),
+        Skill.Null,
+        Debuff.Null,
+        new Array<DiceBox>(
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(6, 1, true, 1, 1),
+            new DiceBox(16, 2, false, 0, 4),
+            new DiceBox(6, 2, true, 1, 1),
+            new DiceBox(17, 0, false, 0, 4),
+            new DiceBox(6, 0, true, 1, 1),
+        )
+    );
+
+    public static readonly Yeti1 : Encounter = new Encounter(0, "Yeti1", 0, 
+        new Item([0, 0, 0, 0]),
+        Skill.Null,
+        Debuff.Null,
+        new Array<DiceBox>(
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(5, 1, true, 0, 0),
+            new DiceBox(6, 1, true, 1, 1),
+            new DiceBox(16, 2, false, 0, 4),
+            new DiceBox(6, 2, true, 1, 1),
+            new DiceBox(17, 0, false, 0, 4),
+            new DiceBox(6, 0, true, 1, 1),
+        )
+    );
 }

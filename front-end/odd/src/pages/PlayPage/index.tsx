@@ -63,7 +63,7 @@ const PlayPage: React.FC = () => {
               <h2 className="text-2xl font-bold mb-2">Boss</h2>
               <div className="flex flex-col items-center">
                 <img
-                  src={`/${boss}`}
+                  src={`/${boss}.jpg`}
                   alt={boss}
                   className="w-48 h-48 object-contain rounded-md"
                 />

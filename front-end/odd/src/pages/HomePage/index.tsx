@@ -27,7 +27,6 @@ const HomePage: React.FC = () => {
   info();
   let userName = localStorage.getItem('userdata');
   info();
-  console.log(userName)
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
@@ -48,7 +47,6 @@ const HomePage: React.FC = () => {
         // Game code exists, pull all the data
         querySnapshot.forEach(async (doc) => {
           const gameData = doc.data();
-          console.log(gameData);
           if(gameData.players[1] == "fillerID"){
 
           localStorage.setItem("dungeon", gameData.dungeon);

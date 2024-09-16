@@ -60,7 +60,6 @@ export class Game {
             ret += " - " + this._dungeon.floors[0].deck[o].name + "\n";
         }
 
-        console.log(ret);
     }
 
     

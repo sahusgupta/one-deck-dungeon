@@ -5,7 +5,6 @@ type PageLayoutProps = {
   
   const PageLayout: React.FC<PageLayoutProps> = ({children }) => {
       const imageURL = localStorage.getItem('imageURL') || "null";
-      console.log(imageURL)
     return (
         <div
         className="relative w-full h-screen bg-cover bg-center"
