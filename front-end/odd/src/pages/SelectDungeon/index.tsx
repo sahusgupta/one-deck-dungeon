@@ -5,8 +5,9 @@ import { Dungeon } from '../../middle-end/Dungeon/Dungeon';
 import { Game } from '../../middle-end/RuntimeFiles/Game';
 import { Player } from '../../middle-end/RuntimeFiles/Player';
 import { db } from '../../backend/firebase/firebase_utils';
-import {getDoc, doc} from 'firebase/firestore'
+import { getDoc, doc, setDoc } from 'firebase/firestore';
 import PageLayout from '../../components/PageLayout';
+
 const SelectDungeon: React.FC = () => {
 
   const info = async () => {
@@ -23,24 +24,43 @@ const SelectDungeon: React.FC = () => {
   }
   info();
   let userName = localStorage.getItem('userdata');
-    const navigate = useNavigate();
-    const playerUrl = localStorage.getItem('playerCount')!;
-    const reRoute = (playerCount: string, dungeon: string) => {
-      console.log(playerCount);
-      localStorage.setItem("dungeon", dungeon)
-      startGame();
-      const url = "/play";
-      navigate(url)
+  const navigate = useNavigate();
+  const playerUrl = localStorage.getItem('playerCount')!;
+  const reRoute = (playerCount: string, dungeon: string) => {
+    console.log(playerCount);
+    localStorage.setItem("dungeon", dungeon)
+    startGame();
+    const url = "/play";
+    navigate(url)
   };
 
-  const startGame = () => {
-    Game.createGame(localStorage.getItem("gameId"), Dungeon.getFromBossName(localStorage.getItem("dungeon")), localStorage.getItem("playerCount") == "1P" ? ["testId1"] : ["testId1", "testId2"]);
-    Game.getInstance().printSetup();
+  const startGame = async () => {
+    const gameId = localStorage.getItem("gameId");
+    const dungeon = Dungeon.getFromBossName(localStorage.getItem("dungeon"));
+    const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
+    
+    Game.createGame(gameId, dungeon, players);
+    const gameInstance = Game.getInstance();
+    
+    // Save game data to Firestore
+    if (gameId) {
+      await setDoc(doc(db, "games", gameId), {
+        gameId: gameId,
+        dungeon: localStorage.getItem("dungeon"),
+        players: players,
+        boss: dungeon.boss.name,
+        deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
+      });
+    } else {
+      console.error("gameId is null");
+    }
+
+    gameInstance.printSetup();
   }
 
   return (
     <PageLayout>
-           <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-black opacity-50"></div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
@@ -53,28 +73,27 @@ const SelectDungeon: React.FC = () => {
           <DungeonTag
             imgURL='Dragon1.jpg'
             onClick={() => reRoute(playerUrl, "Dragon1")}
-            />
-            <DungeonTag
+          />
+          <DungeonTag
             imgURL='Hydra1.jpg'
             onClick={() => reRoute(playerUrl, "Hydra1")}
-            />
-            <DungeonTag
+          />
+          <DungeonTag
             imgURL='Lich1.jpg'
             onClick={() => reRoute(playerUrl, "Lich1")}
-            />
-            <DungeonTag
+          />
+          <DungeonTag
             imgURL='Minotaur1.jpg'
             onClick={() => reRoute(playerUrl, "Minotaur1")}
-            />
-            <DungeonTag
+          />
+          <DungeonTag
             imgURL='Yeti1.jpg'
             onClick={() => reRoute(playerUrl, "Yeti1")}
-            />
+          />
         </div>
-
-        </div>
-        </PageLayout>
-
+      </div>
+    </PageLayout>
   );
 };
+
 export default SelectDungeon

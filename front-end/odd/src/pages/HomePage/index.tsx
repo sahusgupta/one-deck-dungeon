@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react';
 import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../backend/firebase/firebase_utils';
-import { getDoc, collection, doc } from 'firebase/firestore';
+import { getDoc, collection, doc, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import MultiplayerModal from '../../components/Modals/multiplayerModal';
 import PageLayout from '../../components/PageLayout';
 import { Util } from '../../middle-end/Util/Util';
-
 
 const HomePage: React.FC = () => {
 
@@ -17,7 +16,6 @@ const HomePage: React.FC = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       let data = docSnap.data();
-      console.log(data)
       localStorage.setItem('userdata', data.name)
       localStorage.setItem('imageURL', data.imageURL)
     } else {
@@ -40,10 +38,40 @@ const HomePage: React.FC = () => {
     localStorage.setItem("gameId", title.split(": ")[1]);
     // localStorage.setItem("playerCount", "2P")
   };
-  const onAction = (inputValue: string) => {
+  const onAction = async (inputValue: string) => {
     console.log(inputValue) //handle logic for code joining
-    //should either take to waiting for teammate screen or char 
-    reRoute("2P", inputValue, modalTitle.split(": ")[1]);
+    // Check if the game code exists in the active games collection
+    if(inputValue != ""){
+      const gameQuery = query(collection(db, "games"), where("gameId", "==", inputValue));
+      const querySnapshot = await getDocs(gameQuery);
+      if (!querySnapshot.empty) {
+        // Game code exists, pull all the data
+        querySnapshot.forEach(async (doc) => {
+          const gameData = doc.data();
+          console.log(gameData);
+          localStorage.setItem("dungeon", gameData.dungeon);
+          localStorage.setItem("players", JSON.stringify(gameData.players));
+          localStorage.setItem("boss", gameData.boss);
+          localStorage.setItem("deck", gameData.deck);
+
+          // Update the players list
+          const players = gameData.players;
+          const userId = localStorage.getItem("credentials");
+          if (players && players.length > 1 && userId) {
+            players[1] = userId;
+            await updateDoc(doc.ref, { players });
+            localStorage.setItem("players", JSON.stringify(players));
+          }
+        });
+        
+        reRoute("2P", inputValue, modalTitle.split(": ")[1]);
+      } else {
+        console.log("Invalid game code");
+        // Handle invalid game code scenario
+      }
+    } else {
+      reRoute("2P", inputValue, modalTitle.split(": ")[1]);
+    }
   }
   const closeModal = () => {
     setModalOpen(false);
