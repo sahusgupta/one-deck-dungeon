@@ -64,13 +64,13 @@ const HomePage: React.FC = () => {
             await updateDoc(doc.ref, { players });
             localStorage.setItem("players", JSON.stringify(players));
           }
+          reRoute("2P", inputValue, modalTitle.split(": ")[1]);
         }
         else{
           console.log("game full")
         }
         });
         
-        reRoute("2P", inputValue, modalTitle.split(": ")[1]);
       } else {
         console.log("Invalid game code");
         // Handle invalid game code scenario
