@@ -74,11 +74,6 @@ const SelectPlayerPage: React.FC = () => {
             />
         </div>
 
-        {/* Profile Icons */}
-        <div className="absolute top-4 right-4 flex space-x-2">
-          <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
-          <div className="w-10 h-10 rounded-full bg-gray-500"></div> {/* Replace with actual profile image */}
-        </div>
       </div>
     </PageLayout>
   );
