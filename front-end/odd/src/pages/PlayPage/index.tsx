@@ -40,10 +40,40 @@ const PlayPage: React.FC = () => {
   if (!gameData) {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
-
+  let names: string[] = [];
   const { deck, dungeon, players } = gameData;
+  let playerName1 = ""
+  let playerName2 = ""
   const boss = localStorage.getItem("boss") || "Dragon1.jpg"
-
+  const info = async () => {
+    let playerIDs: string[] = JSON.parse(localStorage.getItem('players') || '[]');
+    let i = 0;
+    for (let id of playerIDs){
+      if (id != ""){
+        const docRef = doc(db, "users", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          let data = docSnap.data();
+          console.log("Player name:", data.name)
+          if(i ==0){
+            playerName1 = data.name;
+            i++;
+          }
+          else{
+            playerName2 = data.name;
+          }
+        } else {
+          // docSnap.data() will be undefined in this case
+          console.log("No user");
+        }
+      } else {
+        throw new Error('No players found')
+      }
+    }
+  }
+  info();
+  console.log(playerName2)
+  console.log(playerName1)
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
@@ -98,7 +128,7 @@ const PlayPage: React.FC = () => {
               </div>
             </div>
           </div>
-
+          info
           {/* Players Section */}
           <div className="mt-8 bg-gray-800 rounded-lg p-4 shadow-md">
             <h2 className="text-2xl font-bold mb-4">Players</h2>
@@ -106,6 +136,7 @@ const PlayPage: React.FC = () => {
               {players.map((playerId: string, index: number) => (
                 <div key={index} className="p-4 bg-gray-700 rounded-lg text-center">
                   <p className="text-lg font-semibold">Player {index + 1}</p>
+                  <p className="text-lg font-semibold"> Name: {playerName1}</p>
                   <p className="text-sm text-gray-400">{playerId}</p>
                 </div>
               ))}
