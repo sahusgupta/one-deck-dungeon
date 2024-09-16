@@ -49,6 +49,8 @@ const HomePage: React.FC = () => {
         querySnapshot.forEach(async (doc) => {
           const gameData = doc.data();
           console.log(gameData);
+          if(gameData.players[1] != "fillerId"){
+
           localStorage.setItem("dungeon", gameData.dungeon);
           localStorage.setItem("players", JSON.stringify(gameData.players));
           localStorage.setItem("boss", gameData.boss);
@@ -62,6 +64,10 @@ const HomePage: React.FC = () => {
             await updateDoc(doc.ref, { players });
             localStorage.setItem("players", JSON.stringify(players));
           }
+        }
+        else{
+          console.log("game full")
+        }
         });
         
         reRoute("2P", inputValue, modalTitle.split(": ")[1]);
