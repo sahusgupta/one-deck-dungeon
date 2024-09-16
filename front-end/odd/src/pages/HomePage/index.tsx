@@ -79,7 +79,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const reRoute = (playerCount: string, gameCode?: string, titleCode?: string) => { //parameter should be "1P" or "2P"
     localStorage.setItem("playerCount", playerCount)
-    localStorage.setItem("gameId", gameCode ? gameCode : Util.generateRandCode(gameIdLength));
+    localStorage.setItem("gameId", gameCode ? gameCode : (titleCode ? titleCode : Util.generateRandCode(gameIdLength)));
     if (playerCount === "2P" && gameCode === "" && titleCode) {
       navigate("/dungeon-select") //joins as server
     } else if (playerCount === "2P" && gameCode && gameCode.length == gameIdLength) {
