@@ -53,7 +53,7 @@ const HomePage: React.FC = () => {
     localStorage.setItem("playerCount", playerCount)
     localStorage.setItem("gameId", gameCode ? gameCode : Util.generateRandCode(gameIdLength));
     if (playerCount === "2P" && gameCode === "" && titleCode) {
-      navigate("/waiting") //joins as server
+      navigate("/dungeon-select") //joins as server
     } else if (playerCount === "2P" && gameCode && gameCode.length == gameIdLength) {
       navigate("/waiting") //joins as client
     } else if(!localStorage.getItem("characterSelected")){
