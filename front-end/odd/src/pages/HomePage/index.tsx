@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
     if (playerCount === "2P" && gameCode === "" && titleCode) {
       navigate("/dungeon-select") //joins as server
     } else if (playerCount === "2P" && gameCode && gameCode.length == gameIdLength) {
-      navigate("/waiting") //joins as client
+      navigate("/play") //joins as client
     } else if(!localStorage.getItem("characterSelected")){
       navigate("/char-select")
     } else {
