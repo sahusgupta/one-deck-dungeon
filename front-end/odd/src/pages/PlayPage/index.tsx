@@ -41,7 +41,8 @@ const PlayPage: React.FC = () => {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
 
-  const { boss, deck, dungeon, players } = gameData;
+  const { deck, dungeon, players } = gameData;
+  const boss = localStorage.getItem("boss") || "Dragon1.jpg"
 
   return (
     <PageLayout>
@@ -62,11 +63,10 @@ const PlayPage: React.FC = () => {
               <h2 className="text-2xl font-bold mb-2">Boss</h2>
               <div className="flex flex-col items-center">
                 <img
-                  src={`/${boss}.jpg`}
+                  src={`/${boss}`}
                   alt={boss}
                   className="w-48 h-48 object-contain rounded-md"
                 />
-                <p className="mt-2 text-lg">{boss}</p>
               </div>
             </div>
 

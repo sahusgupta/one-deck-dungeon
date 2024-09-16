@@ -5,7 +5,7 @@ import { Dungeon } from '../../middle-end/Dungeon/Dungeon';
 import { Game } from '../../middle-end/RuntimeFiles/Game';
 import { Player } from '../../middle-end/RuntimeFiles/Player';
 import { db } from '../../backend/firebase/firebase_utils';
-import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import PageLayout from '../../components/PageLayout';
 
 const SelectDungeon: React.FC = () => {
@@ -26,9 +26,10 @@ const SelectDungeon: React.FC = () => {
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
   const playerUrl = localStorage.getItem('playerCount')!;
-  const reRoute = (playerCount: string, dungeon: string) => {
+  const reRoute = (playerCount: string, dungeon: string, boss: string) => {
     console.log(playerCount);
     localStorage.setItem("dungeon", dungeon)
+    localStorage.setItem("boss", boss);
     startGame();
     const url = "/play";
     navigate(url)
@@ -72,23 +73,23 @@ const SelectDungeon: React.FC = () => {
           {/* Select Char */}
           <DungeonTag
             imgURL='Dragon1.jpg'
-            onClick={() => reRoute(playerUrl, "Dragon1")}
+            onClick={() => reRoute(playerUrl, "DragonCave", "Dragon1.jpg")}
           />
           <DungeonTag
             imgURL='Hydra1.jpg'
-            onClick={() => reRoute(playerUrl, "Hydra1")}
+            onClick={() => reRoute(playerUrl, "HydraReef", "Hydra1.jpg")}
           />
           <DungeonTag
             imgURL='Lich1.jpg'
-            onClick={() => reRoute(playerUrl, "Lich1")}
+            onClick={() => reRoute(playerUrl, "LichTomb", "Lich1.jpg")}
           />
           <DungeonTag
             imgURL='Minotaur1.jpg'
-            onClick={() => reRoute(playerUrl, "Minotaur1")}
+            onClick={() => reRoute(playerUrl, "MinotaurMaze", "Minotaur1.jpg")}
           />
           <DungeonTag
             imgURL='Yeti1.jpg'
-            onClick={() => reRoute(playerUrl, "Yeti1")}
+            onClick={() => reRoute(playerUrl, "YetiCavern", "Yeti1.jpg")}
           />
         </div>
       </div>
