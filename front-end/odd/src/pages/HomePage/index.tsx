@@ -49,7 +49,7 @@ const HomePage: React.FC = () => {
         querySnapshot.forEach(async (doc) => {
           const gameData = doc.data();
           console.log(gameData);
-          if(gameData.players[1] == "fillerId"){
+          if(gameData.players[1] == "fillerID"){
 
           localStorage.setItem("dungeon", gameData.dungeon);
           localStorage.setItem("players", JSON.stringify(gameData.players));
