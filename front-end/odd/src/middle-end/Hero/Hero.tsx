@@ -2,7 +2,21 @@ import { Campaign } from "../Campaign/Campaign";
 import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
 
+function generateHeroID(length: number) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    return result;
+  }
+
 export class Hero {
+    private _id: string;
+    public get id(): string { return this._id; }
+    public set id(value: string) { this._id = value; }
+
     private _feat: Skill;
     public get feat(): Skill {return this._feat;}
     public set feat(value: Skill) {this._feat = value;}
@@ -31,13 +45,16 @@ export class Hero {
 
     public constructor(feat: Skill, basicSkill: Skill, basicItem: Item, name: string, heroName: string) {
         this._feat = feat;
+        this._id = generateHeroID(10)
         this._basicSkill = basicSkill;
         this._basicItem = basicItem;
         this._name = name;
         this._heroName = heroName;
         // this._campaign = campaign;
     }
+    private toMap(){
 
+    }
     public static readonly Aquamancer1P : Hero = new Hero(
         Skill.Tsunami1P,
         Skill.BubblesWaterSpirit,

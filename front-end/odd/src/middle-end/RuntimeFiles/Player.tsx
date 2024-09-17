@@ -1,7 +1,27 @@
+import { TupleType } from "typescript";
 import { Debuff } from "../Debuff/Debuff";
 import { Hero } from "../Hero/Hero";
 import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
+import { CampaignSkill } from "../Campaign/CampaignSkill";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../../backend/firebase/firebase_utils";
+
+interface Dict {
+    skills: Array<Skill>
+    items: Array<Item>
+    heroID: string
+    campaignSkills: Array<[CampaignSkill, boolean]>
+
+}
+
+/*
+
+OR 
+    User
+        - Hero
+            - campaign
+*/
 
 export class Player {
     private _id: string;
@@ -26,5 +46,10 @@ export class Player {
 
     public static getFromId (id: string) : Player {
         return new Player(id, Hero.Aquamancer1P);
+    }
+
+    public async loadFromStore (id: string) {
+        const dRef = doc(db, 'users', id)
+        
     }
 }
