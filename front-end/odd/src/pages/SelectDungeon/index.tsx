@@ -38,7 +38,6 @@ const SelectDungeon: React.FC = () => {
   const startGame = async () => {
     const gameId = localStorage.getItem("gameId");
     const dungeon = Dungeon.getFromBossName(localStorage.getItem("boss"));
-    console.log(dungeon.name + " dungoen name")
     const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
     
     Game.createGame(gameId, dungeon, players);
