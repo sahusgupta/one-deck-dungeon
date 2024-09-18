@@ -1,14 +1,86 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../backend/firebase/firebase_utils';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, setDoc,updateDoc, onSnapshot } from 'firebase/firestore';
 import PageLayout from '../../components/PageLayout';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComment } from '@fortawesome/free-solid-svg-icons'; 
+import ChatModal from '../../components/Modals/chatModal';
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
   const [userName, setUserName] = useState<string | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState("Error");
+  const [modalTitle, setModalTitle] = useState("Error");
+  const [chatLog, setChatLog] = useState([])
+  
+  useEffect(  ()=> {
+    const gameId = localStorage.getItem("gameId") || "1234";
+    const gameRef = doc(db, 'games', gameId);
+    const unsubscribe = onSnapshot(gameRef, (gameSnap) => {
+      if(gameSnap.exists()){
+        const gameData = gameSnap.data();
+        if(gameData.chatLog){
+          setChatLog(gameData.chatLog);
+          console.log(chatLog)
+        }
+      }
+    });
+    return () => {
+      unsubscribe();
+    }
+  }, []);
   const navigate = useNavigate();
+  const isTwoPlayer = localStorage.getItem("playerCount")
+  const twoPlayerBool = (isTwoPlayer === "2P")
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+  const submitChat = async (inputText:string) => {
+    const gameId = localStorage.getItem("gameId") || "1234";
+    const gameRef = doc(db, 'games', gameId);
+    const gameSnap = await getDoc(gameRef);
+    if (gameSnap.exists()) {
+      const gamedata = gameSnap.data();
+      console.log(gamedata.chatLog)
+      if(gamedata.chatLog){
+        console.log("accessing exists")
+        const chatLog = gamedata.chatLog
+        console.log(chatLog)
+        chatLog.push((localStorage.getItem("userdata") || "undefined user")+ ": " + inputText)
+        console.log(chatLog)      
+        await updateDoc(doc(db, "games", gameId), {
+        chatLog: chatLog
+      });
+      }
+      else{
+        const chatLog = [(localStorage.getItem("userdata") || "undefined user")+ ": " +inputText]
+        await updateDoc(doc(db, "games", gameId), {
+          chatLog: chatLog
+        });
+      }
 
+    } else {
+      console.log("No game data found");
+    }
+    
+
+  }
+  const showChat = async (gameId: string, title: string, message: string) => {
+    setModalTitle(title);
+    setModalContent(message);
+    setModalOpen(true);
+    const gameRef = doc(db, 'games', gameId);
+      const gameSnap = await getDoc(gameRef);
+      if (gameSnap.exists()) {
+        const gamedata = gameSnap.data();
+        console.log(gamedata)
+        console.log(gamedata.boss)
+      } else {
+        console.log("No game data found");
+      }
+  }
   useEffect(() => {
     // Fetch game data based on gameId from localStorage
     const fetchGameData = async () => {
@@ -70,6 +142,16 @@ const PlayPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Chat Section */}
+            <div className="relative">
+            <div className="fixed left-0 top-50 h-3/4 w-1/4 bg-gray-800 p-4 shadow-md">
+              <h2 className="text-xl font-bold mb-4">Chat</h2>
+              <div className="flex flex-col h-3/4 overflow-y-scroll bg-gray-700 p-2 rounded-md shadow-inner">{chatLog.map((message, index) => (<div key={index} className="text-sm text-gray-200 mb-2">
+                {message}
+              </div>))}
+              </div>
+            </div>
+
             {/* Dungeon Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dungeon</h2>
@@ -111,11 +193,23 @@ const PlayPage: React.FC = () => {
               ))}
             </div>
           </div>
+          {twoPlayerBool && <div onClick={() => showChat(localStorage.getItem("gameId")|| "1234", "Chat", "Enter your message here:")} >
+            <FontAwesomeIcon icon={faComment} size="5x" />
+          </div>
+          }
+          {isModalOpen && <ChatModal
+           isOpen={isModalOpen}
+           onClose={closeModal}
+           title={modalTitle}
+           content={modalContent}
+           onAction={submitChat}
+           actionLabel = "Submit"/>
 
-
+          }
           <div className="flex justify-center mt-8">
           </div>
         </div>
+      </div>
       </div>
     </PageLayout>
   );
