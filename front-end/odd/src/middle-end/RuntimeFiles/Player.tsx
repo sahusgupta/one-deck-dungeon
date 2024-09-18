@@ -4,15 +4,15 @@ import { Hero } from "../Hero/Hero";
 import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
 import { CampaignSkill } from "../Campaign/CampaignSkill";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../backend/firebase/firebase_utils";
-
+import { Map } from "../Campaign/Campaign";
 interface Dict {
+    heroName: string
+    herotype: string
     skills: Array<Skill>
     items: Array<Item>
-    heroID: string
-    campaignSkills: Array<[CampaignSkill, boolean]>
-
+    campaign: Map
 }
 
 /*
@@ -51,5 +51,24 @@ export class Player {
     public async loadFromStore (id: string) {
         const dRef = doc(db, 'users', id)
         
+    }
+    public async saveToStore () {
+        let campaign = this._hero.campaign.toFirestore();
+        let exp: Dict = {
+            heroName: this._hero.name,
+            herotype: this._hero.heroName,
+            skills: this._skills,
+            items: this._items,
+            campaign: await campaign,
+        }
+        const collR = collection(db, 'users')
+        const docR = doc(db, 'users', localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "")
+        const dVerif = await getDoc(docR)
+        if (dVerif.exists()){
+            let name = this._hero.name;
+            setDoc(docR, {[name]: exp})
+        } else {
+            
+        }
     }
 }

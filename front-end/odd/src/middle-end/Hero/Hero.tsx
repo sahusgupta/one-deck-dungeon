@@ -1,4 +1,5 @@
 import { Campaign } from "../Campaign/Campaign";
+import { CampaignSkill } from "../Campaign/CampaignSkill";
 import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
 
@@ -37,30 +38,31 @@ export class Hero {
     public get heroName(): string {return this._heroName;}
     public set heroName(value: string) {this._heroName = value;}
 
-    // private _campaign: Campaign;
+    private _campaign: Campaign;
+    public get campaign(): Campaign { return this._campaign; }
+    public set campaign(value: Campaign) { this._campaign = value; }
 
     public _maxItems: number = 1;
 
     public _maxSkills: number = 1;
 
-    public constructor(feat: Skill, basicSkill: Skill, basicItem: Item, name: string, heroName: string) {
+    public constructor(feat: Skill, basicSkill: Skill, basicItem: Item, name: string, heroName: string, campaign: Campaign) {
         this._feat = feat;
         this._id = generateHeroID(10)
         this._basicSkill = basicSkill;
         this._basicItem = basicItem;
         this._name = name;
         this._heroName = heroName;
-        // this._campaign = campaign;
+        this._campaign = campaign;
     }
-    private toMap(){
 
-    }
     public static readonly Aquamancer1P : Hero = new Hero(
         Skill.Tsunami1P,
         Skill.BubblesWaterSpirit,
         new Item([1, 2, 4, 5]),
         "", 
-        "Aquamancer1P"
+        "Aquamancer1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
     public static readonly Aquamancer2P : Hero = new Hero(
@@ -68,7 +70,8 @@ export class Hero {
         Skill.WaterBlessing,
         new Item([0, 1, 3, 3]),
         "", 
-        "Aquamancer2P"
+        "Aquamancer2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
     public static readonly Archer1P : Hero = new Hero(
@@ -76,7 +79,8 @@ export class Hero {
         Skill.Kiting,
         new Item([2, 3, 2, 5]),
         "", 
-        "Archer1P"
+        "Archer1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
     public static readonly Archer2P : Hero = new Hero(
@@ -84,7 +88,8 @@ export class Hero {
         Skill.CombinedShot,
         new Item([1, 2, 1, 3]),
         "", 
-        "Archer2P"
+        "Archer2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
     public static readonly Dragoon1P : Hero = new Hero(
@@ -92,7 +97,9 @@ export class Hero {
         Skill.Trident,
         new Item([4, 1, 2, 6]),
         "", 
-        "Dragoon1P"
+        "Dragoon1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Dragoon2P : Hero = new Hero(
@@ -100,7 +107,9 @@ export class Hero {
         Skill.ForkedStrike,
         new Item([3, 0, 1, 4]),
         "", 
-        "Dragoon2P"
+        "Dragoon2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Mage1P : Hero = new Hero(
@@ -108,7 +117,9 @@ export class Hero {
         Skill.ShieldAura,
         new Item([1, 2, 4, 5]),
         "", 
-        "Mage1P"
+        "Mage1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Mage2P : Hero = new Hero(
@@ -116,7 +127,8 @@ export class Hero {
         Skill.PowerTransfer,
         new Item([0, 1, 3, 3]),
         "", 
-        "Mage2P"
+        "Mage2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
     public static readonly Paladin1P : Hero = new Hero(
@@ -124,7 +136,8 @@ export class Hero {
         Skill.Armor,
         new Item([3, 1, 3, 5]),
         "", 
-        "Paladin1P"
+        "Paladin1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
     public static readonly Paladin2P : Hero = new Hero(
@@ -132,7 +145,9 @@ export class Hero {
         Skill.SupportAura,
         new Item([2, 0, 2, 3]),
         "", 
-        "Paladin2P"
+        "Paladin2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Rogue1P : Hero = new Hero(
@@ -140,7 +155,9 @@ export class Hero {
         Skill.Stealth,
         new Item([1, 4, 2, 5]),
         "", 
-        "Rogue1P"
+        "Rogue1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Rogue2P : Hero = new Hero(
@@ -148,7 +165,9 @@ export class Hero {
         Skill.Dungeoneering,
         new Item([0, 3, 1, 3]),
         "", 
-        "Rogue2P"
+        "Rogue2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Warrior1P : Hero = new Hero(
@@ -156,7 +175,9 @@ export class Hero {
         Skill.SecondWind,
         new Item([4, 2, 1, 6]),
         "", 
-        "Warrior1P"
+        "Warrior1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Warrior2P : Hero = new Hero(
@@ -164,7 +185,9 @@ export class Hero {
         Skill.FearlessCharge,
         new Item([3, 1, 0, 4]),
         "", 
-        "Warrior2P"
+        "Warrior2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Witch1P : Hero = new Hero(
@@ -172,7 +195,9 @@ export class Hero {
         Skill.InnerFire,
         new Item([2, 2, 2, 5]),
         "", 
-        "Witch1P"
+        "Witch1P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
     public static readonly Witch2P : Hero = new Hero(
@@ -180,7 +205,9 @@ export class Hero {
         Skill.AntiHex,
         new Item([1, 1, 1, 3]),
         "", 
-        "Witch2P"
+        "Witch2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+
     );
 
 
