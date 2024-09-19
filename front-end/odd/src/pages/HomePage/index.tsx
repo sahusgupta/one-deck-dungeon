@@ -26,7 +26,6 @@ const HomePage: React.FC = () => {
   }
   info();
   let userName = localStorage.getItem('userdata');
-  info();
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");

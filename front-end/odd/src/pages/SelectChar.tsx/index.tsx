@@ -41,35 +41,35 @@ const SelectPlayerPage: React.FC = () => {
         <div className="flex space-x-4 w-250">
           {/* Select Char */}
           <PlayerCard
-            imgURL='Aquamancer1P.jpg'
+            imgURL='Characters/Aquamancer1P.jpg'
             onClick={() => reRoute("Aquamancer")}
             />
             <PlayerCard
-            imgURL='Archer1P.jpg'
+            imgURL='Characters/Archer1P.jpg'
             onClick={() => reRoute("Archer")}
             />
             <PlayerCard
-            imgURL='Dragoon1P.jpg'
+            imgURL='Characters/Dragoon1P.jpg'
             onClick={() => reRoute("Dragoon")}
             />
             <PlayerCard
-            imgURL='Mage1P.jpg'
+            imgURL='Characters/Mage1P.jpg'
             onClick={() => reRoute("Mage")}
             />
             <PlayerCard
-            imgURL='Paladin1P.jpg'
+            imgURL='Characters/Paladin1P.jpg'
             onClick={() => reRoute("Paladin")}
             />
             <PlayerCard
-            imgURL='Rogue1P.jpg'
+            imgURL='Characters/Rogue1P.jpg'
             onClick={() => reRoute("Rogue")}
             />
             <PlayerCard
-            imgURL='Warrior1P.jpg'
+            imgURL='Characters/Warrior1P.jpg'
             onClick={() => reRoute("Warrior")}
             />
             <PlayerCard
-            imgURL='Witch1P.jpg'
+            imgURL='Characters/Witch1P.jpg'
             onClick={() => reRoute("Witch")}
             />
         </div>
