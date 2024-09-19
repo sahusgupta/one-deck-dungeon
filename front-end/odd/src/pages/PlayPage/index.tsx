@@ -31,7 +31,6 @@ const PlayPage: React.FC = () => {
       unsubscribe();
     }
   }, []);
-  const navigate = useNavigate();
   const isTwoPlayer = localStorage.getItem("playerCount")
   const twoPlayerBool = (isTwoPlayer === "2P")
   const closeModal = () => {
@@ -174,6 +173,7 @@ const PlayPage: React.FC = () => {
 
             {/* Chat Section */}
             <div className="relative">
+            {twoPlayerBool &&   
             <div className="fixed left-0 top-50 h-3/4 w-1/4 bg-gray-800 p-4 shadow-md">
               <h2 className="text-xl font-bold mb-4">Chat</h2>
               <div className="flex flex-col h-3/4 overflow-y-scroll bg-gray-700 p-2 rounded-md shadow-inner">{chatLog.map((message, index) => (<div key={index} className="text-sm text-gray-200 mb-2">
@@ -181,7 +181,7 @@ const PlayPage: React.FC = () => {
               </div>))}
               </div>
             </div>
-
+              }
             {/* Dungeon Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dungeon</h2>
@@ -210,7 +210,6 @@ const PlayPage: React.FC = () => {
               </div>
             </div>
           </div>
-          info
           {/* Players Section */}
           <div className="mt-8 bg-gray-800 rounded-lg p-4 shadow-md">
             <h2 className="text-2xl font-bold mb-4">Players</h2>
