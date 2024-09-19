@@ -1,3 +1,4 @@
+import { DocumentData } from "firebase/firestore";
 import { Campaign } from "../Campaign/Campaign";
 import { CampaignSkill } from "../Campaign/CampaignSkill";
 import { Item } from "../Loot/Item";
@@ -209,6 +210,8 @@ export class Hero {
         new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
 
     );
-
+    public async fromFirestore(data: DocumentData){
+        // return new Hero(data.name)
+    }
 
 }
