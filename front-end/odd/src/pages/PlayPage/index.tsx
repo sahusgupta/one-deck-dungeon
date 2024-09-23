@@ -112,6 +112,7 @@ const PlayPage: React.FC = () => {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
   let names: string[] = [];
+  let activeDeck: string[] = ["null", "null", "null", "null"];
   const { deck, dungeon, players } = gameData;
   let playerName1 = ""
   let playerName2 = ""
@@ -199,6 +200,17 @@ const PlayPage: React.FC = () => {
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Deck</h2>
               <div className="flex flex-wrap justify-center">
+              {activeDeck.map((card: string, index: number) => (
+                  <img
+                    key={index}
+                    src={card=== "null" ? "ClosedDoor.jpg" : `/Encounters/${card}.jpg`}
+                    alt={card}
+                    className="w-50 h-32 m-1 object-cover rounded-md shadow-lg"
+                  />
+                ))}
+              </div>
+              {false &&
+              <div className="flex flex-wrap justify-center">
                 {deck.split(', ').map((card: string, index: number) => (
                   <img
                     key={index}
@@ -207,7 +219,12 @@ const PlayPage: React.FC = () => {
                     className="w-20 h-32 m-1 object-cover rounded-md shadow-lg"
                   />
                 ))}
-            </div>
+              </div>
+              }
+               <img
+                    src="ClosedDoor.jpg"
+                    className="w-50 h-32 m-1 object-cover rounded-md shadow-lg m-auto mt-10"
+                  />
           </div>
           {/* Players Section */}
           <div className="bg-gray-800 rounded-lg p-4 shadow-md">
