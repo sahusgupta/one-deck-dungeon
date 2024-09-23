@@ -7,6 +7,7 @@ import { CampaignSkill } from "../Campaign/CampaignSkill";
 import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../backend/firebase/firebase_utils";
 import { Map } from "../Campaign/Campaign";
+import { log } from "console";
 interface Dict {
     heroName: string
     herotype: string
@@ -50,7 +51,13 @@ export class Player {
 
     public async loadFromStore (id: string) {
         const dRef = doc(db, 'users', id)
-        
+        const dVerif = await getDoc(dRef)
+        if (dVerif.exists()){
+            let data = dVerif.data()
+            // let p = new Player(id, Hero.fromFirestore(data))
+        } else {
+            
+        }
     }
     public async saveToStore () {
         let campaign = this._hero.campaign.toFirestore();
@@ -61,14 +68,13 @@ export class Player {
             items: this._items,
             campaign: await campaign,
         }
-        const collR = collection(db, 'users')
         const docR = doc(db, 'users', localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "")
         const dVerif = await getDoc(docR)
         if (dVerif.exists()){
             let name = this._hero.name;
             setDoc(docR, {[name]: exp})
         } else {
-            
+            console.log('NOT POSSIBLE?')
         }
     }
 }
