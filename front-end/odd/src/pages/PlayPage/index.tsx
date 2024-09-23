@@ -172,7 +172,7 @@ const PlayPage: React.FC = () => {
             </div>
 
             {/* Chat Section */}
-            <div className="relative">
+
             {twoPlayerBool &&   
             <div className="fixed left-0 top-50 h-3/4 w-1/4 bg-gray-800 p-4 shadow-md">
               <h2 className="text-xl font-bold mb-4">Chat</h2>
@@ -207,11 +207,10 @@ const PlayPage: React.FC = () => {
                     className="w-20 h-32 m-1 object-cover rounded-md shadow-lg"
                   />
                 ))}
-              </div>
             </div>
           </div>
           {/* Players Section */}
-          <div className="mt-8 bg-gray-800 rounded-lg p-4 shadow-md">
+          <div className="bg-gray-800 rounded-lg p-4 shadow-md">
             <h2 className="text-2xl font-bold mb-4">Players</h2>
             <div className="grid grid-cols-2 gap-4">
               {players.map((playerId: string, index: number) => (
