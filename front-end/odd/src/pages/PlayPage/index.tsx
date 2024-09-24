@@ -161,12 +161,8 @@ const PlayPage: React.FC = () => {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
   let names: string[] = [];
-<<<<<<< HEAD
-=======
   const playerCount = localStorage.getItem("PlayerCount") || "1P";
   const level = "1";
-  let activeDeck: string[] = ["null", "null", "null", "null"];
->>>>>>> d44d8a6a6d02bbcbd57c0337d7570b5e7465b2b0
   const { deck, dungeon, players } = gameData;
   const fullDeck : string[] = Array.from(deck);
   let playerName1 = ""
