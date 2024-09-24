@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { googleLogin } from '../../backend/firebase/google_auth';
 import { FcGoogle } from 'react-icons/fc';
 import { FaUserCircle } from 'react-icons/fa';
 import PageLayout from '../../components/PageLayout';
+import { response } from 'express';
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -17,7 +18,11 @@ function LoginPage() {
     const errorMessage = (error: string) => {
         console.log(error);
     };
-
+    useEffect(() => {
+        if (localStorage.getItem('login') == 'true') {
+            responseMessage('already logged in');
+        }
+    })
     return (
         <PageLayout>
         <div className="flex items-center justify-center min-h-screen bg-gray-100">

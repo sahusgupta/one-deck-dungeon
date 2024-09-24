@@ -6,6 +6,8 @@ import PageLayout from '../../components/PageLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment } from '@fortawesome/free-solid-svg-icons'; 
 import ChatModal from '../../components/Modals/chatModal';
+import { Player } from '../../middle-end/RuntimeFiles/Player';
+import { Hero } from '../../middle-end/Hero/Hero';
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -31,6 +33,7 @@ const PlayPage: React.FC = () => {
       unsubscribe();
     }
   }, []);
+  const navigate = useNavigate();
   const isTwoPlayer = localStorage.getItem("playerCount")
   const twoPlayerBool = (isTwoPlayer === "2P")
   const closeModal = () => {
@@ -106,6 +109,22 @@ const PlayPage: React.FC = () => {
 
     fetchGameData();
     fetchUserData();
+    let heroKey = (localStorage.getItem('characterSelected') || '') + (localStorage.getItem('playerCount') || '');
+
+    function isValidHeroKey(key: string): key is keyof typeof Hero {
+      return key in Hero;
+    }
+
+    let hero = isValidHeroKey(heroKey) ? Hero[heroKey] : null;
+    function handleBeforeUnload() {
+       // let player = new Player(localStorage.getItem('credentials') || '', new Hero(new Skill(null), null, null, null, null, null)) 
+      // return player;
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   if (!gameData) {
@@ -180,7 +199,7 @@ const PlayPage: React.FC = () => {
               </div>))}
               </div>
             </div>
-              }
+            }
             {/* Dungeon Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dungeon</h2>
@@ -224,6 +243,7 @@ const PlayPage: React.FC = () => {
                     className="w-50 h-32 m-1 object-cover rounded-md shadow-lg m-auto mt-10"
                   />
           </div>
+          info
           {/* Players Section */}
           <div className="bg-gray-800 rounded-lg p-4 shadow-md">
             <h2 className="text-2xl font-bold mb-4">Players</h2>

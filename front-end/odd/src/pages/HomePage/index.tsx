@@ -18,6 +18,7 @@ const HomePage: React.FC = () => {
       let data = docSnap.data();
       localStorage.setItem('userdata', data.name)
       localStorage.setItem('imageURL', data.imageURL)
+      localStorage.setItem('email', data.email)
     } else {
       userName = 'Couldn\'t find display name'
       // docSnap.data() will be undefined in this case
