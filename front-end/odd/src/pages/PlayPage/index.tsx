@@ -14,6 +14,8 @@ const PlayPage: React.FC = () => {
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
   const [chatLog, setChatLog] = useState([])
+  const [discardNum, setDiscard] = useState<number>(0);
+  const [activeDeck, updateDeck] = useState(["empty", "empty", "empty", "empty"]); //empty means no card, "name-null" means flipped over, "name" is text of encounter
   
   useEffect(  ()=> {
     const gameId = localStorage.getItem("gameId") || "1234";
@@ -66,6 +68,33 @@ const PlayPage: React.FC = () => {
     
 
   }
+
+  const exploreDeck = () => {
+    burnCards(2);
+    console.log("full deck: " + fullDeck.toLocaleString());
+    activeDeck.map((card : string, index : number) => {
+      if (card == "empty") {
+        activeDeck[index] = fullDeck.splice(fullDeck.length - 1)[0] + "-null";
+      }
+    })
+
+    updateDeck(activeDeck);
+  }
+
+  const activeClick = (index : number) => {
+    console.log("got here active deck: " + activeDeck.toLocaleString());
+    burnCards(2);
+    if (activeDeck[index].includes("null")) {
+      activeDeck[index] = activeDeck[index].substring(activeDeck[index].length - 5);
+      updateDeck(activeDeck);
+    }
+  }
+
+  const burnCards = (num : number) => {
+    setDiscard(discardNum + num);
+    fullDeck.splice(fullDeck.length - num);
+  }
+
   const showChat = async (gameId: string, title: string, message: string) => {
     setModalTitle(title);
     setModalContent(message);
@@ -112,8 +141,8 @@ const PlayPage: React.FC = () => {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
   let names: string[] = [];
-  let activeDeck: string[] = ["null", "null", "null", "null"];
   const { deck, dungeon, players } = gameData;
+  const fullDeck : string[] = Array.from(deck);
   let playerName1 = ""
   let playerName2 = ""
   const boss = localStorage.getItem("boss") || "Dragon1.jpg"
@@ -198,14 +227,15 @@ const PlayPage: React.FC = () => {
 
             {/* Deck Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-2">Deck</h2>
+              <h2 className="text-2xl font-bold mb-2">Deck - Discard: {discardNum}</h2>
               <div className="flex flex-wrap justify-center">
               {activeDeck.map((card: string, index: number) => (
                   <img
                     key={index}
-                    src={card=== "null" ? "ClosedDoor.jpg" : `/Encounters/${card}.jpg`}
+                    src={card=== "empty" ? "Empty.jpg" : card.includes("null") ? "ClosedDoor.jpg" : `/Encounters/${card}.jpg`}
                     alt={card}
                     className="w-50 h-32 m-1 object-cover rounded-md shadow-lg"
+                    onClick={() => activeClick(index)}
                   />
                 ))}
               </div>
@@ -221,10 +251,12 @@ const PlayPage: React.FC = () => {
                 ))}
               </div>
               }
-               <img
+              <div onClick={exploreDeck}>
+              <img
                     src="ClosedDoor.jpg"
                     className="w-50 h-32 m-1 object-cover rounded-md shadow-lg m-auto mt-10"
                   />
+              </div>
           </div>
           {/* Players Section */}
           <div className="bg-gray-800 rounded-lg p-4 shadow-md">
