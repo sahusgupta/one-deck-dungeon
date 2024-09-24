@@ -6,6 +6,9 @@ import PageLayout from '../../components/PageLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment } from '@fortawesome/free-solid-svg-icons'; 
 import ChatModal from '../../components/Modals/chatModal';
+import { Player } from '../../middle-end/RuntimeFiles/Player';
+import { Hero } from '../../middle-end/Hero/Hero';
+import Dice from 'react-dice-roll';
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -33,6 +36,7 @@ const PlayPage: React.FC = () => {
       unsubscribe();
     }
   }, []);
+  const navigate = useNavigate();
   const isTwoPlayer = localStorage.getItem("playerCount")
   const twoPlayerBool = (isTwoPlayer === "2P")
   const closeModal = () => {
@@ -135,12 +139,34 @@ const PlayPage: React.FC = () => {
 
     fetchGameData();
     fetchUserData();
+    let heroKey = (localStorage.getItem('characterSelected') || '') + (localStorage.getItem('playerCount') || '');
+
+    function isValidHeroKey(key: string): key is keyof typeof Hero {
+      return key in Hero;
+    }
+
+    let hero = isValidHeroKey(heroKey) ? Hero[heroKey] : null;
+    function handleBeforeUnload() {
+       // let player = new Player(localStorage.getItem('credentials') || '', new Hero(new Skill(null), null, null, null, null, null)) 
+      // return player;
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   if (!gameData) {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
   let names: string[] = [];
+<<<<<<< HEAD
+=======
+  const playerCount = localStorage.getItem("PlayerCount") || "1P";
+  const level = "1";
+  let activeDeck: string[] = ["null", "null", "null", "null"];
+>>>>>>> d44d8a6a6d02bbcbd57c0337d7570b5e7465b2b0
   const { deck, dungeon, players } = gameData;
   const fullDeck : string[] = Array.from(deck);
   let playerName1 = ""
@@ -173,8 +199,6 @@ const PlayPage: React.FC = () => {
     }
   }
   info();
-  console.log(playerName2)
-  console.log(playerName1)
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
@@ -191,12 +215,17 @@ const PlayPage: React.FC = () => {
           <div className="mt-8 grid grid-cols-3 gap-6">
             {/* Boss Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-2">Boss</h2>
+              <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
                 <img
-                  src={`/${boss}.jpg`}
-                  alt={boss}
+                  src={`/${dungeon}.jpg`}
+                  alt={dungeon}
                   className="w-48 h-48 object-contain rounded-md"
+                />
+                <img 
+                src={`/Leveling/Level${level}-${playerCount}.jpg`}
+                alt={level}
+                className="w-48 h-48 object-contain rounded-md"
                 />
               </div>
             </div>
@@ -211,16 +240,12 @@ const PlayPage: React.FC = () => {
               </div>))}
               </div>
             </div>
-              }
+            }
             {/* Dungeon Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-2">Dungeon</h2>
+              <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
-                <img
-                  src={`/${dungeon}.jpg`}
-                  alt={dungeon}
-                  className="w-48 h-48 object-contain rounded-md"
-                />
+                <Dice onRoll={(value) => console.log(value)} />
                 <p className="mt-2 text-lg">{dungeon}</p>
               </div>
             </div>
@@ -258,6 +283,7 @@ const PlayPage: React.FC = () => {
                   />
               </div>
           </div>
+          info
           {/* Players Section */}
           <div className="bg-gray-800 rounded-lg p-4 shadow-md">
             <h2 className="text-2xl font-bold mb-4">Players</h2>
