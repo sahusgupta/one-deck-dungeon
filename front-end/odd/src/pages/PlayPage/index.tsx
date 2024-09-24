@@ -8,6 +8,7 @@ import { faComment } from '@fortawesome/free-solid-svg-icons';
 import ChatModal from '../../components/Modals/chatModal';
 import { Player } from '../../middle-end/RuntimeFiles/Player';
 import { Hero } from '../../middle-end/Hero/Hero';
+import Dice from 'react-dice-roll';
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -131,6 +132,8 @@ const PlayPage: React.FC = () => {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
   let names: string[] = [];
+  const playerCount = localStorage.getItem("PlayerCount") || "1P";
+  const level = "1";
   let activeDeck: string[] = ["null", "null", "null", "null"];
   const { deck, dungeon, players } = gameData;
   let playerName1 = ""
@@ -179,12 +182,17 @@ const PlayPage: React.FC = () => {
           <div className="mt-8 grid grid-cols-3 gap-6">
             {/* Boss Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-2">Boss</h2>
+              <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
                 <img
-                  src={`/${boss}.jpg`}
-                  alt={boss}
+                  src={`/${dungeon}.jpg`}
+                  alt={dungeon}
                   className="w-48 h-48 object-contain rounded-md"
+                />
+                <img 
+                src={`/Leveling/Level${level}-${playerCount}.jpg`}
+                alt={level}
+                className="w-48 h-48 object-contain rounded-md"
                 />
               </div>
             </div>
@@ -202,13 +210,9 @@ const PlayPage: React.FC = () => {
             }
             {/* Dungeon Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-2">Dungeon</h2>
+              <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
-                <img
-                  src={`/${dungeon}.jpg`}
-                  alt={dungeon}
-                  className="w-48 h-48 object-contain rounded-md"
-                />
+                <Dice onRoll={(value) => console.log(value)} />
                 <p className="mt-2 text-lg">{dungeon}</p>
               </div>
             </div>
