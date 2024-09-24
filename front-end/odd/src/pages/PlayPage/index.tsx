@@ -144,8 +144,6 @@ const PlayPage: React.FC = () => {
     }
   }
   info();
-  console.log(playerName2)
-  console.log(playerName1)
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
