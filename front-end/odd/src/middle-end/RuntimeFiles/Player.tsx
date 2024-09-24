@@ -59,7 +59,8 @@ export class Player {
             
         }
     }
-    public async saveToStore () {
+    public async saveToStore (event: Event) {
+        alert('saving data to firestore')
         let campaign = this._hero.campaign.toFirestore();
         let exp: Dict = {
             heroName: this._hero.name,
@@ -71,10 +72,12 @@ export class Player {
         const docR = doc(db, 'users', localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "")
         const dVerif = await getDoc(docR)
         if (dVerif.exists()){
+            
             let name = this._hero.name;
             setDoc(docR, {[name]: exp})
         } else {
             console.log('NOT POSSIBLE?')
         }
+        
     }
 }

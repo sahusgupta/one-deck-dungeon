@@ -9,6 +9,7 @@ import ChatModal from '../../components/Modals/chatModal';
 import { Player } from '../../middle-end/RuntimeFiles/Player';
 import { Hero } from '../../middle-end/Hero/Hero';
 import Dice from 'react-dice-roll';
+import { heroes } from '../../backend/mappings';
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -141,20 +142,21 @@ const PlayPage: React.FC = () => {
     fetchUserData();
     let heroKey = (localStorage.getItem('characterSelected') || '') + (localStorage.getItem('playerCount') || '');
 
-    function isValidHeroKey(key: string): key is keyof typeof Hero {
-      return key in Hero;
+    function isValidHeroKey(key: string) {
+      return key in heroes;
     }
 
-    let hero = isValidHeroKey(heroKey) ? Hero[heroKey] : null;
-    function handleBeforeUnload() {
-       // let player = new Player(localStorage.getItem('credentials') || '', new Hero(new Skill(null), null, null, null, null, null)) 
-      // return player;
+    
+    async function handleBeforeUnload(event: Event) {
+      if (isValidHeroKey(localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string)){ 
+        let player = new Player(localStorage.getItem('credentials') || '', heroes[localStorage.getItem('') as string]);
+        console.log(player)
+        await player.saveToStore(event);
+      }
     }
-    window.addEventListener('beforeunload', handleBeforeUnload)
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+    window.onbeforeunload = (event) => {
+      handleBeforeUnload(event);
+    }
   }, []);
 
   if (!gameData) {
