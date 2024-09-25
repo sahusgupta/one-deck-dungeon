@@ -42,6 +42,13 @@ export class Encounter {
         this._boxes = boxes;
     }
 
+    public static readonly EmptyEncounter : Encounter = new Encounter(0, "EmptyEncounter1", 0,
+        new Item([0, 0, 0, 0]),
+        Skill.Null,
+        Debuff.Null,
+        new Array<DiceBox>()
+    );
+
     public static readonly ArrowWall1 : Encounter = new Encounter(2, "ArrowWall1", 3,
         new Item([1, 0, 0, 0]),
         Skill.Dodge,
