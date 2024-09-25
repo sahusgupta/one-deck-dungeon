@@ -4,7 +4,7 @@ import { Hero } from "../middle-end/Hero/Hero";
 import { Encounter} from "../middle-end/Encounter/Encounter";
 import { Debuff } from "../middle-end/Debuff/Debuff";
 
-let heroes: { [key: string]: Hero } = {
+const heroes: { [key: string]: Hero } = {
     "Aquamancer1P": Hero.Aquamancer1P,
     "Aquamancer2P": Hero.Aquamancer2P,
     "Archer1P": Hero.Archer1P,
@@ -23,7 +23,7 @@ let heroes: { [key: string]: Hero } = {
     "Witch2P": Hero.Witch2P
 }
 
-let skills: { [key: string]: Skill } = {
+const skills: { [key: string]: Skill } = {
     "Tsunami1P": Skill.Tsunami1P,
     "Tsunami2P": Skill.Tsunami2P,
     "BubblesWaterSpirit": Skill.BubblesWaterSpirit,
@@ -87,7 +87,7 @@ let skills: { [key: string]: Skill } = {
     "Null": Skill.Null
 }
 
-let debuffs: { [key: string]: Debuff } = {
+const debuffs: { [key: string]: Debuff } = {
     "Null": Debuff.Null,
     "Dodge": Debuff.Dodge,
     "Survivor": Debuff.Survivor,

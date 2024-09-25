@@ -7,7 +7,9 @@ export class Skill {
         this._name = value;
     }
     
-    private _function: CallableFunction = () => {}
+    private _function: CallableFunction = () => {
+        //function 
+    }
 
     public constructor(name: string, func?: CallableFunction) {
         this._name = name; 
