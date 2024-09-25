@@ -280,7 +280,7 @@ const PlayPage: React.FC = () => {
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
-                <Dice onRoll={(value) => console.log(value)} />
+                <Dice onRoll={(value: number) => console.log(value)} />
                 <p className="mt-2 text-lg">{dungeon}</p>
               </div>
             </div>
