@@ -182,7 +182,7 @@ const PlayPage: React.FC = () => {
           <div className="mt-8 grid grid-cols-3 gap-6">
             {/* Boss Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-2">Dice</h2>
+              <h2 className="text-2xl font-bold mb-2">Information</h2>
               <div className="flex flex-col items-center">
                 <img
                   src={`/${dungeon}.jpg`}
@@ -212,7 +212,7 @@ const PlayPage: React.FC = () => {
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
-                <Dice onRoll={(value) => console.log(value)} />
+                <Dice faces= {["https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000"]} onRoll={(value) => console.log(value)} />
                 <p className="mt-2 text-lg">{dungeon}</p>
               </div>
             </div>
