@@ -37,7 +37,7 @@ export class Campaign {
             
         }
     }
-
+    
     public async toFirestore(){
         const map: Map = {skills: this._skills, checks: this._checks}
         return map;

@@ -4,7 +4,7 @@ import { Hero } from "../Hero/Hero";
 import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
 import { CampaignSkill } from "../Campaign/CampaignSkill";
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
 import { db } from "../../backend/firebase/firebase_utils";
 import { Map } from "../Campaign/Campaign";
 import { log } from "console";
@@ -69,15 +69,16 @@ export class Player {
             items: this._items,
             campaign: await campaign,
         }
-        const docR = doc(db, 'users', localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "")
-        const dVerif = await getDoc(docR)
-        if (dVerif.exists()){
-            
-            let name = this._hero.name;
-            setDoc(docR, {[name]: exp})
-        } else {
-            console.log('NOT POSSIBLE?')
-        }
+        let subColls = collection(db, `users/${localStorage.getItem("credentials") ? String(localStorage.getItem("credentials")) : ""}`)
+        let q = query(subColls);
+        let docs = await getDocs(q);
+        let heronames: string[] = [];
+        docs.forEach((doc) => {
+            heronames.push(doc.id)
+        })
+        let d = doc(db, `users/${localStorage.getItem("credentials") ? String(localStorage.getItem("credentials")) : ""}`, exp.heroName)
+        
+        setDoc(d, {[exp.heroName]: exp})
         
     }
 }
