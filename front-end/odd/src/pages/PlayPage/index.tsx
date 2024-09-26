@@ -100,10 +100,9 @@ const PlayPage: React.FC = () => {
 
   const activeClick = (index: number) => {
     console.log("got here active deck: " + workspace.toLocaleString());
-    burnCards(2);
     if (!workspace[index][1]) {
       workspace[index][1] = true; //cards active now
-      activeEncounter = workspace[index][0];
+      burnCards(2);
     } else if (workspace[index][0].name != activeEncounter?.name) {
       let oldIndex: number = 0;
       workspace.map((encounterOptional: [Encounter, boolean], index2: number) => {
@@ -111,9 +110,11 @@ const PlayPage: React.FC = () => {
           oldIndex = index2;
         }
       });
-      finishEncounter(oldIndex);
-      activeEncounter = workspace[index][0];
+      workspace[oldIndex][0] = Encounter.EmptyEncounter;
+      workspace[oldIndex][1] = false;
     }
+    activeEncounter = workspace[index][0];
+    updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
   };
 
@@ -121,10 +122,6 @@ const PlayPage: React.FC = () => {
     setDiscard(discardNum + num);
     fullDeck.splice(fullDeck.length - num);
   };
-
-  const finishEncounter = (index : number) => {
-    activeEncounter = null;
-  }
 
   const showChat = async (gameId: string, title: string, message: string) => {
     setModalTitle(title);
@@ -295,7 +292,7 @@ const PlayPage: React.FC = () => {
                     key={index}
                     src={
                       encounterOptional[1]
-                        ? "/Encounters/${card}.jpg"
+                        ? `/Encounters/${encounterOptional[0].name}.jpg`
                         : encounterOptional[0].name == Encounter.EmptyEncounter.name
                         ? "Empty.jpg"
                         : "ClosedDoor.jpg"
