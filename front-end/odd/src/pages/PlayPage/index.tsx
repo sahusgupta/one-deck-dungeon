@@ -278,10 +278,10 @@ const PlayPage: React.FC = () => {
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
-                <Dice faces= {yellowDice} onRoll={(value) => console.log(value)} />
-                <Dice faces= {blueDice} onRoll={(value) => console.log(value)} />
-                  <Dice faces={blackDice} onRoll={(value) => console.log(value)} />
-                  <Dice faces={pinkDice} onRoll={(value) => console.log(value)} />
+                <Dice faces= {yellowDice} onRoll={(value:number) => console.log(value, typeof value)} />
+                <Dice faces= {blueDice} onRoll={(value:number) => console.log(value)} />
+                  <Dice faces={blackDice} onRoll={(value:number) => console.log(value)} />
+                  <Dice faces={pinkDice} onRoll={(value:number) => console.log(value)} />
                 <p className="mt-2 text-lg">{dungeon}</p>
               </div>
             </div>
