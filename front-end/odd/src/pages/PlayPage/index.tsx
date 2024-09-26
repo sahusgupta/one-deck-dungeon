@@ -30,7 +30,7 @@ const PlayPage: React.FC = () => {
 
   const [workspace, updateWorkspace] = useState(game.dungeon.floors[game.dungeon.currFloor].workspace);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
-
+  let turn = 0;
   useEffect(() => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
@@ -183,16 +183,14 @@ const PlayPage: React.FC = () => {
       ) {
         let player = new Player(
           localStorage.getItem("credentials") || "",
-          heroes[localStorage.getItem("") as string]
+          heroes[localStorage.getItem("heroName") as string]
         );
         console.log(player);
         await player.saveToStore(event);
       }
     }
-    window.onbeforeunload = (event) => {
-      handleBeforeUnload(event);
-    };
-  }, []);
+    
+  }, [turn]);
 
   if (!gameData) {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded

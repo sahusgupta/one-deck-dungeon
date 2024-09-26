@@ -8,6 +8,7 @@ import { addDoc, collection, doc, getDoc, getDocs, query, setDoc } from "firebas
 import { db } from "../../backend/firebase/firebase_utils";
 import { Map } from "../Campaign/Campaign";
 import { log } from "console";
+import { heroes } from "../../backend/mappings";
 interface Dict {
     heroName: string
     herotype: string
@@ -54,7 +55,9 @@ export class Player {
         const dVerif = await getDoc(dRef)
         if (dVerif.exists()){
             let data = dVerif.data()
-            // let p = new Player(id, Hero.fromFirestore(data))
+            let name = dVerif.id;
+            let heroInfo = JSON.parse(String(data))
+            let hero = null;
         } else {
             
         }
