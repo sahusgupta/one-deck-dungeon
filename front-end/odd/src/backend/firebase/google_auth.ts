@@ -36,7 +36,7 @@ const googleLogin = async () => {
             localStorage.setItem('login', 'true')
             return creds;
         } else {
-            setDoc(doc(db, 'users', creds.token), {name: creds.name, email: creds.email, imageURL: creds.imageURL, gamesPlayed: 0, checks: 0, Campaign: ""})
+            setDoc(doc(db, 'users', creds.token), {name: creds.name, email: creds.email, imageURL: creds.imageURL, gamesPlayed: 0, checks: 0, heroes: []})
             creds.login = true
             localStorage.setItem('login', 'true')
             return creds;

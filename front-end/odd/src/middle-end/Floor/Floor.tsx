@@ -15,7 +15,19 @@ export class Floor {
         this._deck = value;
     }
     private _discard: Array<Encounter>;
+    public get discard(): Array<Encounter> {
+        return this._discard;
+    }
+    public set discard(value: Array<Encounter>) {
+        this._discard = value;
+    }
     private _workspace: Array<[Encounter, boolean]>;
+    public get workspace(): Array<[Encounter, boolean]> {
+        return this._workspace;
+    }
+    public set workspace(value: Array<[Encounter, boolean]>) {
+        this._workspace = value;
+    }
 
     constructor(debuff: Debuff, perilBoxes: Array<DiceBox>, combatBoxes: Array<DiceBox>) {
         this._debuff = debuff;
@@ -23,7 +35,12 @@ export class Floor {
         this._combatBoxes = combatBoxes;
 
         this._discard = new Array<Encounter>();
-        this._workspace = new Array<[Encounter, boolean]>();
+        this._workspace = new Array<[Encounter, boolean]>(
+            [Encounter.EmptyEncounter, false],
+            [Encounter.EmptyEncounter, false],
+            [Encounter.EmptyEncounter, false],
+            [Encounter.EmptyEncounter, false]
+        );
         this._deck = Array.from<Encounter>(Encounter.encounterList);
         this.shuffle(this._deck);
     }

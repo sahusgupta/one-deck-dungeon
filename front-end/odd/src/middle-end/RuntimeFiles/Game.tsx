@@ -4,7 +4,11 @@ import { Player } from "./Player";
 
 export class Game {
     private _playerList: Array<Player>;
+    
     private _dungeon: Dungeon;
+    public get dungeon(): Dungeon {return this._dungeon;}
+    public set dungeon(value: Dungeon) {this._dungeon = value;}
+
     private _gameId: string | null;
     private _potions: number;
     private _level: number;
