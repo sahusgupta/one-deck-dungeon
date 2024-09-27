@@ -51,6 +51,8 @@ const SelectDungeon: React.FC = () => {
         players: players,
         boss: dungeon.boss.name,
         deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
+        player1dice: [],
+        player2dice: []
       });
     } else {
       console.error("gameId is null");
