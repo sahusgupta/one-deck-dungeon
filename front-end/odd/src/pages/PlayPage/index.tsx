@@ -102,9 +102,9 @@ const PlayPage: React.FC = () => {
   };
 
   const activeClick = (index: number) => {
-    console.log("got here active deck: " + workspace.toLocaleString());
     if (!workspace[index][1]) {
       workspace[index][1] = true; //cards active now
+      console.log("turning on: " + workspace[index][0]);
       burnCards(2);
     } else if (workspace[index][0].name != activeEncounter?.name) {
       let oldIndex: number = 0;
@@ -119,6 +119,7 @@ const PlayPage: React.FC = () => {
     activeEncounter = workspace[index][0];
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
+    console.log(workspace.toLocaleString());
   };
 
   const burnCards = (num: number) => {

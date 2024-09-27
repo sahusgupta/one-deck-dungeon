@@ -42,6 +42,10 @@ export class Encounter {
         this._boxes = boxes;
     }
 
+    public toString() : string {
+        return this.name;
+    }
+
     public static readonly EmptyEncounter : Encounter = new Encounter(0, "EmptyEncounter1", 0,
         new Item([0, 0, 0, 0]),
         Skill.Null,

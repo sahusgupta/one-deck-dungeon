@@ -29,14 +29,6 @@ export class Game {
     }
     //HANDLES ALL NETWORKING AND CROSS COMMUNICATION
 
-    public updateGame() : void {
-
-    }
-
-    public updateOtherGame() : void {
-
-    }
-
     public static getInstance() : Game {
         return this._instance;
     }
