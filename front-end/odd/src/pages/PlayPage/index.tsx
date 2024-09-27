@@ -34,7 +34,7 @@ const PlayPage: React.FC = () => {
 
   const [workspace, updateWorkspace] = useState(game.dungeon.floors[game.dungeon.currFloor].workspace);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
-  let turn = 0;
+  let [turn, setTurn] = useState(false);  
   useEffect(() => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
