@@ -27,10 +27,14 @@ const PlayPage: React.FC = () => {
   const pinkDice = ["https://drive.google.com/thumbnail?id=17LTXwJjXjN4rFzA0P827J50lvdP7HOMQ&sz=w1000","https://drive.google.com/thumbnail?id=1UK-lCu66p_t_9zTp_PjmQsTLFW4CGv-q&sz=w1000", "https://drive.google.com/thumbnail?id=1mml53cxpKcj8EegETGdBmmHVYwJgsoMi&sz=w1000", "https://drive.google.com/thumbnail?id=1gVxmrRN_Cjc2Aq_whiEzFChsBpmBk8sH&sz=w1000", "https://drive.google.com/thumbnail?id=13VseXMQbnHZf3jnHXOSU4L2yH8AsTy6o&sz=w1000","https://drive.google.com/thumbnail?id=1K2IP4g_GxA5EmkFWUeEAS0B4Df55KkEU&sz=w1000"];
   const game = Game.getInstance();
   const fullDeck: Encounter[] = game.dungeon.floors[game.dungeon.currFloor].deck;
+  const yellowDiceAmount  = 3; 
+  const blueDiceAmount = 4; 
+  const blackDiceAmount = 0;
+  const pinkDiceAmount = 2;
 
   const [workspace, updateWorkspace] = useState(game.dungeon.floors[game.dungeon.currFloor].workspace);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
-  let turn = 0;
+  let [turn, setTurn] = useState(false);  
   useEffect(() => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
@@ -279,10 +283,26 @@ const PlayPage: React.FC = () => {
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
-                <Dice faces= {yellowDice} onRoll={(value:number) => console.log(value, typeof value)} />
-                <Dice faces= {blueDice} onRoll={(value:number) => console.log(value)} />
-                  <Dice faces={blackDice} onRoll={(value:number) => console.log(value)} />
-                  <Dice faces={pinkDice} onRoll={(value:number) => console.log(value)} />
+                <div className="flex space-x-2">
+              {Array.from({length:yellowDiceAmount}, (_, index) => (
+                    <Dice key={index} size={50} faces= {yellowDice} onRoll={(value:number) => console.log(value)} />
+                  ))}
+                  </div>
+                  <div className="flex space-x-2">
+                  {Array.from({length:blueDiceAmount}, (_, index) => (
+                    <Dice key={index} size={50} faces= {blueDice} onRoll={(value:number) => console.log(value)} />
+                  ))}
+                  </div>
+                  <div className="flex space-x-2">
+                  {Array.from({length:blackDiceAmount}, (_, index) => (
+                    <Dice key={index} size={50} faces= {blackDice} onRoll={(value:number) => console.log(value)} />
+                  ))} 
+                  </div>
+                  <div className="flex space-x-2">
+                  {Array.from({length:pinkDiceAmount}, (_, index) => (
+                    <Dice key={index} size={50} faces= {pinkDice} onRoll={(value:number) => console.log(value)} />
+                  ))}
+                  </div>
                 <p className="mt-2 text-lg">{dungeon}</p>
               </div>
             </div>
