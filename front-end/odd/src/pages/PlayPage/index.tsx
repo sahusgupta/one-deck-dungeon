@@ -12,6 +12,7 @@ import Dice from "react-dice-roll";
 import { heroes } from "../../backend/mappings";
 import { Game } from "../../middle-end/RuntimeFiles/Game";
 import { Encounter } from "../../middle-end/Encounter/Encounter";
+import { Util } from "../../middle-end/Util/Util";
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -25,16 +26,21 @@ const PlayPage: React.FC = () => {
   const blueDice = ["https://drive.google.com/thumbnail?id=1NygZkS2sL8dtnTpStxIipgNQnh1rPMrQ&sz=w1000","https://drive.google.com/thumbnail?id=1JqpZte8HBp9S0neVRdE5Gk6B8p7292-B&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1lP6_SvegGwqzY7ZCdpdtObGjzt4Isi1F&sz=w1000","https://drive.google.com/thumbnail?id=10dqi-GNHPodNPmiZ0V_IflLdXVVth3Ue&sz=w1000"];
   const blackDice = ["https://drive.google.com/thumbnail?id=1dmxTGOmw6cW6wjsWo1xWhK503xvEW6Wc&sz=w1000","https://drive.google.com/thumbnail?id=1mQC_Bv_m2nx_qdNics6bFDm2cDFevhOo&sz=w1000", "https://drive.google.com/thumbnail?id=16MpNbd-mWyFc4lyre6BdhRUt_1ia-NAr&sz=w1000", "https://drive.google.com/thumbnail?id=1FzGXlI3ae612fxp3PT4sJYkB9mJCYdGx&sz=w1000", "https://drive.google.com/thumbnail?id=1r9v3ftIlrTMuPlcMP2zFdLeLeoxfFp0j&sz=w1000","https://drive.google.com/thumbnail?id=1yfnrTeFMirQWuSMc9r8cowUWDKsNJI_J&sz=w1000"];
   const pinkDice = ["https://drive.google.com/thumbnail?id=17LTXwJjXjN4rFzA0P827J50lvdP7HOMQ&sz=w1000","https://drive.google.com/thumbnail?id=1UK-lCu66p_t_9zTp_PjmQsTLFW4CGv-q&sz=w1000", "https://drive.google.com/thumbnail?id=1mml53cxpKcj8EegETGdBmmHVYwJgsoMi&sz=w1000", "https://drive.google.com/thumbnail?id=1gVxmrRN_Cjc2Aq_whiEzFChsBpmBk8sH&sz=w1000", "https://drive.google.com/thumbnail?id=13VseXMQbnHZf3jnHXOSU4L2yH8AsTy6o&sz=w1000","https://drive.google.com/thumbnail?id=1K2IP4g_GxA5EmkFWUeEAS0B4Df55KkEU&sz=w1000"];
-  const game = Game.getInstance();
-  const fullDeck: Encounter[] = game.dungeon.floors[game.dungeon.currFloor].deck;
   const yellowDiceAmount  = 3; 
   const blueDiceAmount = 4; 
   const blackDiceAmount = 0;
   const pinkDiceAmount = 2;
-
-  const [workspace, updateWorkspace] = useState(game.dungeon.floors[game.dungeon.currFloor].workspace);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
   let [turn, setTurn] = useState(false);  
+  const [workspace, updateWorkspace] = useState(
+    new Array<[Encounter, boolean]>(
+      [Encounter.EmptyEncounter, false],
+      [Encounter.EmptyEncounter, false],
+      [Encounter.EmptyEncounter, false],
+      [Encounter.EmptyEncounter, false]
+    )
+  );
+
   useEffect(() => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
@@ -204,6 +210,8 @@ const PlayPage: React.FC = () => {
   const playerCount = localStorage.getItem("PlayerCount") || "1P";
   const level = "1";
   const { deck, dungeon, players } = gameData;
+  const fullDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
+  // console.log(fullDeck.toLocaleString());
   let playerName1 = "";
   let playerName2 = "";
   const boss = localStorage.getItem("boss") || "Dragon1.jpg";

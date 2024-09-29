@@ -7,4 +7,9 @@ export class Util {
       return res;
   
     }
+
+    public static parseArrayAsStrings(item : string) : string[] {
+      let ret : string = item.replaceAll(",", "");
+      return ret.split(" ");
+    }
 }

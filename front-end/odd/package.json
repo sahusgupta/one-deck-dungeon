@@ -20,6 +20,7 @@
     "browserify": "^17.0.0",
     "firebase": "^10.13.0",
     "headlessui": "^0.0.0",
+    "odd": "file:",
     "react": "^18.3.1",
     "react-dice-roll": "^1.2.2",
     "react-dom": "^18.3.1",

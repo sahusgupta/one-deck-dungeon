@@ -42,8 +42,20 @@ export class Encounter {
         this._boxes = boxes;
     }
 
-    public toString() : string {
+    public toLocaleString() : string {
         return this.name;
+    }
+
+    public static returnEncounterDeck(deck : string[]) : Encounter[] {
+        let ret : Encounter[] = [];
+        deck.forEach(encounterName => {
+            this.encounterList.forEach(encounter => {
+                if (encounterName == encounter.name) {
+                    ret.push(encounter);
+                }
+            });
+        });
+        return ret;
     }
 
     public static readonly EmptyEncounter : Encounter = new Encounter(0, "EmptyEncounter1", 0,
