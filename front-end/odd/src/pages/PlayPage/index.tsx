@@ -99,6 +99,17 @@ const PlayPage: React.FC = () => {
   };
 
   const exploreDeck = () => {
+    let hasEmpty : boolean = false;
+    workspace.forEach((w: [Encounter, boolean]) => {
+      if (w[0].name == Encounter.EmptyEncounter.name) {
+        hasEmpty = true;
+      }
+    })
+
+    if (!hasEmpty) {
+      return;
+    }
+
     burnCards(2);
 
     workspace.map((encounterOptional: [Encounter, boolean], index: number) => {
@@ -112,20 +123,11 @@ const PlayPage: React.FC = () => {
   };
 
   const activeClick = (index: number) => {
-    if (!workspace[index][1]) {
+    if (!workspace[index][1] && workspace[index][0] != Encounter.EmptyEncounter) {
       workspace[index][1] = true; //cards active now
-      console.log("turning on: " + workspace[index][0]);
       burnCards(2);
-    } else if (workspace[index][0].name != activeEncounter?.name) {
-      let oldIndex: number = 0;
-      workspace.map((encounterOptional: [Encounter, boolean], index2: number) => {
-        if (encounterOptional[0].name == activeEncounter?.name) {
-          oldIndex = index2;
-        }
-      });
-      workspace[oldIndex][0] = Encounter.EmptyEncounter;
-      workspace[oldIndex][1] = false;
     }
+
     activeEncounter = workspace[index][0];
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
