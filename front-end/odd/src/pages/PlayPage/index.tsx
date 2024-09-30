@@ -69,7 +69,6 @@ const PlayPage: React.FC = () => {
     setEncounterModalOpen(false);
   }
   const encounterAccepted = () => {
-    burnCards(2);
     //insert functionality to create the encounter
     setEncounterModalOpen(false)
   }
