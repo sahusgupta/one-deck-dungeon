@@ -47,5 +47,9 @@ const googleLogin = async () => {
         return creds;
     }
 }
-
-export { googleLogin, type Dict };
+async function logout(){
+    if (localStorage.getItem('login') == 'true'){
+        localStorage.clear()
+    }
+}
+export { googleLogin, type Dict, logout };
