@@ -12,4 +12,15 @@ export class Util {
       let ret : string = item.replaceAll(",", "");
       return ret.split(" ");
     }
+
+    public static convertEncounterNameToShowName(name : string) : string {
+      let ret : string = "";
+      ret = name.replace(/([A-Z])/g, ' $1').toLowerCase();
+      ret = ret.substring(0, ret.length - 1);
+      ret = ret.toLowerCase()
+        .split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ');
+      return ret;
+    }
 }
