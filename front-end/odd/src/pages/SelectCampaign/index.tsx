@@ -18,34 +18,57 @@ const SelectCampaignPage: React.FC = () => {
       console.log("No user");
     }
   }
-  let matching_heroes: string[][] = []
-  if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) async() => {
-      const agent = localStorage.getItem('characterSelected') as string;
-      const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
+  async function getHeroes() {
+    console.log("Starting getHeroes")
+    let matching_heroes: unknown[][] = []
+    const agent = localStorage.getItem('characterSelected') as string;
+    console.log("Selected agent:", agent)
+    const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
+    const docSnap = await getDoc(docRef);
+    console.log("Document snapshot:", docSnap)
+    if (docSnap.exists()) {
         let data = docSnap.data();
         let heroes = data.heroes;
-
+  
         for (let hero of heroes){
-            matching_heroes.push(JSON.parse(hero) as string[])
+          let h: unknown[] = []
+          console.log(hero)
+          let h_map = hero
+          if (h_map.heroName != agent){
+            continue;
+          } else {
+            for (let [key, value] of Object.entries(JSON.parse(hero))){
+              h.push(value)
+            }
+            matching_heroes.push(h)
+          }
         }
         
       } else {
         userName = 'Couldn\'t find display name'
         console.log("No user");
       }
+      return matching_heroes;
   }
+  let heroes: unknown[][] = []
+  if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
+    console.log("Conditions met, calling getHeroes")
+    ;(async() => {
+      try {
+        heroes = await getHeroes()
+        console.log("Heroes retrieved:", heroes)
+      } catch (error) {
+        console.error("Error in getHeroes:", error)
+      }
+    })()
+  } else {
+    console.log('Conditions not met')
+  }
+    
   
   info();
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
-  const playerUrl = "/homepage";
-  console.log(playerUrl);
-  const reRoute = (characterSelected: string) => {
-    localStorage.setItem('characterSelected', characterSelected)
-    navigate(playerUrl)
-  };
   
   return (
     <PageLayout>
@@ -53,9 +76,9 @@ const SelectCampaignPage: React.FC = () => {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
-        {matching_heroes.map((hero, index) => (
+        {heroes.map((hero, index) => (
             <div key={index} className="flex space-x-4 w-250">
-                {hero}
+                {hero as string[]}
             </div>
         ))}
         <div className="flex space-x-4 w-250">
