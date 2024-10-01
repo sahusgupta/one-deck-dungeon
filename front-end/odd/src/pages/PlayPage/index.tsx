@@ -14,6 +14,7 @@ import { Game } from "../../middle-end/RuntimeFiles/Game";
 import { Encounter } from "../../middle-end/Encounter/Encounter";
 import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
+import { encounters } from "../../backend/mappings";
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -44,6 +45,7 @@ const PlayPage: React.FC = () => {
   );
 
   useEffect(() => {
+    console.log("running this")
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
     const unsubscribe = onSnapshot(gameRef, (gameSnap) => {
@@ -52,6 +54,15 @@ const PlayPage: React.FC = () => {
         if (gameData.chatLog) {
           setChatLog(gameData.chatLog);
           console.log(chatLog);
+          const activeDeck = gameData.activeDeck;
+          for(let i = 0; i < activeDeck.length; i++){
+            const stringRep = activeDeck[i].split("-");
+            console.log(stringRep);
+            const mob = encounters[stringRep[0]]
+            var mobBoolean = JSON.parse(stringRep[1])
+            workspace[i] = [mob, mobBoolean];
+            console.log(mob)
+          }
         }
       }
     });
@@ -107,7 +118,7 @@ const PlayPage: React.FC = () => {
     }
   };
 
-  const exploreDeck = () => {
+  const exploreDeck = async () => {
     let hasEmpty : boolean = false;
     workspace.forEach((w: [Encounter, boolean]) => {
       if (w[0].name == Encounter.EmptyEncounter.name) {
@@ -127,8 +138,28 @@ const PlayPage: React.FC = () => {
         encounterOptional[1] = false;
       }
     })
-
+    const gameId = localStorage.getItem("gameId") || "1234";
+    const gameRef = doc(db, "games", gameId);
+    const gameSnap = await getDoc(gameRef);
+    if (gameSnap.exists()) {
+      const gamedata = gameSnap.data();
+      console.log(gamedata);
+      if (gamedata) {
+        let arr: string[] = new Array<string>();
+        for(let i = 0; i < workspace.length;i++ ){
+          arr.push(workspace[i][0].name + "-" + workspace[i][1])
+        }
+        await updateDoc(doc(db, 'games', gameId),{
+          activeDeck: arr
+        })
+      } else {
+        
+      }
+    } else {
+      console.log("No game data found");
+    }
     updateWorkspace(workspace);
+    console.log(workspace)
   };
 
   const activeClick = (index: number) => {
