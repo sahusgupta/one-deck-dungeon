@@ -65,12 +65,23 @@ const PlayPage: React.FC = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
-  const encounterCloseModal = () =>{
+  const encounterStay = () => {
+    activeEncounter = null;
     setEncounterModalOpen(false);
   }
   const encounterAccepted = () => {
     //insert functionality to create the encounter
-    setEncounterModalOpen(false)
+    workspace.map((a : [Encounter, boolean], index : number) => {
+      console.log(a[0].name);
+      console.log(activeEncounter?.name + " -active");
+      if (activeEncounter?.name == a[0].name) {
+        workspace[index][0] = Encounter.EmptyEncounter;
+        workspace[index][1] = false;
+      }
+    });
+    activeEncounter = null;
+    updateWorkspace(workspace);
+    setEncounterModalOpen(false);
   }
   const submitChat = async (inputText: string) => {
     const gameId = localStorage.getItem("gameId") || "1234";
@@ -137,11 +148,14 @@ const PlayPage: React.FC = () => {
       burnCards(2);
     }
 
-    activeEncounter = workspace[index][0];
-    setEncounterModalOpen(true);
+    if (workspace[index][0] == Encounter.EmptyEncounter || !workspace[index][1]) {
+      activeEncounter = null;
+    } else {
+      activeEncounter = workspace[index][0];
+      setEncounterModalOpen(true);
+    }
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
-    console.log(workspace.toLocaleString());
   };
 
   const burnCards = (num: number) => {
@@ -227,6 +241,7 @@ const PlayPage: React.FC = () => {
   let playerName1 = "";
   let playerName2 = "";
   const boss = localStorage.getItem("boss") || "Dragon1.jpg";
+
   const info = async () => {
     let playerIDs: string[] = JSON.parse(
       localStorage.getItem("players") || "[]"
@@ -401,9 +416,9 @@ const PlayPage: React.FC = () => {
             {isEncounterModalOpen &&(
               <EncounterModal
               isOpen={isEncounterModalOpen}
-              onClose={encounterCloseModal}
+              onClose={encounterStay}
                 title={"You have encountered"}
-                content={"Insert name of encounter"}
+                content={activeEncounter? Util.convertEncounterNameToShowName(activeEncounter.name) : "NULL ENCOUNTER ERROR"}
                 onAction={encounterAccepted}
                 actionLabel="Encounter"
               />
