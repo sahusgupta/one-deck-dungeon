@@ -15,6 +15,7 @@ import { Encounter } from "../../middle-end/Encounter/Encounter";
 import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
 import { encounters } from "../../backend/mappings";
+import EncounterCard from "../../components/Encounter";
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -25,6 +26,7 @@ const PlayPage: React.FC = () => {
   const [chatLog, setChatLog] = useState([]);
   const [discardNum, setDiscard] = useState<number>(0);
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
+  const [isEncounterFacing, setEncounterFacing] = useState(false);
   const yellowDice = ["https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000","https://drive.google.com/thumbnail?id=1ugPUVuORGHQgYy6kn-izilERyBQ75ANT&sz=w1000", "https://drive.google.com/thumbnail?id=1j6g5qu_GjariWl9w9TupE7DeBUWIJs0z&sz=w1000", "https://drive.google.com/thumbnail?id=12BRJ3Eo36JPrXHY1ia0FZq1aaAefXDda&sz=w1000", "https://drive.google.com/thumbnail?id=1q6ZyyyhgmBOX54nOhVV8Sl02Or6fgO-h&sz=w1000","https://drive.google.com/thumbnail?id=1NzQnTTtwFxKxw4DmUkAUch6QZEo0KP2U&sz=w1000"]
   const blueDice = ["https://drive.google.com/thumbnail?id=1NygZkS2sL8dtnTpStxIipgNQnh1rPMrQ&sz=w1000","https://drive.google.com/thumbnail?id=1JqpZte8HBp9S0neVRdE5Gk6B8p7292-B&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1lP6_SvegGwqzY7ZCdpdtObGjzt4Isi1F&sz=w1000","https://drive.google.com/thumbnail?id=10dqi-GNHPodNPmiZ0V_IflLdXVVth3Ue&sz=w1000"];
   const blackDice = ["https://drive.google.com/thumbnail?id=1dmxTGOmw6cW6wjsWo1xWhK503xvEW6Wc&sz=w1000","https://drive.google.com/thumbnail?id=1mQC_Bv_m2nx_qdNics6bFDm2cDFevhOo&sz=w1000", "https://drive.google.com/thumbnail?id=16MpNbd-mWyFc4lyre6BdhRUt_1ia-NAr&sz=w1000", "https://drive.google.com/thumbnail?id=1FzGXlI3ae612fxp3PT4sJYkB9mJCYdGx&sz=w1000", "https://drive.google.com/thumbnail?id=1r9v3ftIlrTMuPlcMP2zFdLeLeoxfFp0j&sz=w1000","https://drive.google.com/thumbnail?id=1yfnrTeFMirQWuSMc9r8cowUWDKsNJI_J&sz=w1000"];
@@ -97,8 +99,6 @@ const PlayPage: React.FC = () => {
     updateWorkspace(workspace);
   }
 
-  
-  const navigate = useNavigate();
   const isTwoPlayer = localStorage.getItem("playerCount");
   const twoPlayerBool = isTwoPlayer === "2P";
   const closeModal = () => {
@@ -114,6 +114,7 @@ const PlayPage: React.FC = () => {
       console.log(a[0].name);
       console.log(activeEncounter?.name + " -active");
       if (activeEncounter?.name == a[0].name) {
+        setEncounterFacing(true);
         workspace[index][0] = Encounter.EmptyEncounter;
         workspace[index][1] = false;
       }
@@ -411,7 +412,6 @@ const PlayPage: React.FC = () => {
                 />
               </div>
             </div>
-            info
             {/* Players Section */}
             <div className="bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-4">Players</h2>
@@ -431,6 +431,14 @@ const PlayPage: React.FC = () => {
                 ))}
               </div>
             </div>
+            {isEncounterFacing && (
+              <EncounterCard
+              encounter={activeEncounter || workspace[0][0]}
+              onClick= {() => console.log("running the encounter")}
+              />
+            )
+
+            }
             {twoPlayerBool && (
               <div
                 onClick={() =>
