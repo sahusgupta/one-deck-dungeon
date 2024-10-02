@@ -75,6 +75,7 @@ const PlayPage: React.FC = () => {
       unsubscribe();
     };
   }, []);
+  const navigate = useNavigate();
   const updateActiveDeck = async () => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
@@ -341,6 +342,7 @@ const PlayPage: React.FC = () => {
     for (let key in gameInfo){
       localStorage.removeItem(key);
     }
+    navigate('/')
   }
   return (
     <PageLayout>
