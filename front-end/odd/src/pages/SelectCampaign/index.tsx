@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import PlayerCard from '../../components/PlayerCard';
 import { db } from '../../backend/firebase/firebase_utils';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { heroes as h } from '../../backend/mappings';
 import PageLayout from '../../components/PageLayout';
 const SelectCampaignPage: React.FC = () => {
   const info = async () => {
@@ -51,25 +52,41 @@ const SelectCampaignPage: React.FC = () => {
       return matching_heroes;
   }
   let heroes: unknown[][] = []
-  if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
-    console.log("Conditions met, calling getHeroes")
-    ;(async() => {
-      try {
-        heroes = await getHeroes()
-        console.log("Heroes retrieved:", heroes)
-      } catch (error) {
-        console.error("Error in getHeroes:", error)
-      }
-    })()
-  } else {
-    console.log('Conditions not met')
-  }
-    
+  
   
   info();
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
-  
+  useEffect(() =>  {
+    if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
+      (async() => {
+        try {
+          heroes = await getHeroes()
+          console.log("Heroes retrieved:", heroes)
+        } catch (error) {
+          console.error("Error in getHeroes:", error)
+        }
+      })()
+    } else {
+      console.log('Conditions not met')
+    }
+    console.log(heroes.length)
+    if (heroes.length == 0){
+      (async () => {
+        const d = doc(db, 'users', localStorage.getItem('credentials') as string)
+        const dRef = await getDoc(d)
+        if (dRef.exists()){
+          let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
+          const sHero = h[hero]
+          let hMaps: Map<string, any>[] = dRef.data().heroes;
+          hMaps.push(await sHero.ToMap())
+          setDoc(d, {heroes: hMaps})
+        }
+        console.log('leaving')
+        navigate('/play')
+      })()
+    }
+  })
   return (
     <PageLayout>
       <div className="absolute inset-0 bg-black opacity-50"></div>
