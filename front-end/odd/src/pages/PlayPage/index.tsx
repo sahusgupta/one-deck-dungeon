@@ -54,22 +54,50 @@ const PlayPage: React.FC = () => {
         if (gameData.chatLog) {
           setChatLog(gameData.chatLog);
           console.log(chatLog);
-          const activeDeck = gameData.activeDeck;
-          for(let i = 0; i < activeDeck.length; i++){
-            const stringRep = activeDeck[i].split("-");
-            console.log(stringRep);
-            const mob = encounters[stringRep[0]]
-            var mobBoolean = JSON.parse(stringRep[1])
-            workspace[i] = [mob, mobBoolean];
-            console.log(mob)
           }
-        }
+          if(gameData){
+            const activeDeck = gameData.activeDeck;
+            for(let i = 0; i < activeDeck.length; i++){
+              const stringRep = activeDeck[i].split("-");
+              console.log(stringRep);
+              const mob = encounters[stringRep[0]]
+              var mobBoolean = JSON.parse(stringRep[1])
+              workspace[i] = [mob, mobBoolean];
+              console.log(mob)
+            }
+            updateWorkspace(workspace)
+          }
       }
     });
     return () => {
       unsubscribe();
     };
   }, []);
+  const updateActiveDeck = async () => {
+    const gameId = localStorage.getItem("gameId") || "1234";
+    const gameRef = doc(db, "games", gameId);
+    const gameSnap = await getDoc(gameRef);
+    if (gameSnap.exists()) {
+      const gamedata = gameSnap.data();
+      console.log(gamedata);
+      if (gamedata) {
+        let arr: string[] = new Array<string>();
+        for(let i = 0; i < workspace.length;i++ ){
+          arr.push(workspace[i][0].name + "-" + workspace[i][1])
+        }
+        await updateDoc(doc(db, 'games', gameId),{
+          activeDeck: arr
+        })
+      } else {
+        
+      }
+    } else {
+      console.log("No game data found");
+    }
+    updateWorkspace(workspace);
+  }
+
+  
   const navigate = useNavigate();
   const isTwoPlayer = localStorage.getItem("playerCount");
   const twoPlayerBool = isTwoPlayer === "2P";
@@ -92,6 +120,7 @@ const PlayPage: React.FC = () => {
     });
     activeEncounter = null;
     updateWorkspace(workspace);
+    updateActiveDeck();
     setEncounterModalOpen(false);
   }
   const submitChat = async (inputText: string) => {
@@ -149,28 +178,7 @@ const PlayPage: React.FC = () => {
         encounterOptional[1] = false;
       }
     })
-    const gameId = localStorage.getItem("gameId") || "1234";
-    const gameRef = doc(db, "games", gameId);
-    const gameSnap = await getDoc(gameRef);
-    if (gameSnap.exists()) {
-      const gamedata = gameSnap.data();
-      console.log(gamedata);
-      if (gamedata) {
-        let arr: string[] = new Array<string>();
-        for(let i = 0; i < workspace.length;i++ ){
-          arr.push(workspace[i][0].name + "-" + workspace[i][1])
-        }
-        await updateDoc(doc(db, 'games', gameId),{
-          activeDeck: arr
-        })
-      } else {
-        
-      }
-    } else {
-      console.log("No game data found");
-    }
-    updateWorkspace(workspace);
-    console.log(workspace)
+    updateActiveDeck();
   };
 
   const activeClick = (index: number) => {
@@ -187,6 +195,8 @@ const PlayPage: React.FC = () => {
     }
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
+    console.log(workspace)
+    updateActiveDeck();
   };
 
   const burnCards = (num: number) => {
