@@ -96,7 +96,6 @@ const HomePage: React.FC = () => {
       navigate("/dungeon-select")
     }
   };
-  
   return (
     <PageLayout>
       <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -113,7 +112,6 @@ const HomePage: React.FC = () => {
               logout();
               navigate('/')
           }}>
-            
             <span className="text-xl font-bold">Log Out</span>
             <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
               <svg

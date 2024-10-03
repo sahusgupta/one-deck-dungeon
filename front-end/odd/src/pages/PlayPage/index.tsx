@@ -15,7 +15,6 @@ import { Encounter } from "../../middle-end/Encounter/Encounter";
 import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
 import { encounters } from "../../backend/mappings";
-import { HiChevronDoubleRight, HiChevronLeft } from "react-icons/hi";
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -46,6 +45,7 @@ const PlayPage: React.FC = () => {
   );
 
   useEffect(() => {
+    console.log("running this")
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
     const unsubscribe = onSnapshot(gameRef, (gameSnap) => {
@@ -152,7 +152,6 @@ const PlayPage: React.FC = () => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
-    console.log(gameId, gameRef, gameSnap)
     if (gameSnap.exists()) {
       const gamedata = gameSnap.data();
       console.log(gamedata);
@@ -302,31 +301,9 @@ const PlayPage: React.FC = () => {
     }
   };
   info();
-
-  let exit = () => {
-    let gameInfo = ['boss', 'characterSelected', 'dungeon', 'gameId', 'playerCount']
-    for (let key in gameInfo){
-      localStorage.removeItem(key);
-    }
-  }
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
-          <button className="w-56 h-56 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => navigate("/")}>
-            <span className="text-xl font-bold">Exit</span>
-            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <HiChevronLeft size="20px"/>
-              </svg>
-            </div>
-          </button>
         <div className="container mx-auto">
           {/* Game Title and Player Info */}
           <div className="flex justify-between items-center">
