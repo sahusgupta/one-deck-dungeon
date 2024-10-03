@@ -15,6 +15,8 @@ import { Encounter } from "../../middle-end/Encounter/Encounter";
 import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
 import { encounters } from "../../backend/mappings";
+import { HiChevronDoubleRight, HiChevronLeft } from "react-icons/hi";
+import EncounterCard from "../../components/Encounter";
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
@@ -25,6 +27,7 @@ const PlayPage: React.FC = () => {
   const [chatLog, setChatLog] = useState([]);
   const [discardNum, setDiscard] = useState<number>(0);
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
+  const [isEncounterFacing, setEncounterFacing] = useState(false);
   const yellowDice = ["https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000","https://drive.google.com/thumbnail?id=1ugPUVuORGHQgYy6kn-izilERyBQ75ANT&sz=w1000", "https://drive.google.com/thumbnail?id=1j6g5qu_GjariWl9w9TupE7DeBUWIJs0z&sz=w1000", "https://drive.google.com/thumbnail?id=12BRJ3Eo36JPrXHY1ia0FZq1aaAefXDda&sz=w1000", "https://drive.google.com/thumbnail?id=1q6ZyyyhgmBOX54nOhVV8Sl02Or6fgO-h&sz=w1000","https://drive.google.com/thumbnail?id=1NzQnTTtwFxKxw4DmUkAUch6QZEo0KP2U&sz=w1000"]
   const blueDice = ["https://drive.google.com/thumbnail?id=1NygZkS2sL8dtnTpStxIipgNQnh1rPMrQ&sz=w1000","https://drive.google.com/thumbnail?id=1JqpZte8HBp9S0neVRdE5Gk6B8p7292-B&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1lP6_SvegGwqzY7ZCdpdtObGjzt4Isi1F&sz=w1000","https://drive.google.com/thumbnail?id=10dqi-GNHPodNPmiZ0V_IflLdXVVth3Ue&sz=w1000"];
   const blackDice = ["https://drive.google.com/thumbnail?id=1dmxTGOmw6cW6wjsWo1xWhK503xvEW6Wc&sz=w1000","https://drive.google.com/thumbnail?id=1mQC_Bv_m2nx_qdNics6bFDm2cDFevhOo&sz=w1000", "https://drive.google.com/thumbnail?id=16MpNbd-mWyFc4lyre6BdhRUt_1ia-NAr&sz=w1000", "https://drive.google.com/thumbnail?id=1FzGXlI3ae612fxp3PT4sJYkB9mJCYdGx&sz=w1000", "https://drive.google.com/thumbnail?id=1r9v3ftIlrTMuPlcMP2zFdLeLeoxfFp0j&sz=w1000","https://drive.google.com/thumbnail?id=1yfnrTeFMirQWuSMc9r8cowUWDKsNJI_J&sz=w1000"];
@@ -43,9 +46,8 @@ const PlayPage: React.FC = () => {
       [Encounter.EmptyEncounter, false]
     )
   );
-
+  console.log(workspace)
   useEffect(() => {
-    console.log("running this")
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
     const unsubscribe = onSnapshot(gameRef, (gameSnap) => {
@@ -54,23 +56,49 @@ const PlayPage: React.FC = () => {
         if (gameData.chatLog) {
           setChatLog(gameData.chatLog);
           console.log(chatLog);
-          const activeDeck = gameData.activeDeck;
-          for(let i = 0; i < activeDeck.length; i++){
-            const stringRep = activeDeck[i].split("-");
-            console.log(stringRep);
-            const mob = encounters[stringRep[0]]
-            var mobBoolean = JSON.parse(stringRep[1])
-            workspace[i] = [mob, mobBoolean];
-            console.log(mob)
           }
-        }
+          if(gameData){
+            const activeDeck = gameData.activeDeck;
+            for(let i = 0; i < activeDeck.length; i++){
+              const stringRep = activeDeck[i].split("-");
+              console.log(stringRep);
+              const mob = encounters[stringRep[0]]
+              var mobBoolean = JSON.parse(stringRep[1])
+              workspace[i] = [mob, mobBoolean];
+              console.log(mob)
+            }
+            updateWorkspace(workspace)
+          }
       }
     });
     return () => {
       unsubscribe();
     };
   }, []);
-  const navigate = useNavigate();
+  const updateActiveDeck = async () => {
+    const gameId = localStorage.getItem("gameId") || "1234";
+    const gameRef = doc(db, "games", gameId);
+    const gameSnap = await getDoc(gameRef);
+    if (gameSnap.exists()) {
+      const gamedata = gameSnap.data();
+      console.log(gamedata);
+      if (gamedata) {
+        let arr: string[] = new Array<string>();
+        for(let i = 0; i < workspace.length;i++ ){
+          arr.push(workspace[i][0].name + "-" + workspace[i][1])
+        }
+        await updateDoc(doc(db, 'games', gameId),{
+          activeDeck: arr
+        })
+      } else {
+        
+      }
+    } else {
+      console.log("No game data found");
+    }
+    updateWorkspace(workspace);
+  }
+
   const isTwoPlayer = localStorage.getItem("playerCount");
   const twoPlayerBool = isTwoPlayer === "2P";
   const closeModal = () => {
@@ -86,12 +114,14 @@ const PlayPage: React.FC = () => {
       console.log(a[0].name);
       console.log(activeEncounter?.name + " -active");
       if (activeEncounter?.name == a[0].name) {
+        setEncounterFacing(true);
         workspace[index][0] = Encounter.EmptyEncounter;
         workspace[index][1] = false;
       }
     });
     activeEncounter = null;
     updateWorkspace(workspace);
+    updateActiveDeck();
     setEncounterModalOpen(false);
   }
   const submitChat = async (inputText: string) => {
@@ -145,13 +175,14 @@ const PlayPage: React.FC = () => {
 
     workspace.map((encounterOptional: [Encounter, boolean], index: number) => {
       if (!encounterOptional[1]) {
-        encounterOptional[0] = burnCards(1)[0];
+        encounterOptional[0] = fullDeck.splice(fullDeck.length - 1)[0];
         encounterOptional[1] = false;
       }
     })
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
+    console.log(gameId, gameRef, gameSnap)
     if (gameSnap.exists()) {
       const gamedata = gameSnap.data();
       console.log(gamedata);
@@ -171,6 +202,7 @@ const PlayPage: React.FC = () => {
     }
     updateWorkspace(workspace);
     console.log(workspace)
+    updateActiveDeck();
   };
 
   const activeClick = (index: number) => {
@@ -187,21 +219,13 @@ const PlayPage: React.FC = () => {
     }
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
+    console.log(workspace)
+    updateActiveDeck();
   };
 
-  const burnCards = (num: number) : Encounter[] => {
+  const burnCards = (num: number) => {
     setDiscard(discardNum + num);
-    let ret : Encounter[] = fullDeck.splice(fullDeck.length - num);
-
-    const gameId = localStorage.getItem("gameId");
-    if (gameId) {
-      updateDoc(doc(db, "games", gameId), {
-        deck: fullDeck.map(card => card.name).join(", "),
-      });
-    } else {
-      console.error("gameId is null");
-    }
-    return ret;
+    fullDeck.splice(fullDeck.length - num);
   };
 
   const showChat = async (gameId: string, title: string, message: string) => {
@@ -311,9 +335,19 @@ const PlayPage: React.FC = () => {
     }
   };
   info();
+
+  let exit = () => {
+    let gameInfo = ['boss', 'characterSelected', 'dungeon', 'gameId', 'playerCount']
+    for (let key in gameInfo){
+      localStorage.removeItem(key);
+    }
+  }
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
+          <button className="w-10 h-10 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() =>exit()}>
+            <span className="text-xl font-bold">Exit</span>
+          </button>
         <div className="container mx-auto">
           {/* Game Title and Player Info */}
           <div className="flex justify-between items-center">
@@ -355,7 +389,7 @@ const PlayPage: React.FC = () => {
                 </div>
               </div>
             )}
-            {/* Dungeon Section */}
+            {/* Dice Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Dice</h2>
               <div className="flex flex-col items-center">
@@ -411,7 +445,6 @@ const PlayPage: React.FC = () => {
                 />
               </div>
             </div>
-            info
             {/* Players Section */}
             <div className="bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-4">Players</h2>
@@ -431,6 +464,18 @@ const PlayPage: React.FC = () => {
                 ))}
               </div>
             </div>
+            {isEncounterFacing && (
+              <EncounterCard
+              encounter={activeEncounter || workspace[0][0]}
+              onClick= {() => console.log("running the encounter")}
+              yellowDiceAmount
+              blueDiceAmount
+              blackDiceAmount 
+              pinkDiceAmount
+              />
+            )
+
+            }
             {twoPlayerBool && (
               <div
                 onClick={() =>
@@ -440,7 +485,7 @@ const PlayPage: React.FC = () => {
                     "Enter your message here:"
                   )
                 }
-              >
+              >~~
                 <FontAwesomeIcon icon={faComment} size="5x" />
               </div>
             )}
