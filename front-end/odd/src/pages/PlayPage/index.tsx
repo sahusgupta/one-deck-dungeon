@@ -176,7 +176,7 @@ const PlayPage: React.FC = () => {
 
     workspace.map((encounterOptional: [Encounter, boolean], index: number) => {
       if (!encounterOptional[1]) {
-        encounterOptional[0] = fullDeck.splice(fullDeck.length - 1)[0];
+        encounterOptional[0] = burnCards(1)[0];
         encounterOptional[1] = false;
       }
     })
@@ -224,9 +224,19 @@ const PlayPage: React.FC = () => {
     updateActiveDeck();
   };
 
-  const burnCards = (num: number) => {
+  const burnCards = (num: number) : Encounter[] => {
     setDiscard(discardNum + num);
-    fullDeck.splice(fullDeck.length - num);
+    let ret : Encounter[] = fullDeck.splice(fullDeck.length - num);
+
+    const gameId = localStorage.getItem("gameId");
+    if (gameId) {
+      updateDoc(doc(db, "games", gameId), {
+        deck: fullDeck.map(card => card.name).join(", "),
+      });
+    } else {
+      console.error("gameId is null");
+    }
+    return ret;
   };
 
   const showChat = async (gameId: string, title: string, message: string) => {
