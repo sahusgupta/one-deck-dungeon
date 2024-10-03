@@ -141,11 +141,11 @@ const PlayPage: React.FC = () => {
       return;
     }
 
-    burnCards(2);
+    burnCards(2, true);
 
     workspace.map((encounterOptional: [Encounter, boolean], index: number) => {
       if (!encounterOptional[1]) {
-        encounterOptional[0] = burnCards(1)[0];
+        encounterOptional[0] = burnCards(1, false)[0];
         encounterOptional[1] = false;
       }
     })
@@ -153,19 +153,21 @@ const PlayPage: React.FC = () => {
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
     if (gameSnap.exists()) {
-      const gamedata = gameSnap.data();
-      console.log(gamedata);
-      if (gamedata) {
+      const gameData = gameSnap.data();
+      console.log(gameData);
+      if (gameData) {
         let arr: string[] = new Array<string>();
         for(let i = 0; i < workspace.length;i++ ){
           arr.push(workspace[i][0].name + "-" + workspace[i][1])
         }
         await updateDoc(doc(db, 'games', gameId),{
-          activeDeck: arr
+          activeDeck: arr,
+          deck: fullDeck.map(card => card.name).join(", ")
         })
       } else {
         
       }
+
     } else {
       console.log("No game data found");
     }
@@ -176,7 +178,7 @@ const PlayPage: React.FC = () => {
   const activeClick = (index: number) => {
     if (!workspace[index][1] && workspace[index][0] != Encounter.EmptyEncounter) {
       workspace[index][1] = true; //cards active now
-      burnCards(2);
+      burnCards(2, true);
     }
 
     if (workspace[index][0] == Encounter.EmptyEncounter || !workspace[index][1]) {
@@ -189,18 +191,13 @@ const PlayPage: React.FC = () => {
     updateWorkspace(workspace);
   };
 
-  const burnCards = (num: number) : Encounter[] => {
-    setDiscard(discardNum + num);
-    let ret : Encounter[] = fullDeck.splice(fullDeck.length - num);
-
-    const gameId = localStorage.getItem("gameId");
-    if (gameId) {
-      updateDoc(doc(db, "games", gameId), {
-        deck: fullDeck.map(card => card.name).join(", "),
-      });
-    } else {
-      console.error("gameId is null");
+  const burnCards = (num: number, isDiscard: boolean) : Encounter[] => {
+    if (isDiscard) {
+      setDiscard(discardNum + num);
     }
+    let ret : Encounter[] = fullDeck.splice(fullDeck.length - num);
+    console.log("burning: " + ret.toLocaleString());
+    console.log("full deck: " + fullDeck.toLocaleString());
     return ret;
   };
 
@@ -294,7 +291,7 @@ const PlayPage: React.FC = () => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           let data = docSnap.data();
-          console.log("Player name:", data.name);
+          // console.log("Player name:", data.name);
           if (i == 0) {
             playerName1 = data.name;
             i++;
