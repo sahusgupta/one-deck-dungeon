@@ -1,8 +1,5 @@
-import { Skill } from "../Loot/Skill";
 import { getDoc, getDocs, collection, doc, setDoc } from 'firebase/firestore';
 import { db, app } from "../../backend/firebase/firebase_utils";
-import { Hero } from "../Hero/Hero";
-import { MapLike } from "typescript";
 import { CampaignSkill } from "./CampaignSkill";
 interface Map {
     skills: CampaignSkill[],
