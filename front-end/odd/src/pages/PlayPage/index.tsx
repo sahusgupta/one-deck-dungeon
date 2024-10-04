@@ -100,6 +100,9 @@ const PlayPage: React.FC = () => {
   }
 
   const isTwoPlayer = localStorage.getItem("playerCount");
+  const onDefeat = () => {
+    setEncounterFacing(false);
+  }
   const twoPlayerBool = isTwoPlayer === "2P";
   const closeModal = () => {
     setModalOpen(false);
@@ -482,6 +485,7 @@ const PlayPage: React.FC = () => {
               <EncounterCard
               encounter={activeEncounter || workspace[0][0]}
               onClick= {() => console.log("running the encounter")}
+              onDefeat={() => onDefeat()}
               yellowDiceAmount
               blueDiceAmount
               blackDiceAmount 

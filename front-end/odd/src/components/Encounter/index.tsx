@@ -6,6 +6,7 @@ import Dice from 'react-dice-roll';
 interface EncounterProps{
     encounter: Encounter;
     onClick: () => void;
+    onDefeat: () => void;
     yellowDiceAmount: any;
     blueDiceAmount: any;
     blackDiceAmount: any;
@@ -14,6 +15,7 @@ interface EncounterProps{
 const EncounterCard: React.FC<EncounterProps> = ({
     encounter, 
     onClick,
+    onDefeat,
     yellowDiceAmount,
     blueDiceAmount,
     blackDiceAmount,
@@ -61,6 +63,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
                   ))}
                   </div>
               </div>
+              <div className="text-white" onClick={onDefeat}> Cancel </div>
             </div>
         </EncounterBase>
     )
