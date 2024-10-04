@@ -38,6 +38,7 @@ const PlayPage: React.FC = () => {
   const pinkDiceAmount = 2;
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
   let [turn, setTurn] = useState(false);  
+  const [fullDeck, setFullDeck] = useState<Encounter[]>([]);
   const [workspace, updateWorkspace] = useState(
     new Array<[Encounter, boolean]>(
       [Encounter.EmptyEncounter, false],
@@ -46,7 +47,7 @@ const PlayPage: React.FC = () => {
       [Encounter.EmptyEncounter, false]
     )
   );
-  console.log(workspace)
+  // console.log(workspace)
   useEffect(() => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
@@ -55,17 +56,17 @@ const PlayPage: React.FC = () => {
         const gameData = gameSnap.data();
         if (gameData.chatLog) {
           setChatLog(gameData.chatLog);
-          console.log(chatLog);
+          // console.log(chatLog);
           }
           if(gameData){
             const activeDeck = gameData.activeDeck;
             for(let i = 0; i < activeDeck.length; i++){
               const stringRep = activeDeck[i].split("-");
-              console.log(stringRep);
-              const mob = encounters[stringRep[0]]
+              // console.log(stringRep);
+              const mob = encounters[stringRep[0]]()
               var mobBoolean = JSON.parse(stringRep[1])
               workspace[i] = [mob, mobBoolean];
-              console.log(mob)
+              // console.log(mob)
             }
             updateWorkspace(workspace)
           }
@@ -81,7 +82,7 @@ const PlayPage: React.FC = () => {
     const gameSnap = await getDoc(gameRef);
     if (gameSnap.exists()) {
       const gamedata = gameSnap.data();
-      console.log(gamedata);
+      // console.log(gamedata);
       if (gamedata) {
         let arr: string[] = new Array<string>();
         for(let i = 0; i < workspace.length;i++ ){
@@ -114,8 +115,8 @@ const PlayPage: React.FC = () => {
   const encounterAccepted = () => {
     //insert functionality to create the encounter
     workspace.map((a : [Encounter, boolean], index : number) => {
-      console.log(a[0].name);
-      console.log(activeEncounter?.name + " -active");
+      // console.log(a[0].name);
+      // console.log(activeEncounter?.name + " -active");
       if (activeEncounter?.name == a[0].name) {
         setEncounterFacing(true);
         workspace[index][0] = Encounter.EmptyEncounter;
@@ -133,17 +134,13 @@ const PlayPage: React.FC = () => {
     const gameSnap = await getDoc(gameRef);
     if (gameSnap.exists()) {
       const gamedata = gameSnap.data();
-      console.log(gamedata.chatLog);
       if (gamedata.chatLog) {
-        console.log("accessing exists");
         const chatLog = gamedata.chatLog;
-        console.log(chatLog);
         chatLog.push(
           (localStorage.getItem("userdata") || "undefined user") +
             ": " +
             inputText
         );
-        console.log(chatLog);
         await updateDoc(doc(db, "games", gameId), {
           chatLog: chatLog,
         });
@@ -182,18 +179,19 @@ const PlayPage: React.FC = () => {
         encounterOptional[1] = false;
       }
     })
+    console.log("test workspace print");
+    console.log(workspace);
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
-    console.log(gameId, gameRef, gameSnap)
     if (gameSnap.exists()) {
       const gameData = gameSnap.data();
-      console.log(gameData);
       if (gameData) {
         let arr: string[] = new Array<string>();
         for(let i = 0; i < workspace.length;i++ ){
           arr.push(workspace[i][0].name + "-" + workspace[i][1])
         }
+        console.log(arr)
         await updateDoc(doc(db, 'games', gameId),{
           activeDeck: arr,
           deck: fullDeck.map(card => card.name).join(", ")
@@ -206,7 +204,7 @@ const PlayPage: React.FC = () => {
       console.log("No game data found");
     }
     updateWorkspace(workspace);
-    console.log(workspace)
+    // console.log(workspace)
     updateActiveDeck();
   };
 
@@ -224,7 +222,7 @@ const PlayPage: React.FC = () => {
     }
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
-    console.log(workspace)
+    // console.log(workspace)
     updateActiveDeck();
   };
 
@@ -237,7 +235,7 @@ const PlayPage: React.FC = () => {
     const gameId = localStorage.getItem("gameId");
     if (gameId) {
       updateDoc(doc(db, "games", gameId), {
-        deck: fullDeck.map(card => card.name).join(", "),
+        deck: fullDeck.map(card => card.name).join(", ")
       });
     } else {
       console.error("gameId is null");
@@ -253,8 +251,8 @@ const PlayPage: React.FC = () => {
     const gameSnap = await getDoc(gameRef);
     if (gameSnap.exists()) {
       const gamedata = gameSnap.data();
-      console.log(gamedata);
-      console.log(gamedata.boss);
+      // console.log(gamedata);
+      // console.log(gamedata.boss);
     } else {
       console.log("No game data found");
     }
@@ -302,9 +300,9 @@ const PlayPage: React.FC = () => {
       ) {
         let player = new Player(
           localStorage.getItem("credentials") || "",
-          heroes[localStorage.getItem("heroName") as string]
+          heroes[localStorage.getItem("heroName") as string]()
         );
-        console.log(player);
+        // console.log(player);
         await player.saveToStore(event);
       }
     }
@@ -318,7 +316,12 @@ const PlayPage: React.FC = () => {
   const playerCount = localStorage.getItem("PlayerCount") || "1P";
   const level = "1";
   const { deck, dungeon, players } = gameData;
-  const fullDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
+  const acquiredDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
+  if (fullDeck.length == 0) {
+    acquiredDeck.forEach(card => {
+      fullDeck.push(card);
+    });
+  }
   // console.log(fullDeck.toLocaleString());
   let playerName1 = "";
   let playerName2 = "";
