@@ -175,7 +175,7 @@ const PlayPage: React.FC = () => {
 
     workspace.map((encounterOptional: [Encounter, boolean], index: number) => {
       if (!encounterOptional[1]) {
-        encounterOptional[0] = burnCards(1)[0];
+        encounterOptional[0] = burnCards(1, false)[0];
         encounterOptional[1] = false;
       }
     })
@@ -225,8 +225,10 @@ const PlayPage: React.FC = () => {
     updateActiveDeck();
   };
 
-  const burnCards = (num: number) : Encounter[] => {
-    setDiscard(discardNum + num);
+  const burnCards = (num: number, updateDiscard : boolean) : Encounter[] => {
+    if (updateDiscard) {
+      setDiscard(discardNum + num);
+    }
     let ret : Encounter[] = fullDeck.splice(fullDeck.length - num);
 
     const gameId = localStorage.getItem("gameId");
