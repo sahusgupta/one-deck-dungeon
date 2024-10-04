@@ -77,7 +77,7 @@ const SelectCampaignPage: React.FC = () => {
         const dRef = await getDoc(d)
         if (dRef.exists()){
           let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
-          const sHero = h[hero]
+          const sHero = h[hero]()
           let hMaps: Map<string, any>[] = dRef.data().heroes;
           hMaps.push(await sHero.ToMap())
           updateDoc(d, {heroes: hMaps})

@@ -3,7 +3,7 @@ import { Campaign } from "../Campaign/Campaign";
 import { CampaignSkill } from "../Campaign/CampaignSkill";
 import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
-// import { skills } from "../../backend/mappings";
+import { skills } from "../../backend/mappings";
 
 function generateHeroID(length: number) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -211,21 +211,21 @@ export class Hero {
         new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
 
     );
-    // public async ToMap(){
-    //     let m: Map<string, any> = new Map<string, any>();
-    //     for (let [key, value] of Object.entries(skills)) {
-    //         if (value === this._feat) {
-    //           m.set('feat', key)
-    //         } else if (value == this._basicSkill){
-    //             m.set('basicSkill', key)
-    //         }
-    //     }
-    //     m.set('basicItem', this._basicItem)
-    //     m.set('name', this._name)
-    //     m.set('basicItem', this._basicItem.values)
-    //     m.set('heroName', this._heroName)
-    //     m.set('campaignData', await this.campaign.toFirestore())
-    //     return m;
-    // }
+    public async ToMap(){
+        let m: Map<string, any> = new Map<string, any>();
+        for (let [key, value] of Object.entries(skills)) {
+            if (value() === this._feat) {
+              m.set('feat', key)
+            } else if (value() == this._basicSkill){
+                m.set('basicSkill', key)
+            }
+        }
+        m.set('basicItem', this._basicItem)
+        m.set('name', this._name)
+        m.set('basicItem', this._basicItem.values)
+        m.set('heroName', this._heroName)
+        m.set('campaignData', await this.campaign.toFirestore())
+        return m;
+    }
 
 }
