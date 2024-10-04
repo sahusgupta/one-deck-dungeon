@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
     } else if (playerCount === "2P" && gameCode && gameCode.length == gameIdLength) {
       navigate("/play") //joins as client
     } else if(!localStorage.getItem("characterSelected")){
-      navigate("/char-select")
+      navigate("/selectBuild")
     } 
     else {
       navigate("/dungeon-select")

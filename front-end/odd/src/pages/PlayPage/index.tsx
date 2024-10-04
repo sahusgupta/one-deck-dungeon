@@ -62,7 +62,7 @@ const PlayPage: React.FC = () => {
             for(let i = 0; i < activeDeck.length; i++){
               const stringRep = activeDeck[i].split("-");
               console.log(stringRep);
-              const mob = encounters[stringRep[0]]
+              const mob = encounters[stringRep[0]]()
               var mobBoolean = JSON.parse(stringRep[1])
               workspace[i] = [mob, mobBoolean];
               console.log(mob)
@@ -285,29 +285,7 @@ const PlayPage: React.FC = () => {
 
     fetchGameData();
     fetchUserData();
-    let heroKey =
-      (localStorage.getItem("characterSelected") || "") +
-      (localStorage.getItem("playerCount") || "");
 
-    function isValidHeroKey(key: string) {
-      return key in heroes;
-    }
-
-    async function handleBeforeUnload(event: Event) {
-      if (
-        isValidHeroKey(
-          ((localStorage.getItem("characterSelected") as string) +
-            localStorage.getItem("playerCount")) as string
-        )
-      ) {
-        let player = new Player(
-          localStorage.getItem("credentials") || "",
-          heroes[localStorage.getItem("heroName") as string]
-        );
-        console.log(player);
-        await player.saveToStore(event);
-      }
-    }
     
   }, [turn]);
 
@@ -319,7 +297,6 @@ const PlayPage: React.FC = () => {
   const level = "1";
   const { deck, dungeon, players } = gameData;
   const fullDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
-  // console.log(fullDeck.toLocaleString());
   let playerName1 = "";
   let playerName2 = "";
   const boss = localStorage.getItem("boss") || "Dragon1.jpg";
@@ -335,7 +312,6 @@ const PlayPage: React.FC = () => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           let data = docSnap.data();
-          // console.log("Player name:", data.name);
           if (i == 0) {
             playerName1 = data.name;
             i++;
@@ -343,7 +319,6 @@ const PlayPage: React.FC = () => {
             playerName2 = data.name;
           }
         } else {
-          // docSnap.data() will be undefined in this case
           console.log("No user");
         }
       } else {

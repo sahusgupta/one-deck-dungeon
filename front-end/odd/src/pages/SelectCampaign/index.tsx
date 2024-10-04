@@ -57,6 +57,12 @@ const SelectCampaignPage: React.FC = () => {
   info();
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
+  const nextUrl = "/char-select";
+  console.log(nextUrl);
+  const reRoute = (characterSelected: string) => {
+    localStorage.setItem('characterSelected', characterSelected)
+    navigate(nextUrl)
+  };
   useEffect(() =>  {
     if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
       (async() => {
@@ -83,7 +89,6 @@ const SelectCampaignPage: React.FC = () => {
           updateDoc(d, {heroes: hMaps})
         }
         console.log('leaving')
-        navigate('/play')
       })()
     }
   })
@@ -103,6 +108,10 @@ const SelectCampaignPage: React.FC = () => {
         </div>
 
       </div>
+      <button onClick={() => {
+        reRoute(localStorage.getItem('characterSelected') as string)
+      }}>Create New</button>
+
     </PageLayout>
   );
 };

@@ -21,7 +21,7 @@ const SelectPlayerPage: React.FC = () => {
   info();
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
-  const nextUrl = "/selectBuild";
+  const nextUrl = "/play";
   console.log(nextUrl);
   const reRoute = (characterSelected: string) => {
     localStorage.setItem('characterSelected', characterSelected)
