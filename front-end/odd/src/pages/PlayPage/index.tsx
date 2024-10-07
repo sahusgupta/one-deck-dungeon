@@ -32,10 +32,10 @@ const PlayPage: React.FC = () => {
   const blueDice = ["https://drive.google.com/thumbnail?id=1NygZkS2sL8dtnTpStxIipgNQnh1rPMrQ&sz=w1000","https://drive.google.com/thumbnail?id=1JqpZte8HBp9S0neVRdE5Gk6B8p7292-B&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000", "https://drive.google.com/thumbnail?id=1lP6_SvegGwqzY7ZCdpdtObGjzt4Isi1F&sz=w1000","https://drive.google.com/thumbnail?id=10dqi-GNHPodNPmiZ0V_IflLdXVVth3Ue&sz=w1000"];
   const blackDice = ["https://drive.google.com/thumbnail?id=1dmxTGOmw6cW6wjsWo1xWhK503xvEW6Wc&sz=w1000","https://drive.google.com/thumbnail?id=1mQC_Bv_m2nx_qdNics6bFDm2cDFevhOo&sz=w1000", "https://drive.google.com/thumbnail?id=16MpNbd-mWyFc4lyre6BdhRUt_1ia-NAr&sz=w1000", "https://drive.google.com/thumbnail?id=1FzGXlI3ae612fxp3PT4sJYkB9mJCYdGx&sz=w1000", "https://drive.google.com/thumbnail?id=1r9v3ftIlrTMuPlcMP2zFdLeLeoxfFp0j&sz=w1000","https://drive.google.com/thumbnail?id=1yfnrTeFMirQWuSMc9r8cowUWDKsNJI_J&sz=w1000"];
   const pinkDice = ["https://drive.google.com/thumbnail?id=17LTXwJjXjN4rFzA0P827J50lvdP7HOMQ&sz=w1000","https://drive.google.com/thumbnail?id=1UK-lCu66p_t_9zTp_PjmQsTLFW4CGv-q&sz=w1000", "https://drive.google.com/thumbnail?id=1mml53cxpKcj8EegETGdBmmHVYwJgsoMi&sz=w1000", "https://drive.google.com/thumbnail?id=1gVxmrRN_Cjc2Aq_whiEzFChsBpmBk8sH&sz=w1000", "https://drive.google.com/thumbnail?id=13VseXMQbnHZf3jnHXOSU4L2yH8AsTy6o&sz=w1000","https://drive.google.com/thumbnail?id=1K2IP4g_GxA5EmkFWUeEAS0B4Df55KkEU&sz=w1000"];
-  const yellowDiceAmount  = 3; 
-  const blueDiceAmount = 4; 
-  const blackDiceAmount = 0;
-  const pinkDiceAmount = 2;
+  const yellowDiceAmount: number = 3; 
+  const blueDiceAmount: number = 4; 
+  const blackDiceAmount: number = 0;
+  const pinkDiceAmount: number = 2;
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
   let [turn, setTurn] = useState(false);  
   const [workspace, updateWorkspace] = useState(
@@ -59,15 +59,15 @@ const PlayPage: React.FC = () => {
           }
           if(gameData){
             const activeDeck = gameData.activeDeck;
-            // for(let i = 0; i < activeDeck.length; i++){
-            //   const stringRep = activeDeck[i].split("-");
-            //   // console.log(stringRep);
-            //   const mob = encounters[stringRep[0]]()
-            //   var mobBoolean = JSON.parse(stringRep[1])
-            //   workspace[i] = [mob, mobBoolean];
-            //   // console.log(mob)
-            // }
-            // console.log("use effect thing");
+            for(let i = 0; i < activeDeck.length; i++){
+              const stringRep = activeDeck[i].split("-");
+              console.log(stringRep);
+              const mob = encounters[stringRep[0]]()
+              var mobBoolean = JSON.parse(stringRep[1])
+              workspace[i] = [mob, mobBoolean];
+              console.log(mob)
+            }
+            updateWorkspace(workspace)
           }
       }
     });
@@ -445,10 +445,10 @@ const PlayPage: React.FC = () => {
               encounter={activeEncounter || workspace[0][0]}
               onClick= {() => console.log("running the encounter")}
               onDefeat={() => onDefeat()}
-              yellowDiceAmount
-              blueDiceAmount
-              blackDiceAmount 
-              pinkDiceAmount
+              yellowDiceAmount={yellowDiceAmount}
+              blueDiceAmount={blueDiceAmount}
+              blackDiceAmount={blackDiceAmount}
+              pinkDiceAmount={pinkDiceAmount}
               />
             )
 
