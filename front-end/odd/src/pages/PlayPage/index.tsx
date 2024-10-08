@@ -342,6 +342,13 @@ const PlayPage: React.FC = () => {
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Information</h2>
               <div className="flex flex-col items-center">
+              <iframe
+                  src="https://drive.google.com/file/d/1XR1kNiGFQH-u8CV4cU42KvZEquhRNqGW/preview"
+                  width="480"
+                  height="360"
+                  allow="autoplay"
+                  className="w-full h-full object-contain rounded-md"
+                ></iframe>
                 <img
                   src={`/${dungeon}.jpg`}
                   alt={dungeon}
