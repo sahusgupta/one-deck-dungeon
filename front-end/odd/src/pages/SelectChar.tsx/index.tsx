@@ -3,8 +3,9 @@ import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import PlayerCard from '../../components/PlayerCard';
 import { db } from '../../backend/firebase/firebase_utils';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import PageLayout from '../../components/PageLayout';
+import { heroes as h } from '../../backend/mappings';
 const SelectPlayerPage: React.FC = () => {
   const info = async () => {
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
@@ -23,8 +24,17 @@ const SelectPlayerPage: React.FC = () => {
   const navigate = useNavigate();
   const nextUrl = "/play";
   console.log(nextUrl);
-  const reRoute = (characterSelected: string) => {
+  const reRoute = async (characterSelected: string) => {
     localStorage.setItem('characterSelected', characterSelected)
+    let ref = doc(db, 'users', localStorage.getItem('credentials') as string)
+    let ds = await getDoc(ref)
+    if (ds.exists()){
+      let d = ds.data()
+      console.log(d)
+      let hero = d.heroes
+      hero.push(await h[localStorage.getItem('characterSelected') as string]().ToMap())
+      updateDoc(ref, {heroes: hero})
+    } 
     navigate(nextUrl)
   };
   

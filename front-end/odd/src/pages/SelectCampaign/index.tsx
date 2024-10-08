@@ -75,6 +75,7 @@ const SelectCampaignPage: React.FC = () => {
       })()
     } else {
       console.log('Conditions not met')
+      navigate('/char-select')
     }
     console.log(heroes.length)
     if (heroes.length == 0){
@@ -83,10 +84,15 @@ const SelectCampaignPage: React.FC = () => {
         const dRef = await getDoc(d)
         if (dRef.exists()){
           let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
-          const sHero = h[hero]()
-          let hMaps: Map<string, any>[] = dRef.data().heroes;
-          hMaps.push(await sHero.ToMap())
-          updateDoc(d, {heroes: hMaps})
+          if (hero in h){
+            const sHero = h[hero]
+            let hMaps: Map<string, any>[] = dRef.data().heroes;
+            hMaps.push(await sHero().ToMap())
+            updateDoc(d, {heroes: hMaps})
+          } else {
+            console.log(hero)
+            navigate('/char-select')
+          }
         }
         console.log('leaving')
       })()
