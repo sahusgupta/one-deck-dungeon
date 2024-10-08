@@ -36,6 +36,7 @@ const PlayPage: React.FC = () => {
   const blueDiceAmount: number = 4; 
   const blackDiceAmount: number = 0;
   const pinkDiceAmount: number = 2;
+  const[hero, setActiveHero] = useState<Hero>(Hero.Aquamancer1P);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
   let [turn, setTurn] = useState(false);  
   const [workspace, updateWorkspace] = useState(
@@ -46,7 +47,7 @@ const PlayPage: React.FC = () => {
       [Encounter.EmptyEncounter, false]
     )
   );
-  console.log(workspace)
+  // console.log(workspace)
   useEffect(() => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
@@ -63,7 +64,6 @@ const PlayPage: React.FC = () => {
               const stringRep = activeDeck[i].split("-");
               console.log(stringRep);
               const mob = encounters[stringRep[0]]()
-              console.log(mob)
               var mobBoolean = JSON.parse(stringRep[1])
               workspace[i] = [mob, mobBoolean];
               console.log(mob)
@@ -80,24 +80,26 @@ const PlayPage: React.FC = () => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
+    console.log(gameId, gameRef, gameSnap)
     if (gameSnap.exists()) {
-      const gamedata = gameSnap.data();
-      console.log(gamedata);
-      if (gamedata) {
+      const gameData = gameSnap.data();
+      console.log(gameData);
+      if (gameData) {
         let arr: string[] = new Array<string>();
         for(let i = 0; i < workspace.length;i++ ){
           arr.push(workspace[i][0].name + "-" + workspace[i][1])
         }
         await updateDoc(doc(db, 'games', gameId),{
-          activeDeck: arr
+          activeDeck: arr,
+          deck: fullDeck.map(card => card.name).join(", ")
         })
       } else {
         
       }
+
     } else {
       console.log("No game data found");
     }
-    updateWorkspace(workspace);
   }
 
   const isTwoPlayer = localStorage.getItem("playerCount");
@@ -110,13 +112,15 @@ const PlayPage: React.FC = () => {
   };
   const encounterStay = () => {
     activeEncounter = null;
+    updateActiveEncounter(activeEncounter);
     setEncounterModalOpen(false);
   }
   const encounterAccepted = () => {
     //insert functionality to create the encounter
+    // console.log("tf is this doing here");
     workspace.map((a : [Encounter, boolean], index : number) => {
-      console.log(a[0].name);
-      console.log(activeEncounter?.name + " -active");
+      // console.log(a[0].name);
+      // console.log(activeEncounter?.name + " -active");
       if (activeEncounter?.name == a[0].name) {
         setEncounterFacing(true);
         workspace[index][0] = Encounter.EmptyEncounter;
@@ -183,50 +187,30 @@ const PlayPage: React.FC = () => {
         encounterOptional[1] = false;
       }
     })
-    const gameId = localStorage.getItem("gameId") || "1234";
-    const gameRef = doc(db, "games", gameId);
-    const gameSnap = await getDoc(gameRef);
-    console.log(gameId, gameRef, gameSnap)
-    if (gameSnap.exists()) {
-      const gameData = gameSnap.data();
-      console.log(gameData);
-      if (gameData) {
-        let arr: string[] = new Array<string>();
-        for(let i = 0; i < workspace.length;i++ ){
-          arr.push(workspace[i][0].name + "-" + workspace[i][1])
-        }
-        await updateDoc(doc(db, 'games', gameId),{
-          activeDeck: arr,
-          deck: fullDeck.map(card => card.name).join(", ")
-        })
-      } else {
-        
-      }
-
-    } else {
-      console.log("No game data found");
-    }
-    updateWorkspace(workspace);
-    console.log(workspace)
     updateActiveDeck();
+    updateWorkspace(workspace);
   };
 
   const activeClick = (index: number) => {
     if (!workspace[index][1] && workspace[index][0] != Encounter.EmptyEncounter) {
-      workspace[index][1] = true; //cards active now
+      workspace[index][1] = true;
+
+      
       burnCards(2, true);
     }
 
-    if (workspace[index][0] == Encounter.EmptyEncounter || !workspace[index][1]) {
+    if (workspace[index][0] == Encounter.EmptyEncounter) {
       activeEncounter = null;
     } else {
       activeEncounter = workspace[index][0];
       setEncounterModalOpen(true);
     }
+
+
+    updateActiveDeck();
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
-    console.log(workspace)
-    updateActiveDeck();
+    // console.log(workspace);
   };
 
   const burnCards = (num: number, updateDiscard : boolean) : Encounter[] => {
@@ -296,7 +280,8 @@ const PlayPage: React.FC = () => {
   let names: string[] = [];
   const playerCount = localStorage.getItem("PlayerCount") || "1P";
   const level = "1";
-  const { deck, dungeon, players } = gameData;
+  const { deck, dungeon, players, hero1 } = gameData;
+  setActiveHero(Hero.findHero(hero1, localStorage.getItem("playerCount")))
   const fullDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
   let playerName1 = "";
   let playerName2 = "";
@@ -357,6 +342,13 @@ const PlayPage: React.FC = () => {
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Information</h2>
               <div className="flex flex-col items-center">
+              <iframe
+                  src="https://drive.google.com/file/d/1XR1kNiGFQH-u8CV4cU42KvZEquhRNqGW/preview"
+                  width="480"
+                  height="360"
+                  allow="autoplay"
+                  className="w-full h-full object-contain rounded-md"
+                ></iframe>
                 <img
                   src={`/${dungeon}.jpg`}
                   alt={dungeon}
@@ -459,13 +451,13 @@ const PlayPage: React.FC = () => {
             </div>
             {isEncounterFacing && (
               <EncounterCard
-              encounter={activeEncounter || workspace[0][0]}
-              onClick= {() => console.log("running the encounter")}
-              onDefeat={() => onDefeat()}
-              yellowDiceAmount={yellowDiceAmount}
-              blueDiceAmount={blueDiceAmount}
-              blackDiceAmount={blackDiceAmount}
-              pinkDiceAmount={pinkDiceAmount}
+                encounter={activeEncounter || workspace[0][0]}
+                onClick= {() => console.log("running the encounter")}
+                onDefeat={() => onDefeat()}
+                yellowDiceAmount={yellowDiceAmount}
+                blueDiceAmount={blueDiceAmount}
+                blackDiceAmount={blackDiceAmount}
+                pinkDiceAmount={pinkDiceAmount}
               />
             )
 

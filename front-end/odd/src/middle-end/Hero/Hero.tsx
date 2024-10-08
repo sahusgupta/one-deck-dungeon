@@ -211,6 +211,59 @@ export class Hero {
         new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
 
     );
+
+    public static readonly Empty1P : Hero = new Hero(
+        Skill.HammerSmash2P,
+        Skill.AntiHex,
+        new Item([1, 1, 1, 3]),
+        "", 
+        "Witch2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+    );
+
+    public static readonly Empty2P : Hero = new Hero(
+        Skill.HammerSmash2P,
+        Skill.AntiHex,
+        new Item([1, 1, 1, 3]),
+        "", 
+        "Witch2P",
+        new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
+    );
+
+    public static readonly encounterList : Array<Hero> = new Array<Hero>(
+        this.Aquamancer1P,
+        this.Aquamancer2P,
+        this.Archer1P,
+        this.Archer2P,
+        this.Dragoon1P,
+        this.Dragoon2P,
+        this.Mage1P,
+        this.Mage2P,
+        this.Paladin1P,
+        this.Paladin2P,
+        this.Rogue1P,
+        this.Rogue2P,
+        this.Warrior1P,
+        this.Warrior2P,
+        this.Witch1P,
+        this.Witch2P,
+        this.Empty1P,
+        this.Empty2P
+    )
+
+    public static findHero(name : string, players : string | null) : Hero {
+        this.encounterList.forEach((hero : Hero) => {
+            if (hero.name.slice(0, hero.name.length - 2) == name && hero.name.slice(hero.name.length - 2) == players) {
+                return hero;
+            }
+        });
+        if (players == "1P") {
+            return this.Empty1P;
+        } else {
+            return this.Empty2P;
+        }
+    }
+
     public async ToMap(){
         let m: Map<string, any> = new Map<string, any>();
         for (let [key, value] of Object.entries(skills)) {

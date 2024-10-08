@@ -7,6 +7,7 @@ import { Player } from '../../middle-end/RuntimeFiles/Player';
 import { db } from '../../backend/firebase/firebase_utils';
 import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import PageLayout from '../../components/PageLayout';
+import { Hero } from '../../middle-end/Hero/Hero';
 
 const SelectDungeon: React.FC = () => {
 
@@ -42,6 +43,7 @@ const SelectDungeon: React.FC = () => {
     
     Game.createGame(gameId, dungeon, players);
     const gameInstance = Game.getInstance();
+    const characterSelected = localStorage.getItem("characterSelected") || "Warrior"
     
     // Save game data to Firestore
     if (gameId) {
@@ -51,6 +53,7 @@ const SelectDungeon: React.FC = () => {
         players: players,
         boss: dungeon.boss.name,
         deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
+        hero1: characterSelected,
         player1dice: [],
         player2dice: []
       });
