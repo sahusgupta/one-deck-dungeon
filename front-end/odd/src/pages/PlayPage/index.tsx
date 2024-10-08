@@ -36,6 +36,7 @@ const PlayPage: React.FC = () => {
   const blueDiceAmount: number = 4; 
   const blackDiceAmount: number = 0;
   const pinkDiceAmount: number = 2;
+  const[hero, setActiveHero] = useState<Hero>(Hero.Aquamancer1P);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
   let [turn, setTurn] = useState(false);  
   const [workspace, updateWorkspace] = useState(
@@ -279,7 +280,8 @@ const PlayPage: React.FC = () => {
   let names: string[] = [];
   const playerCount = localStorage.getItem("PlayerCount") || "1P";
   const level = "1";
-  const { deck, dungeon, players } = gameData;
+  const { deck, dungeon, players, hero1 } = gameData;
+  setActiveHero(Hero.findHero(hero1, localStorage.getItem("playerCount")))
   const fullDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
   let playerName1 = "";
   let playerName2 = "";
@@ -442,13 +444,13 @@ const PlayPage: React.FC = () => {
             </div>
             {isEncounterFacing && (
               <EncounterCard
-              encounter={activeEncounter || workspace[0][0]}
-              onClick= {() => console.log("running the encounter")}
-              onDefeat={() => onDefeat()}
-              yellowDiceAmount={yellowDiceAmount}
-              blueDiceAmount={blueDiceAmount}
-              blackDiceAmount={blackDiceAmount}
-              pinkDiceAmount={pinkDiceAmount}
+                encounter={activeEncounter || workspace[0][0]}
+                onClick= {() => console.log("running the encounter")}
+                onDefeat={() => onDefeat()}
+                yellowDiceAmount={yellowDiceAmount}
+                blueDiceAmount={blueDiceAmount}
+                blackDiceAmount={blackDiceAmount}
+                pinkDiceAmount={pinkDiceAmount}
               />
             )
 
