@@ -36,7 +36,8 @@ const PlayPage: React.FC = () => {
   const blueDiceAmount: number = 4; 
   const blackDiceAmount: number = 0;
   const pinkDiceAmount: number = 2;
-  const[hero, setActiveHero] = useState<Hero>(Hero.Aquamancer1P);
+  const playerCount = localStorage.getItem("PlayerCount") || "1P";
+  const[hero, setActiveHero] = useState<Hero | null>(null);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
   let [turn, setTurn] = useState(false);  
   const [workspace, updateWorkspace] = useState(
@@ -234,6 +235,7 @@ const PlayPage: React.FC = () => {
     setModalTitle(title);
     setModalContent(message);
     setModalOpen(true);
+    
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
     if (gameSnap.exists()) {
@@ -254,6 +256,7 @@ const PlayPage: React.FC = () => {
       const gameSnap = await getDoc(gameRef);
       if (gameSnap.exists()) {
         setGameData(gameSnap.data());
+        // console.log("use effect")
       } else {
         console.log("No game data found");
       }
@@ -278,10 +281,13 @@ const PlayPage: React.FC = () => {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
   }
   let names: string[] = [];
-  const playerCount = localStorage.getItem("PlayerCount") || "1P";
   const level = "1";
   const { deck, dungeon, players, hero1 } = gameData;
-  setActiveHero(Hero.findHero(hero1, localStorage.getItem("playerCount")))
+  // console.log(hero1);
+  // setActiveHero(Hero.findHero(hero1, playerCount));
+  if (hero == null) {
+    setActiveHero(Hero.findHero(hero1, playerCount));
+  }
   const fullDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
   let playerName1 = "";
   let playerName2 = "";
