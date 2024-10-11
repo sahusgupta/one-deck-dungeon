@@ -217,7 +217,7 @@ export class Hero {
         Skill.AntiHex,
         new Item([1, 1, 1, 3]),
         "", 
-        "Witch2P",
+        "Empty1P",
         new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
@@ -226,7 +226,7 @@ export class Hero {
         Skill.AntiHex,
         new Item([1, 1, 1, 3]),
         "", 
-        "Witch2P",
+        "Empty2P",
         new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   
     );
 
@@ -252,12 +252,16 @@ export class Hero {
     )
 
     public static findHero(name : string, players : string | null) : Hero {
-        this.encounterList.forEach((hero : Hero) => {
-            if (hero.name.slice(0, hero.name.length - 2) == name && hero.name.slice(hero.name.length - 2) == players) {
-                return hero;
-            }
-        });
+        console.log("finding hero: " + name)
+        const hero = this.encounterList.find(
+            (hero) => hero.heroName.slice(0, hero.heroName.length -2 ) === name && hero.heroName.slice(0, hero.heroName.length -2 ) === players
+        );
+        console.log(hero)
+        if(hero){
+            return hero
+        }
         if (players == "1P") {
+            console.log("returning empty on you")
             return this.Empty1P;
         } else {
             return this.Empty2P;
