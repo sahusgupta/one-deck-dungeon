@@ -38,6 +38,7 @@ const PlayPage: React.FC = () => {
   const pinkDiceAmount: number = 2;
   const playerCount = localStorage.getItem("PlayerCount") || "1P";
   const[hero, setActiveHero] = useState<Hero | null>(null);
+  const [fullDeck, setFullDeck] = useState<Encounter[]>([]);
   let [activeEncounter, updateActiveEncounter] = useState<Encounter | null>(null);
   let [turn, setTurn] = useState(false);  
   const [workspace, updateWorkspace] = useState(
@@ -141,9 +142,9 @@ const PlayPage: React.FC = () => {
       const gamedata = gameSnap.data();
       console.log(gamedata.chatLog);
       if (gamedata.chatLog) {
-        console.log("accessing exists");
+        // console.log("accessing exists");
         const chatLog = gamedata.chatLog;
-        console.log(chatLog);
+        // console.log(chatLog);
         chatLog.push(
           (localStorage.getItem("userdata") || "undefined user") +
             ": " +
@@ -195,6 +196,7 @@ const PlayPage: React.FC = () => {
   const activeClick = (index: number) => {
     if (!workspace[index][1] && workspace[index][0] != Encounter.EmptyEncounter) {
       workspace[index][1] = true;
+      console.log("setting shit to true")
 
       
       burnCards(2, true);
@@ -207,10 +209,9 @@ const PlayPage: React.FC = () => {
       setEncounterModalOpen(true);
     }
 
-
-    updateActiveDeck();
     updateActiveEncounter(activeEncounter);
     updateWorkspace(workspace);
+    updateActiveDeck();
     // console.log(workspace);
   };
 
@@ -240,8 +241,8 @@ const PlayPage: React.FC = () => {
     const gameSnap = await getDoc(gameRef);
     if (gameSnap.exists()) {
       const gamedata = gameSnap.data();
-      console.log(gamedata);
-      console.log(gamedata.boss);
+      // console.log(gamedata);
+      // console.log(gamedata.boss);
     } else {
       console.log("No game data found");
     }
@@ -288,7 +289,15 @@ const PlayPage: React.FC = () => {
   if (hero == null) {
     setActiveHero(Hero.findHero(hero1, playerCount));
   }
-  const fullDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
+
+
+  const acquiredDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
+  if (fullDeck.length == 0) {
+    acquiredDeck.forEach(card => {
+      fullDeck.push(card);
+    });
+  }
+
   let playerName1 = "";
   let playerName2 = "";
   const boss = localStorage.getItem("boss") || "Dragon1.jpg";
