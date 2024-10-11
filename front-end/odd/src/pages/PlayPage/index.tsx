@@ -20,6 +20,7 @@ import EncounterCard from "../../components/Encounter";
 
 const PlayPage: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null); // Store game data here
+  const [heroBool, setHeroBool] = useState<Boolean>(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
@@ -286,11 +287,17 @@ const PlayPage: React.FC = () => {
   const { deck, dungeon, players, hero1 } = gameData;
   // console.log(hero1);
   // setActiveHero(Hero.findHero(hero1, playerCount));
-  if (hero == null) {
+
+  if (hero == null && !heroBool) {
+    console.log(hero1)
+    setHeroBool(true);
+    console.log(Hero.findHero(hero1, playerCount))
     setActiveHero(Hero.findHero(hero1, playerCount));
+    console.log(hero)
   }
 
 
+  console.log(hero);
   const acquiredDeck: Encounter[] = Encounter.returnEncounterDeck(Util.parseArrayAsStrings(deck));
   if (fullDeck.length == 0) {
     acquiredDeck.forEach(card => {
