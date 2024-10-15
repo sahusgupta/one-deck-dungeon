@@ -197,7 +197,8 @@ const PlayPage: React.FC = () => {
   const activeClick = (index: number) => {
     if (!workspace[index][1] && workspace[index][0] != Encounter.EmptyEncounter) {
       workspace[index][1] = true;
-      console.log("setting shit to true")
+      updateWorkspace(workspace);
+      updateActiveDeck();
 
       
       burnCards(2, true);
@@ -211,8 +212,6 @@ const PlayPage: React.FC = () => {
     }
 
     updateActiveEncounter(activeEncounter);
-    updateWorkspace(workspace);
-    updateActiveDeck();
     // console.log(workspace);
   };
 
@@ -221,6 +220,7 @@ const PlayPage: React.FC = () => {
       setDiscard(discardNum + num);
     }
     let ret : Encounter[] = fullDeck.splice(fullDeck.length - num);
+    setFullDeck(fullDeck);
 
     const gameId = localStorage.getItem("gameId");
     if (gameId) {
@@ -476,10 +476,7 @@ const PlayPage: React.FC = () => {
                 encounter={activeEncounter || workspace[0][0]}
                 onClick= {() => console.log("running the encounter")}
                 onDefeat={() => onDefeat()}
-                yellowDiceAmount={yellowDiceAmount}
-                blueDiceAmount={blueDiceAmount}
-                blackDiceAmount={blackDiceAmount}
-                pinkDiceAmount={pinkDiceAmount}
+                hero={hero}
               />
             )
 

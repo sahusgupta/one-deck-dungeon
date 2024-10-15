@@ -2,28 +2,26 @@ import React, { useState } from "react";
 import { Encounter } from "../../middle-end/Encounter/Encounter";
 import EncounterBase from "./encounterBase";
 import Dice from "react-dice-roll";
+import { Hero } from "../../middle-end/Hero/Hero";
 
 interface EncounterProps {
   encounter: Encounter;
   onClick: () => void;
   onDefeat: () => void;
-  yellowDiceAmount: any;
-  blueDiceAmount: any;
-  blackDiceAmount: any;
-  pinkDiceAmount: any;
+  hero : Hero | null;
 }
 
 const EncounterCard: React.FC<EncounterProps> = ({
   encounter,
   onClick,
   onDefeat,
-  yellowDiceAmount,
-  blueDiceAmount,
-  blackDiceAmount,
-  pinkDiceAmount,
+  hero,
 }) => {
-  console.log(encounter);
-  console.log(encounter.name);
+
+  const yellowDiceAmount : number | undefined = hero?.basicItem.values[0];
+  const pinkDiceAmount = hero?.basicItem.values[1];
+  const blueDiceAmount = hero?.basicItem.values[2];
+  const blackDiceAmount = 0;
 
   const yellowDice = [
     "https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000",
@@ -228,7 +226,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
         <h2 className="text-2xl font-bold mb-2">Dice</h2>
         <div className="flex flex-col items-center">
           <div className="flex space-x-2">
-            {Array.from({ length: yellowDiceAmount }, (_, index) => (
+            {Array.from({ length: yellowDiceAmount ? yellowDiceAmount : 0 }, (_, index) => (
               <div
                 key={index}
                 draggable={yellowDiceRolled[index] && !yellowDiceDropped[index]}
@@ -261,7 +259,40 @@ const EncounterCard: React.FC<EncounterProps> = ({
             </div>
           </div>
           <div className="flex space-x-2">
-            {Array.from({ length: blueDiceAmount }, (_, index) => (
+            {Array.from({ length: pinkDiceAmount ? pinkDiceAmount : 0 }, (_, index) => (
+              <div
+                key={index}
+                draggable={pinkDiceRolled[index] && !pinkDiceDropped[index]}
+                onDragStart={(e) =>
+                  !pinkDiceDropped[index] &&
+                  e.dataTransfer.setData(
+                    "text/plain",
+                    `pink-${rolledPinkDice[index]}-${index}`
+                  )
+                }
+              >
+                <Dice
+                  size={50}
+                  faces={pinkDice}
+                  onRoll={(value: number) => handleRoll("pink", index, value)}
+                  disabled={pinkDiceRolled[index]}
+                />
+              </div>
+            ))}
+            <div
+              className="bg-pink-500 p-2 rounded-md border-dotted border-2 border-pink-700"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                const data = e.dataTransfer.getData("text/plain");
+                const [color, value, index] = data.split("-");
+                handleDrop(color, parseInt(value), parseInt(index));
+              }}
+            >
+              {pinkTotal}/20 Pink Total
+            </div>
+          </div>
+          <div className="flex space-x-2">
+            {Array.from({ length: blueDiceAmount ? blueDiceAmount : 0 }, (_, index) => (
               <div
                 key={index}
                 draggable={blueDiceRolled[index] && !blueDiceDropped[index]}
@@ -325,39 +356,6 @@ const EncounterCard: React.FC<EncounterProps> = ({
               }}
             >
               {blackTotal}/20 Black Total
-            </div>
-          </div>
-          <div className="flex space-x-2">
-            {Array.from({ length: pinkDiceAmount }, (_, index) => (
-              <div
-                key={index}
-                draggable={pinkDiceRolled[index] && !pinkDiceDropped[index]}
-                onDragStart={(e) =>
-                  !pinkDiceDropped[index] &&
-                  e.dataTransfer.setData(
-                    "text/plain",
-                    `pink-${rolledPinkDice[index]}-${index}`
-                  )
-                }
-              >
-                <Dice
-                  size={50}
-                  faces={pinkDice}
-                  onRoll={(value: number) => handleRoll("pink", index, value)}
-                  disabled={pinkDiceRolled[index]}
-                />
-              </div>
-            ))}
-            <div
-              className="bg-pink-500 p-2 rounded-md border-dotted border-2 border-pink-700"
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                const data = e.dataTransfer.getData("text/plain");
-                const [color, value, index] = data.split("-");
-                handleDrop(color, parseInt(value), parseInt(index));
-              }}
-            >
-              {pinkTotal}/20 Pink Total
             </div>
           </div>
         </div>
