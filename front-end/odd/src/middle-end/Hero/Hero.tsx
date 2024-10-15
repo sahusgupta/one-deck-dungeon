@@ -281,7 +281,7 @@ export class Hero {
         m.set('name', this._name)
         m.set('basicItem', this._basicItem.values)
         m.set('heroName', this._heroName)
-        m.set('campaignData', await this.campaign.toFirestore())
+        m.set('campaignData', JSON.stringify(await this.campaign.toFirestore()))
         return m;
     }
 

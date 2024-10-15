@@ -63,40 +63,42 @@ const SelectCampaignPage: React.FC = () => {
     localStorage.setItem('characterSelected', characterSelected)
     navigate(nextUrl)
   };
+  if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
+    (async() => {
+      try {
+        heroes = await getHeroes()
+        console.log("Heroes retrieved:", heroes)
+      } catch (error) {
+        console.error("Error in getHeroes:", error)
+      }
+    })()
+  } else {
+    console.log('Conditions not met')
+    navigate('/char-select')
+  }
+  console.log(heroes.length)
+  if (heroes.length == 0){
+    (async () => {
+      const d = doc(db, 'users', localStorage.getItem('credentials') as string)
+      const dRef = await getDoc(d)
+      if (dRef.exists()){
+        let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
+        if (hero in h){
+          const sHero = h[hero]
+          let hMaps: Map<string, any>[] = dRef.data().heroes;
+          hMaps.push(await sHero().ToMap())
+          console.log(hMaps)
+          updateDoc(d, {heroes: hMaps})
+        } else {
+          console.log(hero)
+          navigate('/char-select')
+        }
+      }
+      console.log('leaving')
+    })()
+  }
   useEffect(() =>  {
-    if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
-      (async() => {
-        try {
-          heroes = await getHeroes()
-          console.log("Heroes retrieved:", heroes)
-        } catch (error) {
-          console.error("Error in getHeroes:", error)
-        }
-      })()
-    } else {
-      console.log('Conditions not met')
-      navigate('/char-select')
-    }
-    console.log(heroes.length)
-    if (heroes.length == 0){
-      (async () => {
-        const d = doc(db, 'users', localStorage.getItem('credentials') as string)
-        const dRef = await getDoc(d)
-        if (dRef.exists()){
-          let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
-          if (hero in h){
-            const sHero = h[hero]
-            let hMaps: Map<string, any>[] = dRef.data().heroes;
-            hMaps.push(await sHero().ToMap())
-            updateDoc(d, {heroes: hMaps})
-          } else {
-            console.log(hero)
-            navigate('/char-select')
-          }
-        }
-        console.log('leaving')
-      })()
-    }
+    
   })
   return (
     <PageLayout>

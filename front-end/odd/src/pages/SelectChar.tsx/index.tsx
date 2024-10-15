@@ -32,9 +32,12 @@ const SelectPlayerPage: React.FC = () => {
       let d = ds.data()
       console.log(d)
       let hero = d.heroes
-      hero.push(await h[localStorage.getItem('characterSelected') as string]().ToMap())
-      updateDoc(ref, {heroes: hero})
-    } 
+      if (localStorage.getItem('characterSelected') as string + localStorage.getItem("playerCount") as string in h){
+        hero.push(await h[localStorage.getItem('characterSelected') as string + localStorage.getItem("playerCount") as string]().ToMap())
+        console.log(hero)
+        updateDoc(ref, {heroes: hero})
+      }
+    }
     navigate(nextUrl)
   };
   
