@@ -160,7 +160,8 @@ const encounters: { [key: string]: () => Encounter } = {
     "Lich1": () => Encounter.Lich1,
     "Hydra1": () => Encounter.Hydra1,
     "Minotaur1": () => Encounter.Minotaur1,
-    "Yeti1": () => Encounter.Yeti1
+    "Yeti1": () => Encounter.Yeti1,
+    "EmptyEncounter1": () => Encounter.EmptyEncounter
   };
 
   export {encounters, debuffs, heroes, skills, dungeons};
