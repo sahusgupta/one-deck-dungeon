@@ -381,10 +381,8 @@ const EncounterCard: React.FC<EncounterProps> = ({
               {blackCurrent}/{blackTotal} Black Total
             </div>
           </div>
-<<<<<<< HEAD
-=======
           <div className="flex space-x-2">
-            {Array.from({ length: pinkDiceAmount }, (_, index) => (
+            {Array.from({ length: pinkDiceAmount as number }, (_, index) => (
               <div
                 key={index}
                 draggable={pinkDiceRolled[index] && !pinkDiceDropped[index]}
@@ -416,7 +414,6 @@ const EncounterCard: React.FC<EncounterProps> = ({
               {pinkCurrent}/{pinkTotal} Pink Total
             </div>
           </div>
->>>>>>> fffffd05fbda8cefd050809cc4ed6fe755dffe0c
         </div>
       </div>
       <div className="text-white" onClick={onDefeat}>

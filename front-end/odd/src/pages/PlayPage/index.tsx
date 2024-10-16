@@ -289,7 +289,7 @@ const PlayPage: React.FC = () => {
   // setActiveHero(Hero.findHero(hero1, playerCount));
 
   if (hero == null && !heroBool) {
-    console.log(hero1)
+    console.log("what is this " + hero1)
     setHeroBool(true);
     console.log(Hero.findHero(hero1, playerCount))
     setActiveHero(Hero.findHero(hero1, playerCount));

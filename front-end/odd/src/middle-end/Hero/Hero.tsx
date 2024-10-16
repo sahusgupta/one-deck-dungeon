@@ -254,7 +254,7 @@ export class Hero {
     public static findHero(name : string, players : string | null) : Hero {
         console.log("finding hero: " + name)
         const hero = this.encounterList.find(
-            (hero) => hero.heroName.slice(0, hero.heroName.length -2 ) === name && hero.heroName.slice(0, hero.heroName.length -2 ) === players
+            (hero) => hero.heroName.slice(0, hero.heroName.length -2 ) === name && hero.heroName.slice(hero.heroName.length -2) === players
         );
         console.log(hero)
         if(hero){
@@ -278,7 +278,7 @@ export class Hero {
             }
         }
         const campaignData = await this.campaign.toFirestore();
-        console.log(this._basicItem)
+        console.log(this._basicItem.values)
         m.set('basicItem', JSON.stringify(this._basicItem))
         m.set('name', JSON.stringify(this._name))
         m.set('basicItem', JSON.stringify(this._basicItem.values))

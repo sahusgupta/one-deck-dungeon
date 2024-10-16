@@ -10,11 +10,9 @@ export class Item {
     }
 
     public constructor(statsArr: number[]) {
-        this._values = new Array<number>();
+        this._values = [];
         for (let num = 0; num < statsArr.length; num++) {
-            for (let i = 0; i < statsArr[num]; i++) {
-                this._values.concat(num);
-            }
+            this._values.push(statsArr[num]);
         }
 
     }
