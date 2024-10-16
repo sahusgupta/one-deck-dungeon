@@ -277,12 +277,17 @@ export class Hero {
                 m.set('basicSkill', key)
             }
         }
-        m.set('basicItem', this._basicItem)
-        m.set('name', this._name)
-        m.set('basicItem', this._basicItem.values)
-        m.set('heroName', this._heroName)
-        m.set('campaignData', await this.campaign.toFirestore())
-        return m;
+        const campaignData = await this.campaign.toFirestore();
+        console.log(this._basicItem)
+        m.set('basicItem', JSON.stringify(this._basicItem))
+        m.set('name', JSON.stringify(this._name))
+        m.set('basicItem', JSON.stringify(this._basicItem.values))
+        m.set('heroName', JSON.stringify(this._heroName))
+        m.set('campaignData', JSON.stringify(Object.entries(campaignData)))
+
+        let q = Object.fromEntries(m);
+
+        return q;
     }
 
 }

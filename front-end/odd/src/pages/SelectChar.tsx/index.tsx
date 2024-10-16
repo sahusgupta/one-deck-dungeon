@@ -3,9 +3,11 @@ import { HiChevronDoubleRight } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import PlayerCard from '../../components/PlayerCard';
 import { db } from '../../backend/firebase/firebase_utils';
-import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc, setDoc } from 'firebase/firestore';
 import PageLayout from '../../components/PageLayout';
 import { heroes as h } from '../../backend/mappings';
+import { Dungeon } from '../../middle-end/Dungeon/Dungeon';
+import { Game } from '../../middle-end/RuntimeFiles/Game';
 const SelectPlayerPage: React.FC = () => {
   const info = async () => {
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
@@ -20,10 +22,36 @@ const SelectPlayerPage: React.FC = () => {
     }
   }
   info();
+  const startGame = async () => {
+    const gameId = localStorage.getItem("gameId");
+    const dungeon = Dungeon.getFromBossName(localStorage.getItem("boss"));
+    const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
+    
+    Game.createGame(gameId, dungeon, players);
+    const gameInstance = Game.getInstance();
+    const characterSelected = localStorage.getItem("characterSelected") || "Warrior"
+    
+    // Save game data to Firestore
+    if (gameId) {
+      await setDoc(doc(db, "games", gameId), {
+        gameId: gameId,
+        dungeon: dungeon.name,
+        players: players,
+        boss: dungeon.boss.name,
+        deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
+        hero1: characterSelected,
+        player1dice: [],
+        player2dice: []
+      });
+    } else {
+      console.error("gameId is null");
+    }
+
+    gameInstance.printSetup();
+  }
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
   const nextUrl = "/play";
-  console.log(nextUrl);
   const reRoute = async (characterSelected: string) => {
     localStorage.setItem('characterSelected', characterSelected)
     let ref = doc(db, 'users', localStorage.getItem('credentials') as string)
@@ -32,9 +60,14 @@ const SelectPlayerPage: React.FC = () => {
       let d = ds.data()
       console.log(d)
       let hero = d.heroes
-      hero.push(await h[localStorage.getItem('characterSelected') as string]().ToMap())
-      updateDoc(ref, {heroes: hero})
-    } 
+      if (localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string in h){
+        hero.push(await h[localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string]().ToMap())
+        console.log(hero)
+        updateDoc(ref, {heroes: hero})
+      } 
+
+      }
+    startGame();
     navigate(nextUrl)
   };
   

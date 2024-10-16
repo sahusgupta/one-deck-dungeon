@@ -22,27 +22,21 @@ const SelectCampaignPage: React.FC = () => {
   async function getHeroes() {
     console.log("Starting getHeroes")
     let matching_heroes: unknown[][] = []
-    const agent = localStorage.getItem('characterSelected') as string;
-    console.log("Selected agent:", agent)
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
     const docSnap = await getDoc(docRef);
     console.log("Document snapshot:", docSnap)
     if (docSnap.exists()) {
         let data = docSnap.data();
         let heroes = data.heroes;
-  
+        console.log(heroes)
         for (let hero of heroes){
           let h: unknown[] = []
           console.log(hero)
           let h_map = hero
-          if (h_map.heroName != agent){
-            continue;
-          } else {
-            for (let [key, value] of Object.entries(JSON.parse(hero))){
-              h.push(value)
-            }
-            matching_heroes.push(h)
+          for (let [key, value] of Object.entries(JSON.parse(hero))){
+            h.push(value)
           }
+          matching_heroes.push(h)
         }
         
       } else {
@@ -86,7 +80,7 @@ const SelectCampaignPage: React.FC = () => {
           let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
           if (hero in h){
             const sHero = h[hero]
-            let hMaps: Map<string, any>[] = dRef.data().heroes;
+            let hMaps: Object[] = dRef.data().heroes;
             hMaps.push(await sHero().ToMap())
             updateDoc(d, {heroes: hMaps})
           } else {

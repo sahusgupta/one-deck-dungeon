@@ -31,9 +31,13 @@ const SelectDungeon: React.FC = () => {
     console.log(playerCount);
     localStorage.setItem("dungeon", dungeon)
     localStorage.setItem("boss", boss);
-    startGame();
-    const url = "/play";
-    navigate(url)
+    if (localStorage.getItem('characterSelected') as string != ""){
+      startGame();
+      const url = "/play";
+      navigate(url)
+    } else {
+      navigate('/selectBuild')
+    }
   };
 
   const startGame = async () => {

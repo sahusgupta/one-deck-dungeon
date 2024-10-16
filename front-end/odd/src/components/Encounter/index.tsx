@@ -99,11 +99,34 @@ const EncounterCard: React.FC<EncounterProps> = ({
   );
 
   // State to track total values for each color
-  const [yellowTotal, setYellowTotal] = useState<number>(0);
-  const [blueTotal, setBlueTotal] = useState<number>(0);
-  const [blackTotal, setBlackTotal] = useState<number>(0);
-  const [pinkTotal, setPinkTotal] = useState<number>(0);
+  const [yellowTotal, setYellowTotal] = useState<number>(() => {
+    const total = encounter.boxes.filter(box => box.type === 0).reduce((acc, box) => acc + box.neededRoll, 0);
+    console.log("Yellow Total:", total);
+    return total;
+  });
 
+  const [blueTotal, setBlueTotal] = useState<number>(() => {
+    const total = encounter.boxes.filter(box => box.type === 2).reduce((acc, box) => acc + box.neededRoll, 0);
+    console.log("Blue Total:", total);
+    return total;
+  });
+
+  const [blackTotal, setBlackTotal] = useState<number>(() => {
+    const total = encounter.boxes.filter(box => box.type === 3).reduce((acc, box) => acc + box.neededRoll, 0);
+    console.log("Black Total:", total);
+    return total;
+  });
+
+  const [pinkTotal, setPinkTotal] = useState<number>(() => {
+    const total = encounter.boxes.filter(box => box.type === 1).reduce((acc, box) => acc + box.neededRoll, 0);
+    console.log("Pink Total:", total);
+    return total;
+  });
+
+  const [yellowCurrent, setYellowCurrent] = useState<number>(0);
+  const [blueCurrent, setBlueCurrent] = useState<number>(0);
+  const [blackCurrent, setBlackCurrent] = useState<number>(0);
+  const [pinkCurrent, setPinkCurrent] = useState<number>(0);
   const handleRoll = (color: string, index: number, value: number) => {
     switch (color) {
       case "yellow":
@@ -171,7 +194,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
     switch (color) {
       case "yellow":
         if (!yellowDiceDropped[index]) {
-          setYellowTotal((prev) => prev + value);
+          setYellowCurrent((prev) => prev + value);
           setYellowDiceDropped((prev) => {
             const newDropped = [...prev];
             newDropped[index] = true;
@@ -181,7 +204,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
         break;
       case "blue":
         if (!blueDiceDropped[index]) {
-          setBlueTotal((prev) => prev + value);
+          setBlueCurrent((prev) => prev + value);
           setBlueDiceDropped((prev) => {
             const newDropped = [...prev];
             newDropped[index] = true;
@@ -191,7 +214,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
         break;
       case "black":
         if (!blackDiceDropped[index]) {
-          setBlackTotal((prev) => prev + value);
+          setBlackCurrent((prev) => prev + value);
           setBlackDiceDropped((prev) => {
             const newDropped = [...prev];
             newDropped[index] = true;
@@ -201,7 +224,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
         break;
       case "pink":
         if (!pinkDiceDropped[index]) {
-          setPinkTotal((prev) => prev + value);
+          setPinkCurrent((prev) => prev + value);
           setPinkDiceDropped((prev) => {
             const newDropped = [...prev];
             newDropped[index] = true;
@@ -255,7 +278,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
                 handleDrop(color, parseInt(value), parseInt(index));
               }}
             >
-              {yellowTotal}/20 Yellow Total
+              {yellowCurrent}/{yellowTotal} Yellow Total
             </div>
           </div>
           <div className="flex space-x-2">
@@ -321,7 +344,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
                 handleDrop(color, parseInt(value), parseInt(index));
               }}
             >
-              {blueTotal}/20 Blue Total
+              {blueCurrent}/{blueTotal} Blue Total
             </div>
           </div>
 
@@ -355,9 +378,45 @@ const EncounterCard: React.FC<EncounterProps> = ({
                 handleDrop(color, parseInt(value), parseInt(index));
               }}
             >
-              {blackTotal}/20 Black Total
+              {blackCurrent}/{blackTotal} Black Total
             </div>
           </div>
+<<<<<<< HEAD
+=======
+          <div className="flex space-x-2">
+            {Array.from({ length: pinkDiceAmount }, (_, index) => (
+              <div
+                key={index}
+                draggable={pinkDiceRolled[index] && !pinkDiceDropped[index]}
+                onDragStart={(e) =>
+                  !pinkDiceDropped[index] &&
+                  e.dataTransfer.setData(
+                    "text/plain",
+                    `pink-${rolledPinkDice[index]}-${index}`
+                  )
+                }
+              >
+                <Dice
+                  size={50}
+                  faces={pinkDice}
+                  onRoll={(value: number) => handleRoll("pink", index, value)}
+                  disabled={pinkDiceRolled[index]}
+                />
+              </div>
+            ))}
+            <div
+              className="bg-pink-500 p-2 rounded-md border-dotted border-2 border-pink-700"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                const data = e.dataTransfer.getData("text/plain");
+                const [color, value, index] = data.split("-");
+                handleDrop(color, parseInt(value), parseInt(index));
+              }}
+            >
+              {pinkCurrent}/{pinkTotal} Pink Total
+            </div>
+          </div>
+>>>>>>> fffffd05fbda8cefd050809cc4ed6fe755dffe0c
         </div>
       </div>
       <div className="text-white" onClick={onDefeat}>
