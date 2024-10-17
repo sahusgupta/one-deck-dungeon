@@ -282,39 +282,6 @@ const EncounterCard: React.FC<EncounterProps> = ({
             </div>
           </div>
           <div className="flex space-x-2">
-            {Array.from({ length: pinkDiceAmount ? pinkDiceAmount : 0 }, (_, index) => (
-              <div
-                key={index}
-                draggable={pinkDiceRolled[index] && !pinkDiceDropped[index]}
-                onDragStart={(e) =>
-                  !pinkDiceDropped[index] &&
-                  e.dataTransfer.setData(
-                    "text/plain",
-                    `pink-${rolledPinkDice[index]}-${index}`
-                  )
-                }
-              >
-                <Dice
-                  size={50}
-                  faces={pinkDice}
-                  onRoll={(value: number) => handleRoll("pink", index, value)}
-                  disabled={pinkDiceRolled[index]}
-                />
-              </div>
-            ))}
-            <div
-              className="bg-pink-500 p-2 rounded-md border-dotted border-2 border-pink-700"
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                const data = e.dataTransfer.getData("text/plain");
-                const [color, value, index] = data.split("-");
-                handleDrop(color, parseInt(value), parseInt(index));
-              }}
-            >
-              {pinkTotal}/20 Pink Total
-            </div>
-          </div>
-          <div className="flex space-x-2">
             {Array.from({ length: blueDiceAmount ? blueDiceAmount : 0 }, (_, index) => (
               <div
                 key={index}
