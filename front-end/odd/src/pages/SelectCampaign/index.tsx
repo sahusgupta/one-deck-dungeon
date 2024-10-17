@@ -31,9 +31,9 @@ const SelectCampaignPage: React.FC = () => {
         console.log(heroes)
         for (let hero of heroes){
           let h: unknown[] = []
-          console.log(hero)
+          console.log('logging hero', hero)
           let h_map = hero
-          for (let [key, value] of Object.entries(JSON.parse(hero))){
+          for (let [key, value] of Object.entries(hero)){
             h.push(value)
           }
           matching_heroes.push(h)
@@ -57,41 +57,41 @@ const SelectCampaignPage: React.FC = () => {
     localStorage.setItem('characterSelected', characterSelected)
     navigate(nextUrl)
   };
-  useEffect(() =>  {
-    if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
-      (async() => {
-        try {
-          heroes = await getHeroes()
-          console.log("Heroes retrieved:", heroes)
-        } catch (error) {
-          console.error("Error in getHeroes:", error)
+  if (localStorage.getItem('characterSelected') != null && localStorage.getItem('userdata') != null) {
+    (async() => {
+      try {
+        heroes = await getHeroes()
+      } catch (error) {
+        console.error("Error in getHeroes:", error)
+      }
+    })()
+  } else {
+    console.log('Conditions not met')
+    navigate('/char-select')
+  }
+  console.log('len of heroes', heroes.length)
+  if (heroes.length == 0){
+    (async () => {
+      console.log('empty')
+      const d = doc(db, 'users', localStorage.getItem('credentials') as string)
+      const dRef = await getDoc(d)
+      if (dRef.exists()){
+        let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
+        if (hero in h){
+          const sHero = h[hero]
+          let hMaps: Object[] = dRef.data().heroes;
+          hMaps.push(await sHero().ToMap())
+          console.log(hMaps, Array.from(hMaps.values()))
+          heroes.push(Object.values(await sHero().ToMap()) as string[])
+          updateDoc(d, {heroes: hMaps})
+        } else {
+          console.log(hero)
+          navigate('/char-select')
         }
-      })()
-    } else {
-      console.log('Conditions not met')
-      navigate('/char-select')
-    }
-    console.log(heroes.length)
-    if (heroes.length == 0){
-      (async () => {
-        const d = doc(db, 'users', localStorage.getItem('credentials') as string)
-        const dRef = await getDoc(d)
-        if (dRef.exists()){
-          let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
-          if (hero in h){
-            const sHero = h[hero]
-            let hMaps: Object[] = dRef.data().heroes;
-            hMaps.push(await sHero().ToMap())
-            updateDoc(d, {heroes: hMaps})
-          } else {
-            console.log(hero)
-            navigate('/char-select')
-          }
-        }
-        console.log('leaving')
-      })()
-    }
-  })
+      }
+    })()
+  }
+  console.log('new len', heroes.length)
   return (
     <PageLayout>
       <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -100,7 +100,7 @@ const SelectCampaignPage: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
         {heroes.map((hero, index) => (
             <div key={index} className="flex space-x-4 w-250">
-                {hero as string[]}
+                {hero as []}
             </div>
         ))}
         <div className="flex space-x-4 w-250">
