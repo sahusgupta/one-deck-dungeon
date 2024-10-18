@@ -59,7 +59,7 @@ const SelectPlayerPage: React.FC = () => {
     if (ds.exists()){
       let d = ds.data()
       console.log(d)
-      let hero = d.heroes
+      let hero = d.heroes != undefined ? d.heroes : []
       if (localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string in h){
         hero.push(await h[localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string]().ToMap())
         console.log(hero)
