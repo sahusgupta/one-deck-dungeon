@@ -33,7 +33,7 @@ const SelectCampaignPage: React.FC = () => {
           let h: unknown[] = []
           console.log('logging hero', hero)
           let h_map = hero
-          for (let [key, value] of Object.entries(hero)){
+          for (let [key, value] of Object.entries(h_map)){
             h.push(value)
           }
           matching_heroes.push(h)
@@ -69,7 +69,7 @@ const SelectCampaignPage: React.FC = () => {
     console.log('Conditions not met')
     navigate('/char-select')
   }
-  console.log('len of heroes', heroes.length)
+
   if (heroes.length == 0){
     (async () => {
       console.log('empty')
@@ -77,12 +77,14 @@ const SelectCampaignPage: React.FC = () => {
       const dRef = await getDoc(d)
       if (dRef.exists()){
         let hero = localStorage.getItem('characterSelected') as string + localStorage.getItem('playerCount') as string;
+        console.log("is in h", hero in h)
         if (hero in h){
-          const sHero = h[hero]
+          const sHero = h[hero];
           let hMaps: Object[] = dRef.data().heroes;
           hMaps.push(await sHero().ToMap())
           console.log(hMaps, Array.from(hMaps.values()))
           heroes.push(Object.values(await sHero().ToMap()) as string[])
+          console.log("this is heroes", heroes)
           updateDoc(d, {heroes: hMaps})
         } else {
           console.log(hero)
@@ -91,6 +93,7 @@ const SelectCampaignPage: React.FC = () => {
       }
     })()
   }
+  console.log('new heroes', heroes)
   console.log('new len', heroes.length)
   return (
     <PageLayout>
