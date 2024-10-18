@@ -8,7 +8,7 @@ interface EncounterProps {
   encounter: Encounter;
   onClick: () => void;
   onDefeat: () => void;
-  hero : Hero | null;
+  hero: Hero | null;
 }
 
 const EncounterCard: React.FC<EncounterProps> = ({
@@ -17,11 +17,14 @@ const EncounterCard: React.FC<EncounterProps> = ({
   onDefeat,
   hero,
 }) => {
-
-  const yellowDiceAmount : number | undefined = hero?.basicItem.values[0];
-  const pinkDiceAmount = hero?.basicItem.values[1];
-  const blueDiceAmount = hero?.basicItem.values[2];
-  const blackDiceAmount = 0;
+  // const yellowDiceAmount: number = hero?.basicItem.values[0] || 0;
+  // const pinkDiceAmount: number = hero?.basicItem.values[1] || 0;
+  // const blueDiceAmount: number = hero?.basicItem.values[2] || 0;
+  // const blackDiceAmount = 0;
+  const yellowDiceAmount: number = 5;
+  const pinkDiceAmount: number = 5;
+  const blueDiceAmount: number = 5;
+  const blackDiceAmount: number = 5;
 
   const yellowDice = [
     "https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000",
@@ -100,25 +103,33 @@ const EncounterCard: React.FC<EncounterProps> = ({
 
   // State to track total values for each color
   const [yellowTotal, setYellowTotal] = useState<number>(() => {
-    const total = encounter.boxes.filter(box => box.type === 0).reduce((acc, box) => acc + box.neededRoll, 0);
+    const total = encounter.boxes
+      .filter((box) => box.type === 0)
+      .reduce((acc, box) => acc + box.neededRoll, 0);
     console.log("Yellow Total:", total);
     return total;
   });
 
   const [blueTotal, setBlueTotal] = useState<number>(() => {
-    const total = encounter.boxes.filter(box => box.type === 2).reduce((acc, box) => acc + box.neededRoll, 0);
+    const total = encounter.boxes
+      .filter((box) => box.type === 2)
+      .reduce((acc, box) => acc + box.neededRoll, 0);
     console.log("Blue Total:", total);
     return total;
   });
 
   const [blackTotal, setBlackTotal] = useState<number>(() => {
-    const total = encounter.boxes.filter(box => box.type === 3).reduce((acc, box) => acc + box.neededRoll, 0);
+    const total = encounter.boxes
+      .filter((box) => box.type === 3)
+      .reduce((acc, box) => acc + box.neededRoll, 0);
     console.log("Black Total:", total);
     return total;
   });
 
   const [pinkTotal, setPinkTotal] = useState<number>(() => {
-    const total = encounter.boxes.filter(box => box.type === 1).reduce((acc, box) => acc + box.neededRoll, 0);
+    const total = encounter.boxes
+      .filter((box) => box.type === 1)
+      .reduce((acc, box) => acc + box.neededRoll, 0);
     console.log("Pink Total:", total);
     return total;
   });
@@ -127,6 +138,14 @@ const EncounterCard: React.FC<EncounterProps> = ({
   const [blueCurrent, setBlueCurrent] = useState<number>(0);
   const [blackCurrent, setBlackCurrent] = useState<number>(0);
   const [pinkCurrent, setPinkCurrent] = useState<number>(0);
+
+  // Check if the encounter is defeated
+  const isEncounterDefeated =
+    yellowCurrent >= yellowTotal &&
+    blueCurrent >= blueTotal &&
+    blackCurrent >= blackTotal &&
+    pinkCurrent >= pinkTotal;
+
   const handleRoll = (color: string, index: number, value: number) => {
     switch (color) {
       case "yellow":
@@ -248,27 +267,35 @@ const EncounterCard: React.FC<EncounterProps> = ({
       <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
         <h2 className="text-2xl font-bold mb-2">Dice</h2>
         <div className="flex flex-col items-center">
+          {/* Yellow Dice */}
           <div className="flex space-x-2">
-            {Array.from({ length: yellowDiceAmount ? yellowDiceAmount : 0 }, (_, index) => (
-              <div
-                key={index}
-                draggable={yellowDiceRolled[index] && !yellowDiceDropped[index]}
-                onDragStart={(e) =>
-                  !yellowDiceDropped[index] &&
-                  e.dataTransfer.setData(
-                    "text/plain",
-                    `yellow-${rolledYellowDice[index]}-${index}`
-                  )
-                }
-              >
-                <Dice
-                  size={50}
-                  faces={yellowDice}
-                  onRoll={(value: number) => handleRoll("yellow", index, value)}
-                  disabled={yellowDiceRolled[index]}
-                />
-              </div>
-            ))}
+            {Array.from(
+              { length: yellowDiceAmount ? yellowDiceAmount : 0 },
+              (_, index) => (
+                <div
+                  key={index}
+                  draggable={
+                    yellowDiceRolled[index] && !yellowDiceDropped[index]
+                  }
+                  onDragStart={(e) =>
+                    !yellowDiceDropped[index] &&
+                    e.dataTransfer.setData(
+                      "text/plain",
+                      `yellow-${rolledYellowDice[index]}-${index}`
+                    )
+                  }
+                >
+                  <Dice
+                    size={50}
+                    faces={yellowDice}
+                    onRoll={(value: number) =>
+                      handleRoll("yellow", index, value)
+                    }
+                    disabled={yellowDiceRolled[index]}
+                  />
+                </div>
+              )
+            )}
             <div
               className="bg-yellow-500 p-2 rounded-md border-dotted border-2 border-yellow-700"
               onDragOver={(e) => e.preventDefault()}
@@ -281,27 +308,33 @@ const EncounterCard: React.FC<EncounterProps> = ({
               {yellowCurrent}/{yellowTotal} Yellow Total
             </div>
           </div>
+          {/* Blue Dice */}
           <div className="flex space-x-2">
-            {Array.from({ length: blueDiceAmount ? blueDiceAmount : 0 }, (_, index) => (
-              <div
-                key={index}
-                draggable={blueDiceRolled[index] && !blueDiceDropped[index]}
-                onDragStart={(e) =>
-                  !blueDiceDropped[index] &&
-                  e.dataTransfer.setData(
-                    "text/plain",
-                    `blue-${rolledBlueDice[index]}-${index}`
-                  )
-                }
-              >
-                <Dice
-                  size={50}
-                  faces={blueDice}
-                  onRoll={(value: number) => handleRoll("blue", index, value)}
-                  disabled={blueDiceRolled[index]}
-                />
-              </div>
-            ))}
+            {Array.from(
+              { length: blueDiceAmount ? blueDiceAmount : 0 },
+              (_, index) => (
+                <div
+                  key={index}
+                  draggable={blueDiceRolled[index] && !blueDiceDropped[index]}
+                  onDragStart={(e) =>
+                    !blueDiceDropped[index] &&
+                    e.dataTransfer.setData(
+                      "text/plain",
+                      `blue-${rolledBlueDice[index]}-${index}`
+                    )
+                  }
+                >
+                  <Dice
+                    size={50}
+                    faces={blueDice}
+                    onRoll={(value: number) =>
+                      handleRoll("blue", index, value)
+                    }
+                    disabled={blueDiceRolled[index]}
+                  />
+                </div>
+              )
+            )}
             <div
               className="bg-blue-500 p-2 rounded-md border-dotted border-2 border-blue-700"
               onDragOver={(e) => e.preventDefault()}
@@ -314,12 +347,14 @@ const EncounterCard: React.FC<EncounterProps> = ({
               {blueCurrent}/{blueTotal} Blue Total
             </div>
           </div>
-
+          {/* Black Dice */}
           <div className="flex space-x-2">
             {Array.from({ length: blackDiceAmount }, (_, index) => (
               <div
                 key={index}
-                draggable={blackDiceRolled[index] && !blackDiceDropped[index]}
+                draggable={
+                  blackDiceRolled[index] && !blackDiceDropped[index]
+                }
                 onDragStart={(e) =>
                   !blackDiceDropped[index] &&
                   e.dataTransfer.setData(
@@ -331,7 +366,9 @@ const EncounterCard: React.FC<EncounterProps> = ({
                 <Dice
                   size={50}
                   faces={blackDice}
-                  onRoll={(value: number) => handleRoll("black", index, value)}
+                  onRoll={(value: number) =>
+                    handleRoll("black", index, value)
+                  }
                   disabled={blackDiceRolled[index]}
                 />
               </div>
@@ -348,27 +385,33 @@ const EncounterCard: React.FC<EncounterProps> = ({
               {blackCurrent}/{blackTotal} Black Total
             </div>
           </div>
+          {/* Pink Dice */}
           <div className="flex space-x-2">
-            {Array.from({ length: pinkDiceAmount as number }, (_, index) => (
-              <div
-                key={index}
-                draggable={pinkDiceRolled[index] && !pinkDiceDropped[index]}
-                onDragStart={(e) =>
-                  !pinkDiceDropped[index] &&
-                  e.dataTransfer.setData(
-                    "text/plain",
-                    `pink-${rolledPinkDice[index]}-${index}`
-                  )
-                }
-              >
-                <Dice
-                  size={50}
-                  faces={pinkDice}
-                  onRoll={(value: number) => handleRoll("pink", index, value)}
-                  disabled={pinkDiceRolled[index]}
-                />
-              </div>
-            ))}
+            {Array.from(
+              { length: pinkDiceAmount as number },
+              (_, index) => (
+                <div
+                  key={index}
+                  draggable={pinkDiceRolled[index] && !pinkDiceDropped[index]}
+                  onDragStart={(e) =>
+                    !pinkDiceDropped[index] &&
+                    e.dataTransfer.setData(
+                      "text/plain",
+                      `pink-${rolledPinkDice[index]}-${index}`
+                    )
+                  }
+                >
+                  <Dice
+                    size={50}
+                    faces={pinkDice}
+                    onRoll={(value: number) =>
+                      handleRoll("pink", index, value)
+                    }
+                    disabled={pinkDiceRolled[index]}
+                  />
+                </div>
+              )
+            )}
             <div
               className="bg-pink-500 p-2 rounded-md border-dotted border-2 border-pink-700"
               onDragOver={(e) => e.preventDefault()}
@@ -383,9 +426,17 @@ const EncounterCard: React.FC<EncounterProps> = ({
           </div>
         </div>
       </div>
-      <div className="text-white" onClick={onDefeat}>
-        {" "}
-        Cancel{" "}
+
+      {/* Action Buttons */}
+      <div className="flex space-x-4 mt-4">
+        <div className="text-white cursor-pointer" onClick={onClick}>
+          Cancel
+        </div>
+        {isEncounterDefeated && (
+          <div className="text-white cursor-pointer" onClick={onDefeat}>
+            Beat Encounter
+          </div>
+        )}
       </div>
     </EncounterBase>
   );
