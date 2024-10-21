@@ -136,6 +136,22 @@ const PlayPage: React.FC = () => {
     updateActiveDeck(workspace);
     setEncounterModalOpen(false);
   }
+
+  // onLose functionality for the encounter cards
+  const onLose = async (heartsLost: number) => {
+
+    console.log(`Lost the encounter, hearts lost: ${heartsLost}`);
+    const updatedWorkspace = workspace.map(([enc, isFacing]) =>
+      enc.name === activeEncounter?.name ? [Encounter.EmptyEncounter, false] : [enc, isFacing]
+    );
+
+    updateWorkspace(updatedWorkspace as [Encounter, boolean][]);
+    activeEncounter = null;
+    updateActiveEncounter(activeEncounter);
+
+    setEncounterFacing(false);
+  };
+  
   const submitChat = async (inputText: string) => {
     const gameId = localStorage.getItem("gameId") || "1234";
     const gameRef = doc(db, "games", gameId);
@@ -203,7 +219,7 @@ const PlayPage: React.FC = () => {
     updateWorkspace(newWorkspace);
     updateActiveDeck(newWorkspace);
   };
-
+  
   const activeClick = (index: number) => {
     if (!workspace[index][1] && workspace[index][0] != Encounter.EmptyEncounter) {
       workspace[index][1] = true;
@@ -482,6 +498,7 @@ const PlayPage: React.FC = () => {
                 onClick= {() => console.log("running the encounter")}
                 onDefeat={() => onDefeat()}
                 hero={hero}
+                onLose={() => onLose(1)}
               />
             )
 
@@ -495,7 +512,7 @@ const PlayPage: React.FC = () => {
                     "Enter your message here:"
                   )
                 }
-              >~~
+              >
                 <FontAwesomeIcon icon={faComment} size="5x" />
               </div>
             )}
