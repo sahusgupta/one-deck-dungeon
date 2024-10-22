@@ -33,10 +33,22 @@ export class Player {
     private _skills: Array<Skill>;
 
     private _items: Array<Item>;
+    public get items(): Array<Item> {
+        return this._items;
+    }
+    public set items(value: Array<Item>) {
+        this._items = value;
+    }
 
     private _activeDebuff: Debuff;
 
     private _hero: Hero;
+    public get hero(): Hero {
+        return this._hero;
+    }
+    public set hero(value: Hero) {
+        this._hero = value;
+    }
 
     public constructor(id: string, hero: Hero) {
         this._id = id;
@@ -46,8 +58,8 @@ export class Player {
         this._activeDebuff = Debuff.Null;
     }
 
-    public static getFromId (id: string) : Player {
-        return new Player(id, Hero.Aquamancer1P);
+    public static getFromId (id: string, hero: Hero) : Player {
+        return new Player(id, hero);
     }
 
     public async loadFromStore (id: string) {
@@ -83,5 +95,21 @@ export class Player {
         
         setDoc(d, {[exp.heroName]: exp})
         
+    }
+
+    public itemSum () : Item {
+        let totalStrength = 0;
+        let totalSpeed = 0;
+        let totalMagic = 0;
+        let totalHealth = 0;
+
+        this.items.forEach((item : Item) => {
+            totalStrength += item.values[0];
+            totalSpeed += item.values[1];
+            totalMagic += item.values[2];
+            totalHealth += item.values[3];
+        })
+
+        return new Item([totalStrength, totalSpeed, totalMagic, totalHealth]);
     }
 }

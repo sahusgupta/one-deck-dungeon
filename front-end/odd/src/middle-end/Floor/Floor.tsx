@@ -52,4 +52,10 @@ export class Floor {
           } 
           return array; 
     }
+
+    public burn(num : number) {
+        for (let i : number = 0; i < num ; i++) {
+            this._discard.push(this._deck.pop() ?? Encounter.EmptyEncounter);
+        }
+    }
 }

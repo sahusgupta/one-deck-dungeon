@@ -26,15 +26,13 @@ const SelectDungeon: React.FC = () => {
   info();
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
-  const playerUrl = localStorage.getItem('playerCount')!;
+  const playerCount = localStorage.getItem('playerCount')!;
   const reRoute = (playerCount: string, dungeon: string, boss: string) => {
-    console.log(playerCount);
     localStorage.setItem("dungeon", dungeon)
     localStorage.setItem("boss", boss);
     if (localStorage.getItem('characterSelected') as string != ""){
       startGame();
-      const url = "/play";
-      navigate(url)
+      navigate("/play")
     } else {
       navigate('/selectBuild')
     }
@@ -44,26 +42,11 @@ const SelectDungeon: React.FC = () => {
     const gameId = localStorage.getItem("gameId");
     const dungeon = Dungeon.getFromBossName(localStorage.getItem("boss"));
     const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
-    
-    Game.createGame(gameId, dungeon, players);
+    const charactersSelected : Array<string> = [localStorage.getItem("characterSelected") || "Warrior", "Aquamancer"] //need to expand for 2P somehow
+    Game.createGame(gameId, dungeon, players, charactersSelected);
     const gameInstance = Game.getInstance();
-    const characterSelected = localStorage.getItem("characterSelected") || "Warrior"
     
-    // Save game data to Firestore
-    if (gameId) {
-      await setDoc(doc(db, "games", gameId), {
-        gameId: gameId,
-        dungeon: dungeon.name,
-        players: players,
-        boss: dungeon.boss.name,
-        deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
-        hero1: characterSelected,
-        player1dice: [],
-        player2dice: []
-      });
-    } else {
-      console.error("gameId is null");
-    }
+    // no firestore for rn, just relying on existing game data
 
     gameInstance.printSetup();
   }
@@ -82,23 +65,23 @@ const SelectDungeon: React.FC = () => {
           {/* Select Char */}
           <DungeonTag
             imgURL='Dragon1.jpg'
-            onClick={() => reRoute(playerUrl, "DragonCave", "Dragon1")}
+            onClick={() => reRoute(playerCount, "DragonCave", "Dragon1")}
           />
           <DungeonTag
             imgURL='Hydra1.jpg'
-            onClick={() => reRoute(playerUrl, "HydraReef", "Hydra1")}
+            onClick={() => reRoute(playerCount, "HydraReef", "Hydra1")}
           />
           <DungeonTag
             imgURL='Lich1.jpg'
-            onClick={() => reRoute(playerUrl, "LichTomb", "Lich1")}
+            onClick={() => reRoute(playerCount, "LichTomb", "Lich1")}
           />
           <DungeonTag
             imgURL='Minotaur1.jpg'
-            onClick={() => reRoute(playerUrl, "MinotaurMaze", "Minotaur1")}
+            onClick={() => reRoute(playerCount, "MinotaurMaze", "Minotaur1")}
           />
           <DungeonTag
             imgURL='Yeti1.jpg'
-            onClick={() => reRoute(playerUrl, "YetiCavern", "Yeti1")}
+            onClick={() => reRoute(playerCount, "YetiCavern", "Yeti1")}
           />
         </div>
       </div>

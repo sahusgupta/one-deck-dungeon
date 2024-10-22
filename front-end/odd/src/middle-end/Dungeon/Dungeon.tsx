@@ -43,6 +43,10 @@ export class Dungeon {
         return this.DragonCave;
     }
 
+    public getCurrFloor() : Floor {
+        return this._floors[this._currFloor];
+    }
+
     public static readonly DragonCave = new Dungeon("DragonCave", Encounter.Dragon1, 
         new Floor(Debuff.HallOfStatues, [
             new DiceBox(2, 3, true, 0, 0)

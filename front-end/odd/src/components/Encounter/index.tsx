@@ -3,12 +3,13 @@ import { Encounter } from "../../middle-end/Encounter/Encounter";
 import EncounterBase from "./encounterBase";
 import Dice from "react-dice-roll";
 import { Hero } from "../../middle-end/Hero/Hero";
+import { Player } from "../../middle-end/RuntimeFiles/Player";
 
 interface EncounterProps {
   encounter: Encounter;
   onClick: () => void;
   onDefeat: () => void;
-  hero: Hero | null;
+  player: Player;
   onLose: () => void;
 }
 
@@ -16,14 +17,14 @@ const EncounterCard: React.FC<EncounterProps> = ({
   encounter,
   onClick,
   onDefeat,
-  hero,
+  player,
   onLose,
 }) => {
-  const hearts = hero?.basicItem.values[3];
+  const hearts = player.itemSum().values[3];
   console.log(hearts)
   const diceConfig = {
     yellow: {
-      amount: hero?.basicItem.values[0],
+      amount: player.itemSum().values[0],
       faces: [
         "https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000",
         "https://drive.google.com/thumbnail?id=1ugPUVuORGHQgYy6kn-izilERyBQ75ANT&sz=w1000",
@@ -37,7 +38,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
       boxClass: "bg-yellow-500 border-yellow-700",
     },
     blue: {
-      amount: hero?.basicItem.values[2],
+      amount: player.itemSum().values[2],
       faces: [
         "https://drive.google.com/thumbnail?id=1NygZkS2sL8dtnTpStxIipgNQnh1rPMrQ&sz=w1000",
         "https://drive.google.com/thumbnail?id=1JqpZte8HBp9S0neVRdE5Gk6B8p7292-B&sz=w1000",
@@ -65,7 +66,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
     //   boxClass: "bg-black border-gray-700",
     // },
     pink: {
-      amount: hero?.basicItem.values[1],
+      amount: player.itemSum().values[1],
       faces: [
         "https://drive.google.com/thumbnail?id=17LTXwJjXjN4rFzA0P827J50lvdP7HOMQ&sz=w1000",
         "https://drive.google.com/thumbnail?id=1UK-lCu66p_t_9zTp_PjmQsTLFW4CGv-q&sz=w1000",

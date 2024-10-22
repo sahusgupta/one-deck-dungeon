@@ -1,5 +1,6 @@
 import { Dungeon } from "../Dungeon/Dungeon";
 import { Encounter } from "../Encounter/Encounter";
+import { Hero } from "../Hero/Hero";
 import { Player } from "./Player";
 
 export class Game {
@@ -7,6 +8,12 @@ export class Game {
     public get active(): boolean { return this._active; }
     public set active(value: boolean) { this._active = value; }
     private _playerList: Array<Player>;
+    public get playerList(): Array<Player> {
+        return this._playerList;
+    }
+    public set playerList(value: Array<Player>) {
+        this._playerList = value;
+    }
     private _dungeon: Dungeon;
     public get dungeon(): Dungeon {return this._dungeon;}
     public set dungeon(value: Dungeon) {this._dungeon = value;}
@@ -22,20 +29,38 @@ export class Game {
     private _playerNum: number;
     public get playerNum(): number { return this._playerNum; }
     public set playerNum(value: number) { this._playerNum = value; }
+
+    private _chatLog: Array<string>;
+    public get chatLog(): Array<string> {
+        return this._chatLog;
+    }
+    public set chatLog(value: Array<string>) {
+        this._chatLog = value;
+    }
+
+    private _activeEncounter: [Encounter, number]; //the active encounter, and its index in workspace
+    public get activeEncounter(): [Encounter, number] {
+        return this._activeEncounter;
+    }
+    public set activeEncounter(value: [Encounter, number]) {
+        this._activeEncounter = value;
+    }
     
     private static _instance : Game;
   
-    public constructor(gameId: string | null, dungeon: Dungeon, players: Array<string>) {
+    public constructor(gameId: string | null, dungeon: Dungeon, players: Array<string>, heros: Array<string>) {
         this.active = true;
         this._playerList = new Array<Player>();
-        players.forEach(player  => {
-            this._playerList.push(Player.getFromId(player));
+        players.map((player : string, index : number)  => {
+            this._playerList.push(Player.getFromId(player, Hero.findHero(heros[index], players.length == 1 ? "1P" : "2P")));
         });
         this._dungeon = dungeon;
         this._gameId = gameId;
         this._potions = 1;
         this._level = 1;
         this._playerNum = this._playerList.length;
+        this._chatLog = new Array<string>();
+        this._activeEncounter = [Encounter.EmptyEncounter, 4];
     }
     //HANDLES ALL NETWORKING AND CROSS COMMUNICATION
 
@@ -43,8 +68,8 @@ export class Game {
         return this._instance;
     }
 
-    public static createGame(gameId: string | null, dungeon: Dungeon, players: Array<string>) : void {
-        this._instance = new Game(gameId, dungeon, players);
+    public static createGame(gameId: string | null, dungeon: Dungeon, players: Array<string>, heros: Array<string>) : void {
+        this._instance = new Game(gameId, dungeon, players, heros);
     }
 
     public printSetup() : void {
