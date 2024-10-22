@@ -19,9 +19,11 @@ const EncounterCard: React.FC<EncounterProps> = ({
   hero,
   onLose,
 }) => {
+  const hearts = hero?.basicItem.values[3];
+  console.log(hearts)
   const diceConfig = {
     yellow: {
-      amount: 5,
+      amount: hero?.basicItem.values[0],
       faces: [
         "https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000",
         "https://drive.google.com/thumbnail?id=1ugPUVuORGHQgYy6kn-izilERyBQ75ANT&sz=w1000",
@@ -35,7 +37,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
       boxClass: "bg-yellow-500 border-yellow-700",
     },
     blue: {
-      amount: 5,
+      amount: hero?.basicItem.values[2],
       faces: [
         "https://drive.google.com/thumbnail?id=1NygZkS2sL8dtnTpStxIipgNQnh1rPMrQ&sz=w1000",
         "https://drive.google.com/thumbnail?id=1JqpZte8HBp9S0neVRdE5Gk6B8p7292-B&sz=w1000",
@@ -48,22 +50,22 @@ const EncounterCard: React.FC<EncounterProps> = ({
       colorClass: "blue",
       boxClass: "bg-blue-500 border-blue-700",
     },
-    black: {
-      amount: 5,
-      faces: [
-        "https://drive.google.com/thumbnail?id=1dmxTGOmw6cW6wjsWo1xWhK503xvEW6Wc&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1mQC_Bv_m2nx_qdNics6bFDm2cDFevhOo&sz=w1000",
-        "https://drive.google.com/thumbnail?id=16MpNbd-mWyFc4lyre6BdhRUt_1ia-NAr&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1FzGXlI3ae612fxp3PT4sJYkB9mJCYdGx&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1r9v3ftIlrTMuPlcMP2zFdLeLeoxfFp0j&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1yfnrTeFMirQWuSMc9r8cowUWDKsNJI_J&sz=w1000",
-      ],
-      boxes: encounter.boxes.filter((box) => box.type === 3),
-      colorClass: "black",
-      boxClass: "bg-black border-gray-700",
-    },
+    // black: {
+    //   amount: 5,
+    //   faces: [
+    //     "https://drive.google.com/thumbnail?id=1dmxTGOmw6cW6wjsWo1xWhK503xvEW6Wc&sz=w1000",
+    //     "https://drive.google.com/thumbnail?id=1mQC_Bv_m2nx_qdNics6bFDm2cDFevhOo&sz=w1000",
+    //     "https://drive.google.com/thumbnail?id=16MpNbd-mWyFc4lyre6BdhRUt_1ia-NAr&sz=w1000",
+    //     "https://drive.google.com/thumbnail?id=1FzGXlI3ae612fxp3PT4sJYkB9mJCYdGx&sz=w1000",
+    //     "https://drive.google.com/thumbnail?id=1r9v3ftIlrTMuPlcMP2zFdLeLeoxfFp0j&sz=w1000",
+    //     "https://drive.google.com/thumbnail?id=1yfnrTeFMirQWuSMc9r8cowUWDKsNJI_J&sz=w1000",
+    //   ],
+    //   boxes: encounter.boxes.filter((box) => box.type === 3),
+    //   colorClass: "black",
+    //   boxClass: "bg-black border-gray-700",
+    // },
     pink: {
-      amount: 5,
+      amount: hero?.basicItem.values[1],
       faces: [
         "https://drive.google.com/thumbnail?id=17LTXwJjXjN4rFzA0P827J50lvdP7HOMQ&sz=w1000",
         "https://drive.google.com/thumbnail?id=1UK-lCu66p_t_9zTp_PjmQsTLFW4CGv-q&sz=w1000",
@@ -159,7 +161,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
     return (
       <div className="flex space-x-2 mt-4" key={color}>
         {/* Dice */}
-        {Array.from({ length: amount }, (_, diceIndex) => (
+        {Array.from({ length: amount ?? 0 }, (_, diceIndex) => (
           <div
             key={`${color}-dice-${diceIndex}`}
             draggable={
@@ -219,7 +221,13 @@ const EncounterCard: React.FC<EncounterProps> = ({
           alt={encounter.name}
         />
       </div>
-
+        {/* Heart Section */}
+        <div className="flex items-center justify-center space-x-2 my-4">
+      <span className="text-xl font-semibold text-white">Hearts:</span>
+      {hearts && Array.from({ length: hearts }).map((_, index) => (
+        <span key={index} className="text-red-500 text-2xl">❤️</span>
+      ))}
+      </div>
       {/* Dice Section */}
       <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
         <h2 className="text-2xl font-bold mb-2">Dice</h2>
