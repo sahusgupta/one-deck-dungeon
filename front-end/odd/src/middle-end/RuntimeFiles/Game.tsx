@@ -3,6 +3,9 @@ import { Encounter } from "../Encounter/Encounter";
 import { Player } from "./Player";
 
 export class Game {
+    private _active: boolean = false;
+    public get active(): boolean { return this._active; }
+    public set active(value: boolean) { this._active = value; }
     private _playerList: Array<Player>;
     private _dungeon: Dungeon;
     public get dungeon(): Dungeon {return this._dungeon;}
@@ -23,6 +26,7 @@ export class Game {
     private static _instance : Game;
   
     public constructor(gameId: string | null, dungeon: Dungeon, players: Array<string>) {
+        this.active = true;
         this._playerList = new Array<Player>();
         players.forEach(player  => {
             this._playerList.push(Player.getFromId(player));

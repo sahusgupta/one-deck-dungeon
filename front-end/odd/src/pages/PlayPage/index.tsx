@@ -274,6 +274,7 @@ const PlayPage: React.FC = () => {
       console.log("No game data found");
     }
   };
+  let onPage: boolean = false;
   useEffect(() => {
     // Fetch game data based on gameId from localStorage
     const fetchGameData = async () => {
@@ -304,6 +305,14 @@ const PlayPage: React.FC = () => {
 
     
   }, [turn]);
+
+  useEffect(() => {
+    if (onPage){
+      console.log('leaving')
+      const navigate = useNavigate()
+      navigate('/')
+    }
+  }, [onPage])
 
   if (!gameData) {
     return <div>Loading game...</div>; // Fallback if gameData hasn't loaded
@@ -356,17 +365,17 @@ const PlayPage: React.FC = () => {
     }
   };
   info();
-
-  let exit = () => {
-    let gameInfo = ['boss', 'characterSelected', 'dungeon', 'gameId', 'playerCount']
-    for (let key in gameInfo){
-      localStorage.removeItem(key);
-    }
-  }
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
-          <button className="w-10 h-10 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() =>exit()}>
+          <button className="w-10 h-10 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => {
+            let gameInfo = ['boss', 'characterSelected', 'dungeon', 'gameId', 'playerCount']
+            for (let key in gameInfo){
+              localStorage.removeItem(key);
+            }
+            console.log('leavin this stoopid game')
+            onPage = true;
+          }}>
             <span className="text-xl font-bold">Exit</span>
           </button>
         <div className="container mx-auto">
