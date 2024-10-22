@@ -6,6 +6,7 @@ import { db } from '../../backend/firebase/firebase_utils';
 import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { heroes as h } from '../../backend/mappings';
 import PageLayout from '../../components/PageLayout';
+import HeroCard from '../../components/HeroCard';
 const SelectCampaignPage: React.FC = () => {
   const info = async () => {
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
@@ -21,7 +22,7 @@ const SelectCampaignPage: React.FC = () => {
   }
   async function getHeroes() {
     console.log("Starting getHeroes")
-    let matching_heroes: unknown[][] = []
+    let matching_heroes: Map<any, any>[] = []
     const docRef = doc(db, "users", localStorage.getItem('credentials') ? String(localStorage.getItem('credentials')) : "");
     const docSnap = await getDoc(docRef);
     console.log("Document snapshot:", docSnap)
@@ -30,11 +31,11 @@ const SelectCampaignPage: React.FC = () => {
         let heroes = data.heroes;
         console.log(heroes)
         for (let hero of heroes){
-          let h: unknown[] = []
+          let h: Map<any, any> = new Map<any, any>();
           console.log('logging hero', hero)
           let h_map = hero
           for (let [key, value] of Object.entries(h_map)){
-            h.push(value)
+            h.set(key, value)
           }
           matching_heroes.push(h)
         }
@@ -45,10 +46,30 @@ const SelectCampaignPage: React.FC = () => {
       }
       return matching_heroes;
   }
-  let heroes: unknown[][] = []
+  let heroes: Map<any, any>[] = []
   
   
   info();
+  function mapToObject(map: Map<any, any>): Object {
+    const obj: any = {};
+    for (const [key, value] of Object.entries(map)) {
+      // Handle nested Maps recursively
+      if (value instanceof Map) {
+        obj[key] = mapToObject(value);
+      }
+      // Handle arrays that might contain Maps
+      else if (Array.isArray(value)) {
+        obj[key] = value.map(item => 
+          item instanceof Map ? mapToObject(item) : item
+        );
+      }
+      // Handle regular values
+      else {
+        obj[key] = value;
+      }
+    }
+    return obj;
+  }
   let userName = localStorage.getItem('userdata');
   const navigate = useNavigate();
   const nextUrl = "/char-select";
@@ -81,9 +102,9 @@ const SelectCampaignPage: React.FC = () => {
         if (hero in h){
           const sHero = h[hero];
           let hMaps: Object[] = dRef.data().heroes;
-          hMaps.push(await sHero().ToMap())
+          hMaps.push(mapToObject(await sHero().ToMap()))
           console.log(hMaps, Array.from(hMaps.values()))
-          heroes.push(Object.values(await sHero().ToMap()) as string[])
+          heroes.push(await sHero().ToMap())
           console.log("this is heroes", heroes)
           updateDoc(d, {heroes: hMaps})
         } else {
@@ -103,12 +124,9 @@ const SelectCampaignPage: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
         {heroes.map((hero, index) => (
             <div key={index} className="flex space-x-4 w-250">
-                {hero as []}
+                <HeroCard hero={hero}></HeroCard>
             </div>
         ))}
-        <div className="flex space-x-4 w-250">
-
-        </div>
 
       </div>
       <button onClick={() => {

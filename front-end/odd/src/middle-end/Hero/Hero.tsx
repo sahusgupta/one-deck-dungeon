@@ -13,7 +13,7 @@ function generateHeroID(length: number) {
       result += characters.charAt(randomIndex);
     }
     return result;
-  }
+}
 
 export class Hero {
     private _id: string;
@@ -284,10 +284,11 @@ export class Hero {
         m.set('basicItem', JSON.stringify(this._basicItem.values))
         m.set('heroName', JSON.stringify(this._heroName))
         m.set('campaignData', JSON.stringify(Object.entries(campaignData)))
+        m.set('maxitems', JSON.stringify(this._maxItems))
+        m.set('maxskills', JSON.stringify(this._maxSkills))
+        let q = Object.entries(m);
 
-        let q = Object.fromEntries(m);
-
-        return q;
+        return m;
     }
 
 }
