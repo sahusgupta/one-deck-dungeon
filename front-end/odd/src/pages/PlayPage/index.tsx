@@ -36,7 +36,7 @@ const PlayPage: React.FC = () => {
     setModalOpen(false);
   };
   const encounterStay = () => {
-    gameInstance.activeEncounterRuntime = null;
+    gameInstance.activeEncounterRuntime = undefined;
 
     setEncounterModalOpen(false);
     updateGameEasy();
@@ -58,7 +58,7 @@ const PlayPage: React.FC = () => {
     gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
     gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
 
-    gameInstance.activeEncounterRuntime = null;
+    gameInstance.activeEncounterRuntime = undefined;
 
     setEncounterFacing(false);
     updateGameEasy()

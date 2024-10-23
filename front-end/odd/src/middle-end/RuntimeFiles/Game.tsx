@@ -40,9 +40,9 @@ export class Game {
     public get chatLog(): Array<string> {return this._chatLog;}
     public set chatLog(value: Array<string>) {this._chatLog = value;}
 
-    private _activeEncounterRuntime: EncounterRuntime | null; //null runtime means you arent fighting
-    public get activeEncounterRuntime(): EncounterRuntime | null {return this._activeEncounterRuntime;}
-    public set activeEncounterRuntime(value: EncounterRuntime | null) {this._activeEncounterRuntime = value;}
+    private _activeEncounterRuntime: EncounterRuntime | undefined; //undefined runtime means you arent fighting
+    public get activeEncounterRuntime(): EncounterRuntime | undefined {return this._activeEncounterRuntime;}
+    public set activeEncounterRuntime(value: EncounterRuntime | undefined) {this._activeEncounterRuntime = value;}
 
     private _workspace: Array<[Encounter, boolean]>;
     public get workspace(): Array<[Encounter, boolean]> {return this._workspace;}
@@ -70,7 +70,7 @@ export class Game {
         this._level = 1;
         this._playerNum = this._playerList.length;
         this._chatLog = new Array<string>();
-        this._activeEncounterRuntime = null;
+        this._activeEncounterRuntime = undefined;
 
         this._workspace = new Array<[Encounter, boolean]>(
             [Encounter.EmptyEncounter, false],

@@ -1,32 +1,28 @@
-game on gameId:
+gameId - game:
   active: boolean
   playerList - Array<Player>:
     id: string
     skills: Array<string>
-    items - Array<Item>:
+    items:
       values: Array<number>
-    defeatedEncounters - Array<[Encounter, boolean]>:
-      name: string
-      isItem: boolean
-    activeDebuff - Debuff:
-      name: string
-    hero - Hero:
-      name: string
+    defeatedEncounters - Array<[Encounter, boolean]>: Array<string-boolean>
+    activeDebuff: string
+    hero: string
   dungeon - Dungeon:
     name: string
   potions: number
   level: number
   playerNum: number
   chatLog: Array<string>
-  activeEncounter - [Encounter, number]:
-    name: string
-    index: number
-  workspace - Array<[Encounter, boolean]>:
-    name: string
-    open: boolean
+  activeEncounterRuntime - EncounterRuntime | undefined:
+    encounter: string
+    workspaceIndex: number
+    availableDice: Array<number|number|number-boolean> # uses IDs
+    diceInBox: Array<number|number|number-number-number|number|boolean|number|number|number>
+    necessaryDice: Array<number|number|boolean|number|number|number>
+  workspace - Array<[Encounter, boolean]>: Array<string-boolean>
   deck: Array<string>
   discard: Array<string>
-  
-
-
-    
+# gonna have to make sure that when re-initializing 
+# dice-in-box and necessary diceboxes make sure to keep
+# referencing the same

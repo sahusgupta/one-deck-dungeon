@@ -11,12 +11,6 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   public get encounter(): Encounter {return this._encounter;}
   public set encounter(value: Encounter) {this._encounter = value;}
 
-  private _players: Array<Player>;
-  public get players(): Array<Player> {return this._players;}
-  public set players(value: Array<Player>) {this._players = value;}
-
-  private _dungeon: Dungeon;
-
   private _workspaceIndex: number;
   public get workspaceIndex(): number {return this._workspaceIndex;}
   public set workspaceIndex(value: number) {this._workspaceIndex = value;}
@@ -26,22 +20,22 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   public set availableDice(value: Array<[Dice, boolean]>) {this._availableDice = value;}
 
   private _diceInBox: Array<[Dice, number, DiceBox]>; //dice, its contribution, and the box that its in
+  public get diceInBox(): Array<[Dice, number, DiceBox]> {return this._diceInBox;}
+  public set diceInBox(value: Array<[Dice, number, DiceBox]>) {this._diceInBox = value;}
 
   private _necessaryDiceboxes: Array<DiceBox>;
   public get necessaryDiceboxes(): Array<DiceBox> {return this._necessaryDiceboxes;}
   public set necessaryDiceboxes(value: Array<DiceBox>) {this._necessaryDiceboxes = value;}
 
-  public constructor (_dungeon: Dungeon, _encounter: Encounter, _players: Array<Player>, _workspaceIndex: number) {
-    this._dungeon = _dungeon;
+  public constructor (dungeon: Dungeon, _encounter: Encounter, players: Array<Player>, _workspaceIndex: number) {
     this._encounter = _encounter;
-    this._players = _players;
     this._workspaceIndex = _workspaceIndex;
 
     this._availableDice = new Array<[Dice, boolean]>();
     this._diceInBox = new Array<[Dice, number, DiceBox]>();
     this._necessaryDiceboxes = new Array<DiceBox>();
 
-    this._players.forEach((p : Player) => {
+    players.forEach((p : Player) => {
       for (let i = 0; i < 3; i++) {
         for (let v = 0; v < p.itemSum().values[i]; v++) {
           this._availableDice.push([new Dice(i), false]);
@@ -49,8 +43,8 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
       }
     });
 
-    this._dungeon.floors.map((floor : Floor, index : number) => {
-      if (index <= this._dungeon.currFloor) {
+    dungeon.floors.map((floor : Floor, index : number) => {
+      if (index <= dungeon.currFloor) {
         if (this._encounter.type == 1) { //combat
           this.necessaryDiceboxes.push(...floor.combatBoxes);
         } else if (this._encounter.type >= 2) { //peril
@@ -72,7 +66,7 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
 
     if (box.constrainedToOne) {
       this._diceInBox.forEach((value: [Dice, number, DiceBox]) => {
-        if (value[0] == dice || value[2] == box) {
+        if (value[0].equals(dice) || value[2].equals(box)) {
           return;
         }
       });
@@ -98,7 +92,7 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
 
   private makeDiceUsed(dice: Dice) : boolean { //returns true if dice alr used
     this._availableDice.forEach((d: [Dice, boolean]) => {
-      if (dice == d[0]) {
+      if (dice.equals(d[0])) {
         if (d[1]) {
           return true;
         } else {
@@ -117,7 +111,7 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
       let neededRoll: number = box.neededRoll;
       let partialAdder: number = 0;
       this._diceInBox.map((value: [Dice, number, DiceBox], valueIndex: number) => {
-        if (box == value[2]) {
+        if (box.equals(value[2])) {
           partialAdder += value[1];
         }
       });

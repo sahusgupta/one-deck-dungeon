@@ -21,12 +21,28 @@ class DiceBox {
     public get punishmentHearts(): number{return this._punishmentHearts;}
     public get punishmentTime(): number{return this._punishmentTime;}
 
-    constructor(need: number, type: number, constrained: boolean, punishmentTime: number, punishmentHearts : number){
+    private _idNum: number;
+    public get idNum(): number {return this._idNum;}
+    public set idNum(value: number) {this._idNum = value;}
+
+    private static incrementor: number = 0;
+
+    constructor(need: number, type: number, constrained: boolean, punishmentTime: number, punishmentHearts : number, id?: number){
         this._neededRoll = need;
         this._constrainedToOne = constrained;
         this._punishmentTime = punishmentTime;
         this._punishmentHearts = punishmentHearts;
         this._type = type;
+
+        if (id) {
+            this._idNum = id;
+        } else {
+            this._idNum = DiceBox.incrementor++;
+        }
+    }
+
+    public equals(other: DiceBox) : boolean {
+        return other.idNum == this._idNum;
     }
 }
 
