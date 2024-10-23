@@ -11,7 +11,6 @@ import { Encounter } from "../../middle-end/Encounter/Encounter";
 import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
 import EncounterCard from "../../components/Encounter";
-import { useImmer } from "use-immer";
 import cloneDeep from "lodash/cloneDeep";
 
 const PlayPage: React.FC = () => {
@@ -71,7 +70,6 @@ const PlayPage: React.FC = () => {
   };
 
   const exploreDeck = () => { //DOESNT HANDLE IF FLOORS RUN OUT
-    console.log("humma cavula1")
     let hasEmpty : boolean = false;
     const workspace : Array<[Encounter, boolean]> = gameInstance.dungeon.getCurrFloor().workspace;
     workspace.forEach((w: [Encounter, boolean]) => {
@@ -95,7 +93,6 @@ const PlayPage: React.FC = () => {
         }
       }
     );
-    console.log("humma cavula2")
     updateGameEasy()
   };
   
@@ -125,13 +122,11 @@ const PlayPage: React.FC = () => {
 
   useEffect(() => {
     if (onPage){
-      console.log('leaving')
       const navigate = useNavigate()
       navigate('/')
     }
   }, [onPage])
 
-  console.log("getting over here");
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
@@ -198,22 +193,22 @@ const PlayPage: React.FC = () => {
               <div className="flex flex-col items-center">
                 <div className="flex space-x-2">
               {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.yellowDice} onRoll={(value:number) => console.log(value)} />
+                    <Dice key={index} size={50} faces= {Util.yellowDiceFaces} onRoll={(value:number) => console.log(value)} />
                   ))}
                   </div>
                   <div className="flex space-x-2">
                   {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.blueDice} onRoll={(value:number) => console.log(value)} />
+                    <Dice key={index} size={50} faces= {Util.blueDiceFaces} onRoll={(value:number) => console.log(value)} />
                   ))}
                   </div>
                   <div className="flex space-x-2">
                   {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.blackDice} onRoll={(value:number) => console.log(value)} />
+                    <Dice key={index} size={50} faces= {Util.blackDiceFaces} onRoll={(value:number) => console.log(value)} />
                   ))} 
                   </div>
                   <div className="flex space-x-2">
                   {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.pinkDice} onRoll={(value:number) => console.log(value)} />
+                    <Dice key={index} size={50} faces= {Util.pinkDiceFaces} onRoll={(value:number) => console.log(value)} />
                   ))}
                   </div>
                 <p className="mt-2 text-lg">{gameInstance.dungeon.name}</p>

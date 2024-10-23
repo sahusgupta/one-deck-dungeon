@@ -4,6 +4,8 @@ import EncounterBase from "./encounterBase";
 import Dice from "react-dice-roll";
 import { Hero } from "../../middle-end/Hero/Hero";
 import { Player } from "../../middle-end/RuntimeFiles/Player";
+import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
+import { Util } from "../../middle-end/Util/Util";
 
 interface EncounterProps {
   encounter: Encounter;
@@ -21,65 +23,58 @@ const EncounterCard: React.FC<EncounterProps> = ({
   onLose,
 }) => {
   const hearts = player.itemSum().values[3];
-  console.log(hearts)
   const diceConfig = {
     yellow: {
       amount: player.itemSum().values[0],
-      faces: [
-        "https://drive.google.com/thumbnail?id=1RUjbXgb1zrhzmoYPRJHqdsaS0asFj7OQ&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1ugPUVuORGHQgYy6kn-izilERyBQ75ANT&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1j6g5qu_GjariWl9w9TupE7DeBUWIJs0z&sz=w1000",
-        "https://drive.google.com/thumbnail?id=12BRJ3Eo36JPrXHY1ia0FZq1aaAefXDda&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1q6ZyyyhgmBOX54nOhVV8Sl02Or6fgO-h&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1NzQnTTtwFxKxw4DmUkAUch6QZEo0KP2U&sz=w1000",
-      ],
+      faces: Util.yellowDiceFaces,
       boxes: encounter.boxes.filter((box) => box.type === 0),
       colorClass: "yellow",
       boxClass: "bg-yellow-500 border-yellow-700",
     },
     blue: {
       amount: player.itemSum().values[2],
-      faces: [
-        "https://drive.google.com/thumbnail?id=1NygZkS2sL8dtnTpStxIipgNQnh1rPMrQ&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1JqpZte8HBp9S0neVRdE5Gk6B8p7292-B&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1raFkwnYkJSDLuWp5Avc49ybraKFGD_ms&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1lP6_SvegGwqzY7ZCdpdtObGjzt4Isi1F&sz=w1000",
-        "https://drive.google.com/thumbnail?id=10dqi-GNHPodNPmiZ0V_IflLdXVVth3Ue&sz=w1000",
-      ],
+      faces: Util.blueDiceFaces,
       boxes: encounter.boxes.filter((box) => box.type === 2),
       colorClass: "blue",
       boxClass: "bg-blue-500 border-blue-700",
     },
-    // black: {
-    //   amount: 5,
-    //   faces: [
-    //     "https://drive.google.com/thumbnail?id=1dmxTGOmw6cW6wjsWo1xWhK503xvEW6Wc&sz=w1000",
-    //     "https://drive.google.com/thumbnail?id=1mQC_Bv_m2nx_qdNics6bFDm2cDFevhOo&sz=w1000",
-    //     "https://drive.google.com/thumbnail?id=16MpNbd-mWyFc4lyre6BdhRUt_1ia-NAr&sz=w1000",
-    //     "https://drive.google.com/thumbnail?id=1FzGXlI3ae612fxp3PT4sJYkB9mJCYdGx&sz=w1000",
-    //     "https://drive.google.com/thumbnail?id=1r9v3ftIlrTMuPlcMP2zFdLeLeoxfFp0j&sz=w1000",
-    //     "https://drive.google.com/thumbnail?id=1yfnrTeFMirQWuSMc9r8cowUWDKsNJI_J&sz=w1000",
-    //   ],
-    //   boxes: encounter.boxes.filter((box) => box.type === 3),
-    //   colorClass: "black",
-    //   boxClass: "bg-black border-gray-700",
-    // },
     pink: {
       amount: player.itemSum().values[1],
-      faces: [
-        "https://drive.google.com/thumbnail?id=17LTXwJjXjN4rFzA0P827J50lvdP7HOMQ&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1UK-lCu66p_t_9zTp_PjmQsTLFW4CGv-q&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1mml53cxpKcj8EegETGdBmmHVYwJgsoMi&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1gVxmrRN_Cjc2Aq_whiEzFChsBpmBk8sH&sz=w1000",
-        "https://drive.google.com/thumbnail?id=13VseXMQbnHZf3jnHXOSU4L2yH8AsTy6o&sz=w1000",
-        "https://drive.google.com/thumbnail?id=1K2IP4g_GxA5EmkFWUeEAS0B4Df55KkEU&sz=w1000",
-      ],
+      faces: Util.pinkDiceFaces,
       boxes: encounter.boxes.filter((box) => box.type === 1),
       colorClass: "pink",
       boxClass: "bg-pink-500 border-pink-700",
     },
   };
+
+  const floorBoxes = Dungeon.DragonCave.getCurrFloor().perilBoxes.map((box, index) => {
+    console.log(box)
+    let colorClass = "gray";
+    let boxClass = "bg-gray-500 border-gray-700";
+    let faces = Util.blackDiceFaces; // Default to black dice faces
+
+    if (box.type === 0) {
+      colorClass = "yellow";
+      boxClass = "bg-yellow-500 border-yellow-700";
+      faces = Util.yellowDiceFaces;
+    } else if (box.type === 1) {
+      colorClass = "pink";
+      boxClass = "bg-pink-500 border-pink-700";
+      faces = Util.pinkDiceFaces;
+    } else if (box.type === 2) {
+      colorClass = "blue";
+      boxClass = "bg-blue-500 border-blue-700";
+      faces = Util.blueDiceFaces;
+    }
+
+    return {
+      ...box,
+      colorClass,
+      boxClass,
+      faces,
+      index,
+    };
+  });
 
   const [state, setState] = useState(() => {
     const initialState: Record<string, any> = {};
@@ -91,6 +86,9 @@ const EncounterCard: React.FC<EncounterProps> = ({
         current: Array(diceConfig[color as keyof typeof diceConfig].boxes.length).fill(0),
       };
     }
+    initialState.floor = {
+      current: Array(floorBoxes.length).fill(0),
+    };
     return initialState;
   });
 
@@ -147,12 +145,22 @@ const EncounterCard: React.FC<EncounterProps> = ({
   ) => {
     setState((prevState) => {
       const newState = { ...prevState };
+      const box = diceConfig[color as keyof typeof diceConfig].boxes[boxIndex];
       if (!newState[color].diceDropped[diceIndex]) {
-        newState[color].current[boxIndex] += value;
-        newState[color].diceDropped[diceIndex] = true;
+        if (box.getConstrainedToOne() && newState[color].current[boxIndex] === 0) {
+          newState[color].current[boxIndex] += value;
+          newState[color].diceDropped[diceIndex] = true;
+        } else if (!box.getConstrainedToOne()) {
+          newState[color].current[boxIndex] += value;
+          newState[color].diceDropped[diceIndex] = true;
+        }
       }
       return newState;
     });
+  };
+
+  const logPunishmentDetails = (box: any) => {
+    console.log(`Punishment Time: ${box.punishmentTime}, Punishment Hearts: ${box.punishmentHearts}`);
   };
 
   const renderDiceAndBoxes = (color: string) => {
@@ -206,8 +214,32 @@ const EncounterCard: React.FC<EncounterProps> = ({
             }}
           >
             {state[color].current[boxIndex]}/{box.neededRoll} {color} Box
+            {box.punishmentTime === 0 ? " *" : ""}
+            {state[color].current[boxIndex] < box.neededRoll && box.punishmentTime > 0 && (
+              <button onClick={() => logPunishmentDetails(box)}>Log Punishment</button>
+            )}
           </div>
         ))}
+      </div>
+    );
+  };
+
+  const renderFloorBoxes = () => {
+    return (
+      <div className="flex space-x-2 mt-4">
+        {floorBoxes.map((box: any, index: number) => {
+          const neededRoll = box._neededRoll; // Access the neededRoll from the private property
+          console.log(`Floor Box ${index}:`, box);
+          console.log(neededRoll);
+          return (
+            <div
+              key={`floor-box-${index}`}
+              className={`${box.boxClass} p-2 rounded-md border-dotted border-2`}
+            >
+              {state.floor.current[index]}/{neededRoll} Floor Box
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -222,12 +254,12 @@ const EncounterCard: React.FC<EncounterProps> = ({
           alt={encounter.name}
         />
       </div>
-        {/* Heart Section */}
-        <div className="flex items-center justify-center space-x-2 my-4">
-      <span className="text-xl font-semibold text-white">Hearts:</span>
-      {hearts && Array.from({ length: hearts }).map((_, index) => (
-        <span key={index} className="text-red-500 text-2xl">❤️</span>
-      ))}
+      {/* Heart Section */}
+      <div className="flex items-center justify-center space-x-2 my-4">
+        <span className="text-xl font-semibold text-white">Hearts:</span>
+        {hearts && Array.from({ length: hearts }).map((_, index) => (
+          <span key={index} className="text-red-500 text-2xl">❤️</span>
+        ))}
       </div>
       {/* Dice Section */}
       <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
@@ -236,7 +268,13 @@ const EncounterCard: React.FC<EncounterProps> = ({
           {Object.keys(diceConfig).map((color) => renderDiceAndBoxes(color))}
         </div>
       </div>
-
+      {/* Floor Boxes Section */}
+      <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md mt-4">
+        <h2 className="text-2xl font-bold mb-2">Floor Boxes</h2>
+        <div className="flex flex-col items-center">
+          {renderFloorBoxes()}
+        </div>
+      </div>
       {/* Action Buttons */}
       <div className="flex space-x-4 mt-4">
         <button

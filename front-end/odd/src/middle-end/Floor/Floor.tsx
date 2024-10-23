@@ -28,7 +28,9 @@ export class Floor {
     public set workspace(value: Array<[Encounter, boolean]>) {
         this._workspace = value;
     }
-
+    public get perilBoxes(): Array<DiceBox> {
+        return this._perilBoxes;
+    }
     constructor(debuff: Debuff, perilBoxes: Array<DiceBox>, combatBoxes: Array<DiceBox>) {
         this._debuff = debuff;
         this._perilBoxes = perilBoxes;

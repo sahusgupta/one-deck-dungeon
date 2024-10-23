@@ -19,7 +19,12 @@ class DiceBox {
     public set type(value: number) {
         this._type = value;
     }
-
+    public get punishmentHearts(): number{
+        return this._punishmentHearts;
+    }
+    public get punishmentTime(): number{
+        return this._punishmentTime;
+    }
     constructor(need: number, type: number, constrained: boolean, punishmentTime: number, punishmentHearts : number){
         this._neededRoll = need;
         this._constrainedToOne = constrained;
