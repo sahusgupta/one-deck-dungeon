@@ -11,18 +11,24 @@ import { Encounter } from "../../middle-end/Encounter/Encounter";
 import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
 import EncounterCard from "../../components/Encounter";
+import { useImmer } from "use-immer";
+import cloneDeep from "lodash/cloneDeep";
 
 const PlayPage: React.FC = () => {
-  const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
+  const [gameInstance, updateGameInstance] = useState<any>(Game.getInstance());
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
   const [isEncounterFacing, setEncounterFacing] = useState(false);
   
+  const updateGameEasy = () => {
+    updateGameInstance(cloneDeep(gameInstance));
+  }
+
   useEffect(() => {
     console.log("use effect working");
-    gameInstance.pushToFirebase
+    // gameInstance.pushToFirebase
   
   }, [gameInstance]);
 
@@ -52,7 +58,7 @@ const PlayPage: React.FC = () => {
     gameInstance.activeEncounter = [Encounter.EmptyEncounter, 4];
 
     setEncounterFacing(false);
-    updateGameInstance(gameInstance);
+    updateGameEasy()
   };
   
   const submitChat = async (inputText: string) => {
@@ -61,10 +67,11 @@ const PlayPage: React.FC = () => {
         ": " +
         inputText
     );
-    updateGameInstance(gameInstance);
+    updateGameEasy()
   };
 
   const exploreDeck = () => { //DOESNT HANDLE IF FLOORS RUN OUT
+    console.log("humma cavula1")
     let hasEmpty : boolean = false;
     const workspace : Array<[Encounter, boolean]> = gameInstance.dungeon.getCurrFloor().workspace;
     workspace.forEach((w: [Encounter, boolean]) => {
@@ -74,6 +81,7 @@ const PlayPage: React.FC = () => {
     });
 
     if (!hasEmpty) {
+      updateGameEasy()
       return;
     }
 
@@ -87,8 +95,8 @@ const PlayPage: React.FC = () => {
         }
       }
     );
-    console.log("humma cavula")
-    updateGameInstance(gameInstance);
+    console.log("humma cavula2")
+    updateGameEasy()
   };
   
   const activeClick = (index: number) => {
@@ -104,7 +112,7 @@ const PlayPage: React.FC = () => {
 
     gameInstance.activeEncounter = [workspace[index][0], index];
     setEncounterModalOpen(true);
-    updateGameInstance(gameInstance);
+    updateGameEasy()
   };
 
   const showChat = async (gameId: string, title: string, message: string) => {
@@ -123,7 +131,7 @@ const PlayPage: React.FC = () => {
     }
   }, [onPage])
 
-
+  console.log("getting over here");
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
@@ -176,7 +184,7 @@ const PlayPage: React.FC = () => {
               <div className="fixed left-0 top-50 h-3/4 w-1/4 bg-gray-800 p-4 shadow-md">
                 <h2 className="text-xl font-bold mb-4">Chat</h2>
                 <div className="flex flex-col h-3/4 overflow-y-scroll bg-gray-700 p-2 rounded-md shadow-inner">
-                  {gameInstance.chatLog.map((message, index) => (
+                  {gameInstance.chatLog.map((message : string, index : number) => (
                     <div key={index} className="text-sm text-gray-200 mb-2">
                       {message}
                     </div>
@@ -233,10 +241,11 @@ const PlayPage: React.FC = () => {
                   />
                 ))}
               </div>
-              <div onClick={exploreDeck}>
+              <div>
                 <img
                   src="ClosedDoor.jpg"
                   className="w-50 h-32 m-1 object-cover rounded-md shadow-lg m-auto mt-10"
+                  onClick={() => exploreDeck()}
                 />
               </div>
             </div>

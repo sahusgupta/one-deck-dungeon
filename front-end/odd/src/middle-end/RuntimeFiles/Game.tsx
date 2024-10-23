@@ -9,44 +9,38 @@ export class Game {
     private _active: boolean = false;
     public get active(): boolean { return this._active; }
     public set active(value: boolean) { this._active = value; }
+
     private _playerList: Array<Player>;
-    public get playerList(): Array<Player> {
-        return this._playerList;
-    }
-    public set playerList(value: Array<Player>) {
-        this._playerList = value;
-    }
+    public get playerList(): Array<Player> {return this._playerList;}
+    public set playerList(value: Array<Player>) {this._playerList = value;}
+
     private _dungeon: Dungeon;
     public get dungeon(): Dungeon {return this._dungeon;}
     public set dungeon(value: Dungeon) {this._dungeon = value;}
+
     private _gameId: string | null;
     public get gameId(): string | null { return this._gameId; }
     public set gameId(value: string | null) { this._gameId = value; }
+
     private _potions: number;
     public get potions(): number { return this._potions; }
     public set potions(value: number) { this._potions = value; }
+
     private _level: number;
     public get level(): number { return this._level; }
     public set level(value: number) { this._level = value; }
+
     private _playerNum: number;
     public get playerNum(): number { return this._playerNum; }
     public set playerNum(value: number) { this._playerNum = value; }
 
     private _chatLog: Array<string>;
-    public get chatLog(): Array<string> {
-        return this._chatLog;
-    }
-    public set chatLog(value: Array<string>) {
-        this._chatLog = value;
-    }
+    public get chatLog(): Array<string> {return this._chatLog;}
+    public set chatLog(value: Array<string>) {this._chatLog = value;}
 
     private _activeEncounter: [Encounter, number]; //the active encounter, and its index in workspace
-    public get activeEncounter(): [Encounter, number] {
-        return this._activeEncounter;
-    }
-    public set activeEncounter(value: [Encounter, number]) {
-        this._activeEncounter = value;
-    }
+    public get activeEncounter(): [Encounter, number] {return this._activeEncounter;}
+    public set activeEncounter(value: [Encounter, number]) {this._activeEncounter = value;}
     
     private static _instance : Game;
   
@@ -64,6 +58,7 @@ export class Game {
         this._chatLog = new Array<string>();
         this._activeEncounter = [Encounter.EmptyEncounter, 4];
     }
+
     //HANDLES ALL NETWORKING AND CROSS COMMUNICATION
 
     public static getInstance() : Game {
@@ -96,22 +91,22 @@ export class Game {
     }
     //ARRAYS: COMMA SEPERATED NO SPACES Ex: "turtle,frog,fox,monkey"
     //TUPLE ARRAYS: DASH SEPERATES TUPLE ITEMS, COMMA SEPERATED Ex: "turtle-2,frog-1,fox-3,monkey-4" 
-    public async pushToFirebase(gameId: number) {
-        if (gameId) {
-            await setDoc(doc(db, "games", gameId.toString()), {
-              gameId: gameId,
-              dungeon: this._dungeon.name,
-              players: this._playerList.map(player => player.id).join(","), //TODO
-              boss: dungeon.boss.name,
-              deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
-              hero1: characterSelected,
-              player1dice: [],
-              player2dice: []
-            });
-          } else {
-            console.error("gameId is null");
-          }
-    }
+    // public async pushToFirebase(gameId: number) {
+    //     if (gameId) {
+    //         await setDoc(doc(db, "games", gameId.toString()), {
+    //           gameId: gameId,
+    //           dungeon: this._dungeon.name,
+    //           players: this._playerList.map(player => player.id).join(","), //TODO
+    //           boss: dungeon.boss.name,
+    //           deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
+    //           hero1: characterSelected,
+    //           player1dice: [],
+    //           player2dice: []
+    //         });
+    //       } else {
+    //         console.error("gameId is null");
+    //       }
+    // }
 
     public pullFromFirebase(gameId: number) { //this is hard bc it involved parsing literally every value from firebase
 
