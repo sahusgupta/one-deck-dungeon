@@ -1,0 +1,32 @@
+game on gameId:
+  active: boolean
+  playerList - Array<Player>:
+    id: string
+    skills: Array<string>
+    items - Array<Item>:
+      values: Array<number>
+    defeatedEncounters - Array<[Encounter, boolean]>:
+      name: string
+      isItem: boolean
+    activeDebuff - Debuff:
+      name: string
+    hero - Hero:
+      name: string
+  dungeon - Dungeon:
+    name: string
+  potions: number
+  level: number
+  playerNum: number
+  chatLog: Array<string>
+  activeEncounter - [Encounter, number]:
+    name: string
+    index: number
+  workspace - Array<[Encounter, boolean]>:
+    name: string
+    open: boolean
+  deck: Array<string>
+  discard: Array<string>
+  
+
+
+    

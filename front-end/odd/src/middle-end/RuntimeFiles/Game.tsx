@@ -6,6 +6,11 @@ import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../backend/firebase/firebase_utils';
 
 export class Game {
+
+    private _gameId: string | null;
+    public get gameId(): string | null { return this._gameId; }
+    public set gameId(value: string | null) { this._gameId = value; }
+    
     private _active: boolean = false;
     public get active(): boolean { return this._active; }
     public set active(value: boolean) { this._active = value; }
@@ -17,10 +22,6 @@ export class Game {
     private _dungeon: Dungeon;
     public get dungeon(): Dungeon {return this._dungeon;}
     public set dungeon(value: Dungeon) {this._dungeon = value;}
-
-    private _gameId: string | null;
-    public get gameId(): string | null { return this._gameId; }
-    public set gameId(value: string | null) { this._gameId = value; }
 
     private _potions: number;
     public get potions(): number { return this._potions; }
@@ -41,6 +42,18 @@ export class Game {
     private _activeEncounter: [Encounter, number]; //the active encounter, and its index in workspace
     public get activeEncounter(): [Encounter, number] {return this._activeEncounter;}
     public set activeEncounter(value: [Encounter, number]) {this._activeEncounter = value;}
+
+    private _workspace: Array<[Encounter, boolean]>;
+    public get workspace(): Array<[Encounter, boolean]> {return this._workspace;}
+    public set workspace(value: Array<[Encounter, boolean]>) {this._workspace = value;}
+
+    private _deck: Array<Encounter>;
+    public get deck(): Array<Encounter> {return this._deck;}
+    public set deck(value: Array<Encounter>) {this._deck = value;}
+
+    private _discard: Array<Encounter>;
+    public get discard(): Array<Encounter> {return this._discard;}
+    public set discard(value: Array<Encounter>) {this._discard = value;}
     
     private static _instance : Game;
   
@@ -57,9 +70,34 @@ export class Game {
         this._playerNum = this._playerList.length;
         this._chatLog = new Array<string>();
         this._activeEncounter = [Encounter.EmptyEncounter, 4];
+
+        this._workspace = new Array<[Encounter, boolean]>(
+            [Encounter.EmptyEncounter, false],
+            [Encounter.EmptyEncounter, false],
+            [Encounter.EmptyEncounter, false],
+            [Encounter.EmptyEncounter, false]
+        );
+
+        this._discard = new Array<Encounter>();
+        this._deck = Array.from<Encounter>(Encounter.encounterList);
+        this.shuffle(this._deck);
     }
 
     //HANDLES ALL NETWORKING AND CROSS COMMUNICATION
+
+    private shuffle(array : Array<Encounter>) {
+        for (let i = array.length - 1; i > 0; i--) { 
+            const j = Math.floor(Math.random() * (i + 1)); 
+            [array[i], array[j]] = [array[j], array[i]]; 
+          } 
+          return array; 
+    }
+
+    public burn(num : number) {
+        for (let i : number = 0; i < num ; i++) {
+            this._discard.push(this._deck.pop() ?? Encounter.EmptyEncounter);
+        }
+    }
 
     public static getInstance() : Game {
         return this._instance;
@@ -84,8 +122,8 @@ export class Game {
             "GameID: " + this._gameId + "\n" +
             "Dungeon Boss: " + this._dungeon.boss.name + "\n" +
             "Floor 0 Encounter Sequence: \n";
-        for (var o = 0; o < this._dungeon.floors[0].deck.length; o++) {
-            ret += " - " + this._dungeon.floors[0].deck[o].name + "\n";
+        for (var o = 0; o < this.deck.length; o++) {
+            ret += " - " + this.deck[o].name + "\n";
         }
 
     }
@@ -108,8 +146,8 @@ export class Game {
     //       }
     // }
 
-    public pullFromFirebase(gameId: number) { //this is hard bc it involved parsing literally every value from firebase
+    // public pullFromFirebase(gameId: number) { //this is hard bc it involved parsing literally every value from firebase
 
-    }
+    // }
 
 }

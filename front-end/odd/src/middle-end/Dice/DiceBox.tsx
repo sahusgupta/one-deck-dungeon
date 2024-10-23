@@ -29,12 +29,6 @@ class DiceBox {
         this._type = type;
     }
 
-    getConstrainedToOne(): boolean{return this._constrainedToOne}
-    getheldDice(): number{return this._heldDice;}
-    setNeededRoll(n: number): void {this._neededRoll = n}
-    setConstrainedToOne(b: boolean): void {this._constrainedToOne = b}
-    setHeldDice(n: number): void {this._heldDice = n}
-
     addDice(dice: Dice){
         this._neededRoll -= dice.value;
         this._heldDice += 1;

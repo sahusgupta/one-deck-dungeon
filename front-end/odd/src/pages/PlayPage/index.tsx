@@ -11,11 +11,10 @@ import { Encounter } from "../../middle-end/Encounter/Encounter";
 import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
 import EncounterCard from "../../components/Encounter";
-import { useImmer } from "use-immer";
 import cloneDeep from "lodash/cloneDeep";
 
 const PlayPage: React.FC = () => {
-  const [gameInstance, updateGameInstance] = useState<any>(Game.getInstance());
+  const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
@@ -52,8 +51,8 @@ const PlayPage: React.FC = () => {
   // onLose functionality for the encounter window
   const onEncounterLose = async (heartsLost: number) => {
 
-    gameInstance.dungeon.getCurrFloor().workspace[gameInstance.activeEncounter[1]][0] = Encounter.EmptyEncounter;
-    gameInstance.dungeon.getCurrFloor().workspace[gameInstance.activeEncounter[1]][1] = false;
+    gameInstance.workspace[gameInstance.activeEncounter[1]][0] = Encounter.EmptyEncounter;
+    gameInstance.workspace[gameInstance.activeEncounter[1]][1] = false;
 
     gameInstance.activeEncounter = [Encounter.EmptyEncounter, 4];
 
@@ -71,9 +70,8 @@ const PlayPage: React.FC = () => {
   };
 
   const exploreDeck = () => { //DOESNT HANDLE IF FLOORS RUN OUT
-    console.log("humma cavula1")
     let hasEmpty : boolean = false;
-    const workspace : Array<[Encounter, boolean]> = gameInstance.dungeon.getCurrFloor().workspace;
+    const workspace : Array<[Encounter, boolean]> = gameInstance.workspace;
     workspace.forEach((w: [Encounter, boolean]) => {
       if (w[0].name == Encounter.EmptyEncounter.name) {
         hasEmpty = true;
@@ -85,28 +83,27 @@ const PlayPage: React.FC = () => {
       return;
     }
 
-    gameInstance.dungeon.getCurrFloor().burn(2);
+    gameInstance.burn(2);
 
     workspace.map(
       (encounter: [Encounter, boolean], index : number) => {
         if (encounter[0].name === Encounter.EmptyEncounter.name) {
-          workspace[index][0] = gameInstance.dungeon.getCurrFloor().deck.pop() ?? Encounter.EmptyEncounter; //doesn't handle if floors run out
+          workspace[index][0] = gameInstance.deck.pop() ?? Encounter.EmptyEncounter; //doesn't handle if floors run out
           workspace[index][1] = false;
         }
       }
     );
-    console.log("humma cavula2")
     updateGameEasy()
   };
   
   const activeClick = (index: number) => {
-    const workspace : Array<[Encounter, boolean]> = gameInstance.dungeon.getCurrFloor().workspace;
+    const workspace : Array<[Encounter, boolean]> = gameInstance.workspace;
     if (workspace[index][0] == Encounter.EmptyEncounter) { //only keep going if they clicked on something that exists
       return;
     } //everything past this point def exists
 
     if (!workspace[index][1]) { //if covered, burn 2, flip it
-      gameInstance.dungeon.getCurrFloor().burn(2);
+      gameInstance.burn(2);
       workspace[index][1] = true;
     } //no else statement - active encounter becomes whatever they clicked
 
@@ -222,10 +219,10 @@ const PlayPage: React.FC = () => {
             {/* Deck Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">
-                Deck - Discard: {gameInstance.dungeon.getCurrFloor().discard.length}
+                Deck - Discard: {gameInstance.discard.length}
               </h2>
               <div className="flex flex-wrap justify-center">
-                {gameInstance.dungeon.getCurrFloor().workspace.map((encounterOptional: [Encounter, boolean], index: number) => (
+                {gameInstance.workspace.map((encounterOptional: [Encounter, boolean], index: number) => (
                   <img
                     key={index}
                     src={

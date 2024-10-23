@@ -9,21 +9,7 @@ import { db } from "../../backend/firebase/firebase_utils";
 import { Map } from "../Campaign/Campaign";
 import { log } from "console";
 import { heroes } from "../../backend/mappings";
-interface Dict {
-    heroName: string
-    herotype: string
-    skills: Array<Skill>
-    items: Array<Item>
-    campaign: Map
-}
-
-/*
-
-OR 
-    User
-        - Hero
-            - campaign
-*/
+import { Encounter } from "../Encounter/Encounter";
 
 export class Player {
     private _id: string;
@@ -31,6 +17,12 @@ export class Player {
     public set id(value: string) {this._id = value;}
     
     private _skills: Array<Skill>;
+    public get skills(): Array<Skill> {
+        return this._skills;
+    }
+    public set skills(value: Array<Skill>) {
+        this._skills = value;
+    }
 
     private _items: Array<Item>;
     public get items(): Array<Item> {
@@ -39,6 +31,10 @@ export class Player {
     public set items(value: Array<Item>) {
         this._items = value;
     }
+
+    private _defeatedEncounters: Array<[Encounter, boolean]>;
+    public get defeatedEncounters(): Array<[Encounter, boolean]> {return this._defeatedEncounters;}
+    public set defeatedEncounters(value: Array<[Encounter, boolean]>) {this._defeatedEncounters = value;}
 
     private _activeDebuff: Debuff;
 
@@ -55,46 +51,12 @@ export class Player {
         this._hero = hero;
         this._skills = new Array<Skill>(hero.feat, hero.basicSkill);
         this._items = new Array<Item>(hero.basicItem);
+        this._defeatedEncounters = new Array<[Encounter, boolean]>();
         this._activeDebuff = Debuff.Null;
     }
 
     public static getFromId (id: string, hero: Hero) : Player {
         return new Player(id, hero);
-    }
-
-    public async loadFromStore (id: string) {
-        const dRef = doc(db, 'users', id)
-        const dVerif = await getDoc(dRef)
-        if (dVerif.exists()){
-            let data = dVerif.data()
-            let name = dVerif.id;
-            let heroInfo = JSON.parse(String(data))
-            let hero = null;
-        } else {
-            
-        }
-    }
-    public async saveToStore (event: Event) {
-        alert('saving data to firestore')
-        let campaign = this._hero.campaign.toFirestore();
-        let exp: Dict = {
-            heroName: this._hero.name,
-            herotype: this._hero.heroName,
-            skills: this._skills,
-            items: this._items,
-            campaign: await campaign,
-        }
-        let subColls = collection(db, `users/${localStorage.getItem("credentials") ? String(localStorage.getItem("credentials")) : ""}`)
-        let q = query(subColls);
-        let docs = await getDocs(q);
-        let heronames: string[] = [];
-        docs.forEach((doc) => {
-            heronames.push(doc.id)
-        })
-        let d = doc(db, `users/${localStorage.getItem("credentials") ? String(localStorage.getItem("credentials")) : ""}`, exp.heroName)
-        
-        setDoc(d, {[exp.heroName]: exp})
-        
     }
 
     public itemSum () : Item {
