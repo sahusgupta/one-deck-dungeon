@@ -12,6 +12,7 @@ import { Util } from "../../middle-end/Util/Util";
 import EncounterModal from "../../components/Modals/encounterModal";
 import EncounterCard from "../../components/Encounter";
 import cloneDeep from "lodash/cloneDeep";
+import { EncounterRuntime } from "../../middle-end/RuntimeFiles/EncounterRuntime";
 
 const PlayPage: React.FC = () => {
   const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
@@ -35,7 +36,10 @@ const PlayPage: React.FC = () => {
     setModalOpen(false);
   };
   const encounterStay = () => {
+    gameInstance.activeEncounterRuntime = null;
+
     setEncounterModalOpen(false);
+    updateGameEasy();
   }
 
   const encounterAccepted = () => {
@@ -51,10 +55,10 @@ const PlayPage: React.FC = () => {
   // onLose functionality for the encounter window
   const onEncounterLose = async (heartsLost: number) => {
 
-    gameInstance.workspace[gameInstance.activeEncounter[1]][0] = Encounter.EmptyEncounter;
-    gameInstance.workspace[gameInstance.activeEncounter[1]][1] = false;
+    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
+    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
 
-    gameInstance.activeEncounter = [Encounter.EmptyEncounter, 4];
+    gameInstance.activeEncounterRuntime = null;
 
     setEncounterFacing(false);
     updateGameEasy()
@@ -107,7 +111,7 @@ const PlayPage: React.FC = () => {
       workspace[index][1] = true;
     } //no else statement - active encounter becomes whatever they clicked
 
-    gameInstance.activeEncounter = [workspace[index][0], index];
+    gameInstance.activeEncounterRuntime = new EncounterRuntime(gameInstance.dungeon, workspace[index][0], gameInstance.playerList, index);
     setEncounterModalOpen(true);
     updateGameEasy()
   };
@@ -302,7 +306,7 @@ const PlayPage: React.FC = () => {
               isOpen={isEncounterModalOpen}
               onClose={encounterStay}
                 title={"You have encountered"}
-                content={gameInstance.activeEncounter? Util.convertEncounterNameToShowName(gameInstance.activeEncounter[0].name) : "NULL ENCOUNTER ERROR"}
+                content={gameInstance.activeEncounterRuntime? Util.convertEncounterNameToShowName(gameInstance.activeEncounterRuntime.encounter.name) : "NULL ENCOUNTER ERROR"}
                 onAction={encounterAccepted}
                 actionLabel="Encounter"
               />

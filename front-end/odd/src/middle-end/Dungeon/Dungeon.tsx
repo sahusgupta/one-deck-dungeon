@@ -28,8 +28,8 @@ export class Dungeon {
     public constructor(name : string, boss: Encounter, floor0: Floor, floor1: Floor, floor2: Floor) {
         this._boss = boss;
         this._name = name;
-        this._floors = new Array<Floor>(
-            floor0, floor1, floor2);
+        this._floors = new Array<Floor>(floor0, floor1, floor2);
+        this._currFloor = 0;
     }
 
     public static getFromBossName(bossName : string | null) : Dungeon {

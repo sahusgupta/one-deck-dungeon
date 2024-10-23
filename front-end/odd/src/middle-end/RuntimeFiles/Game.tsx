@@ -4,6 +4,7 @@ import { Hero } from "../Hero/Hero";
 import { Player } from "./Player";
 import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../backend/firebase/firebase_utils';
+import { EncounterRuntime } from "./EncounterRuntime";
 
 export class Game {
 
@@ -39,9 +40,9 @@ export class Game {
     public get chatLog(): Array<string> {return this._chatLog;}
     public set chatLog(value: Array<string>) {this._chatLog = value;}
 
-    private _activeEncounter: [Encounter, number]; //the active encounter, and its index in workspace
-    public get activeEncounter(): [Encounter, number] {return this._activeEncounter;}
-    public set activeEncounter(value: [Encounter, number]) {this._activeEncounter = value;}
+    private _activeEncounterRuntime: EncounterRuntime | null; //null runtime means you arent fighting
+    public get activeEncounterRuntime(): EncounterRuntime | null {return this._activeEncounterRuntime;}
+    public set activeEncounterRuntime(value: EncounterRuntime | null) {this._activeEncounterRuntime = value;}
 
     private _workspace: Array<[Encounter, boolean]>;
     public get workspace(): Array<[Encounter, boolean]> {return this._workspace;}
@@ -69,7 +70,7 @@ export class Game {
         this._level = 1;
         this._playerNum = this._playerList.length;
         this._chatLog = new Array<string>();
-        this._activeEncounter = [Encounter.EmptyEncounter, 4];
+        this._activeEncounterRuntime = null;
 
         this._workspace = new Array<[Encounter, boolean]>(
             [Encounter.EmptyEncounter, false],
