@@ -44,10 +44,10 @@ export class Util {
           return [Util.blueDiceFaces, `blue`];
           break;
         case 3: //black
-          return [Util.blackDiceFaces, `black`];
+          return [Util.blackDiceFaces, `gray`];
           break;
         default:
-          return [Util.blackDiceFaces, `black`];
+          return [Util.blackDiceFaces, `gray`];
           break;
       }
     }

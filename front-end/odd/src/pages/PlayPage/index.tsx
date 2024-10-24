@@ -200,34 +200,7 @@ const PlayPage: React.FC = () => {
                 </div>
               </div>
             )}
-            {/* Dice Section */}
-            <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-2">Dice</h2>
-              <div className="flex flex-col items-center">
-                <div className="flex space-x-2">
-              {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.yellowDiceFaces} onRoll={(value:number) => console.log(value)} />
-                  ))}
-                  </div>
-                  <div className="flex space-x-2">
-                  {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.blueDiceFaces} onRoll={(value:number) => console.log(value)} />
-                  ))}
-                  </div>
-                  <div className="flex space-x-2">
-                  {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.blackDiceFaces} onRoll={(value:number) => console.log(value)} />
-                  ))} 
-                  </div>
-                  <div className="flex space-x-2">
-                  {Array.from({length: 4}, (_, index) => (
-                    <Dice key={index} size={50} faces= {Util.pinkDiceFaces} onRoll={(value:number) => console.log(value)} />
-                  ))}
-                  </div>
-                <p className="mt-2 text-lg">{gameInstance.dungeon.name}</p>
-              </div>
-            </div>
-            {/* Deck Section */}
+            
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">
                 Deck - Discard: {gameInstance.discard.length}
@@ -284,6 +257,7 @@ const PlayPage: React.FC = () => {
                 player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
                 onLose={() => onEncounterLose(1)}
                 updateGameEasy={updateGameEasy}
+                gameInstance={gameInstance}
               />
             )
 
