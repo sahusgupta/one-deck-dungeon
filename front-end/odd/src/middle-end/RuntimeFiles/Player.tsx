@@ -36,8 +36,6 @@ export class Player {
     public get defeatedEncounters(): Array<[Encounter, boolean]> {return this._defeatedEncounters;}
     public set defeatedEncounters(value: Array<[Encounter, boolean]>) {this._defeatedEncounters = value;}
 
-    private _activeDebuff: Debuff;
-
     private _hero: Hero;
     public get hero(): Hero {
         return this._hero;
@@ -52,7 +50,6 @@ export class Player {
         this._skills = new Array<Skill>(hero.feat, hero.basicSkill);
         this._items = new Array<Item>(hero.basicItem);
         this._defeatedEncounters = new Array<[Encounter, boolean]>();
-        this._activeDebuff = Debuff.Null;
     }
 
     public static getFromId (id: string, hero: Hero) : Player {

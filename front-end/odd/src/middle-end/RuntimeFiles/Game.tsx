@@ -134,8 +134,9 @@ export class Game {
     //     if (gameId) {
     //         await setDoc(doc(db, "games", gameId.toString()), {
     //           gameId: gameId,
-    //           dungeon: this._dungeon.name,
-    //           players: this._playerList.map(player => player.id).join(","), //TODO
+    //           active: this._active,
+    //           players: this._playerList.map(player => player.id).join(","),
+    //           active: this._dungeon.name,
     //           boss: dungeon.boss.name,
     //           deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
     //           hero1: characterSelected,

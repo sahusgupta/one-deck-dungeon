@@ -6,7 +6,6 @@ gameId - game:
     items:
       values: Array<number>
     defeatedEncounters - Array<[Encounter, boolean]>: Array<string-boolean>
-    activeDebuff: string
     hero: string
   dungeon - Dungeon:
     name: string
