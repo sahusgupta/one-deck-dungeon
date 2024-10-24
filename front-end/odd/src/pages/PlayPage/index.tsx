@@ -249,15 +249,13 @@ const PlayPage: React.FC = () => {
                 ))}
               </div>
             </div>
-            {isEncounterFacing && gameInstance.activeEncounterRuntime && (
+            {isEncounterFacing && (
               <EncounterCard
-                encounterRuntimeInit={gameInstance.activeEncounterRuntime}
                 onClick= {() => console.log("running the encounter")}
                 onWin={() => onEncounterWin()}
                 player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
                 onLose={() => onEncounterLose(1)}
-                updateGameEasy={updateGameEasy}
-                gameInstance={gameInstance}
+                gameInstanceImport={gameInstance}
               />
             )
 

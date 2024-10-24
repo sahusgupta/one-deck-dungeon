@@ -12,36 +12,32 @@ import cloneDeep from "lodash/cloneDeep";
 import { Game } from "../../middle-end/RuntimeFiles/Game";
 
 interface EncounterProps {
-  encounterRuntimeInit: EncounterRuntime;
   onClick: () => void;
   onWin: () => void;
   player: Player;
   onLose: () => void;
-  updateGameEasy: (encounterRuntime?: EncounterRuntime) => void;
-  gameInstance: Game;
+  gameInstanceImport: Game;
 }
 
 const EncounterCard: React.FC<EncounterProps> = ({
-  encounterRuntimeInit,
   onClick,
   onWin,
   player,
   onLose,
-  updateGameEasy,
-  gameInstance,
+  gameInstanceImport,
 }) => {
   const hearts = player.itemSum().values[3];
-  const [encounterRuntime, updateEncounterRuntime] = useState<EncounterRuntime>(
-    encounterRuntimeInit
+  const [gameInstance, updateGameInstance] = useState<Game>(
+    gameInstanceImport
   );
 
-  const updateRuntimeEasy = () => {
-    updateEncounterRuntime(cloneDeep(encounterRuntime));
-  };
+  const updateGameEasy = () => {
+    updateGameInstance(cloneDeep(gameInstance));
+  }
 
   useEffect(() => {
-    updateGameEasy(cloneDeep(encounterRuntime));
-  }, [encounterRuntime]);
+    gameInstance.pushToFirebase();
+  }, [gameInstance]);
 
   const logPunishmentDetails = (box: DiceBox) => {
     console.log(
@@ -53,7 +49,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
     return (
       <div className="flex flex-wrap space-x-2 mt-4">
         {/* Dice */}
-        {encounterRuntime.availableDice.map(([dice, used], diceIndex) => (
+        {gameInstance.activeEncounterRuntime?.availableDice.map(([dice, used], diceIndex) => (
           <div
             key={`dice-${diceIndex}`}
             draggable={!used && dice.beenRolled()}
@@ -68,14 +64,14 @@ const EncounterCard: React.FC<EncounterProps> = ({
               faces={Util.diceTypeToFacesAndClasses(dice.type)[0]}
               onRoll={(value: number) => {
                 dice.value = value; // Set dice value
-                updateRuntimeEasy();
+                updateGameEasy();
               }}
               disabled={dice.beenRolled()}
             />
           </div>
         ))}
         {/* Boxes */}
-        {encounterRuntime.necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => (
+        {gameInstance.activeEncounterRuntime?.necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => (
           <div
             key={`box-${boxIndex}`}
             className={`bg-${Util.diceTypeToFacesAndClasses(box.type)[1]}-500 p-2 rounded-md border-2`}
@@ -84,19 +80,19 @@ const EncounterCard: React.FC<EncounterProps> = ({
               e.preventDefault();
               const data = e.dataTransfer.getData("text/plain");
               const foundDice = Util.findDiceWithID(
-                encounterRuntime.availableDice.map((v) => v[0]),
+                gameInstance.activeEncounterRuntime?.availableDice.map((v) => v[0]) ?? new Array(),
                 Number.parseInt(data)
               );
               if (foundDice) {
-                encounterRuntime.useDiceOnBox(foundDice, box);
+                gameInstance.activeEncounterRuntime?.useDiceOnBox(foundDice, box);
               }
 
               console.log("humma cavula");
-              console.log(encounterRuntime.checkState());
-              updateRuntimeEasy();
+              console.log(gameInstance.activeEncounterRuntime?.checkState());
+              updateGameEasy();
             }}
           >
-            {encounterRuntime.findFillAmount(box.idNum)}/{box.neededRoll} Box
+            {gameInstance.activeEncounterRuntime?.findFillAmount(box.idNum)}/{box.neededRoll} Box
             {box.punishmentTime === 0 ? " *" : ""}
           </div>
         ))}
@@ -108,7 +104,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
     <EncounterBase isOpen={true} onClose={onClick}>
       <div className="text-white">
         <h1 className="text-3xl font-bold mb-4 text-center">
-          {encounterRuntime.encounter.name}
+          {gameInstance.activeEncounterRuntime?.encounter.name}
         </h1>
         <div className="flex justify-center items-center space-x-4 mb-4">
           <div className="flex flex-col items-center">
@@ -129,11 +125,11 @@ const EncounterCard: React.FC<EncounterProps> = ({
           </div>
           <div className="flex flex-col items-center">
             <img
-              src={`/Encounters/${encounterRuntime.encounter.name}.jpg`}
-              alt={encounterRuntime.encounter.name}
+              src={`/Encounters/${gameInstance.activeEncounterRuntime?.encounter.name}.jpg`}
+              alt={gameInstance.activeEncounterRuntime?.encounter.name}
               className="w-32 h-32 object-contain rounded-md mb-2"
             />
-            <span className="text-sm">{encounterRuntime.encounter.name}</span>
+            <span className="text-sm">{gameInstance.activeEncounterRuntime?.encounter.name}</span>
           </div>
         </div>
       </div>
@@ -156,10 +152,10 @@ const EncounterCard: React.FC<EncounterProps> = ({
       <div className="flex justify-center space-x-4 mt-4">
         <button
           className={`px-4 py-2 bg-${
-            encounterRuntime.checkState() <= 1 ? `red` : `green`
+            (gameInstance.activeEncounterRuntime?.checkState() ?? 0) <= 1 ? `red` : `green`
           }-500 text-white rounded`}
           onClick={onWin}
-          disabled={encounterRuntime.checkState() == 0}
+          disabled={gameInstance.activeEncounterRuntime?.checkState() == 0}
         >
           Leave Encounter
         </button>
