@@ -25,71 +25,10 @@ const EncounterCard: React.FC<EncounterProps> = ({
   onLose,
 }) => {
   const hearts = player.itemSum().values[3];
-  const diceConfig = {
-    yellow: {
-      amount: player.itemSum().values[0],
-      faces: Util.yellowDiceFaces,
-      boxes: encounter.boxes.filter((box) => box.type === 0),
-      colorClass: "yellow",
-      boxClass: "bg-yellow-500 border-yellow-700",
-    },
-    blue: {
-      amount: player.itemSum().values[2],
-      faces: Util.blueDiceFaces,
-      boxes: encounter.boxes.filter((box) => box.type === 2),
-      colorClass: "blue",
-      boxClass: "bg-blue-500 border-blue-700",
-    },
-    pink: {
-      amount: player.itemSum().values[1],
-      faces: Util.pinkDiceFaces,
-      boxes: encounter.boxes.filter((box) => box.type === 1),
-      colorClass: "pink",
-      boxClass: "bg-pink-500 border-pink-700",
-    },
-  };
-
-  const floorBoxes = Dungeon.DragonCave.getCurrFloor().perilBoxes.map((box, index) => {
-    console.log(box)
-    let colorClass = "gray";
-    let boxClass = "bg-gray-500 border-gray-700";
-    let faces = Util.blackDiceFaces; // Default to black dice faces
-
-    if (box.type === 0) {
-      colorClass = "yellow";
-      boxClass = "bg-yellow-500 border-yellow-700";
-      faces = Util.yellowDiceFaces;
-    } else if (box.type === 1) {
-      colorClass = "pink";
-      boxClass = "bg-pink-500 border-pink-700";
-      faces = Util.pinkDiceFaces;
-    } else if (box.type === 2) {
-      colorClass = "blue";
-      boxClass = "bg-blue-500 border-blue-700";
-      faces = Util.blueDiceFaces;
-    }
-
-    return {
-      ...box,
-      colorClass,
-      boxClass,
-      faces,
-      index,
-    };
-  });
-
+  console.log(encounterRuntime);
   const [state, setState] = useState(() => {
-    const initialState: Record<string, any> = {};
-    for (const color in diceConfig) {
-      initialState[color] = {
-        rolledDice: Array(diceConfig[color as keyof typeof diceConfig].amount).fill(null),
-        diceRolled: Array(diceConfig[color as keyof typeof diceConfig].amount).fill(false),
-        diceDropped: Array(diceConfig[color as keyof typeof diceConfig].amount).fill(false),
-        current: Array(diceConfig[color as keyof typeof diceConfig].boxes.length).fill(0),
-      };
-    }
-    initialState.floor = {
-      current: Array(floorBoxes.length).fill(0),
+    const initialState: Record<string, any> = {
+      current: Array(encounterRuntime.necessaryDiceboxes.length).fill(0),
     };
     return initialState;
   });
@@ -102,111 +41,91 @@ const EncounterCard: React.FC<EncounterProps> = ({
 
     const checkWinPossible = () => {
       let possible = true;
-      for (const color in diceConfig) {
-        const colorState = state[color];
-        const colorBoxes = diceConfig[color as keyof typeof diceConfig].boxes;
-        const max =
-          colorState.current.reduce((acc: number, curr: number) => acc + curr, 0) +
-          remainingMaxValue(colorState.rolledDice);
-        const needed = colorBoxes.reduce((acc: number, box: any) => acc + box.neededRoll, 0);
-        if (max < needed) {
-          possible = false;
-          break;
-        }
+      const max = state.current.reduce((acc: number, curr: number) => acc + curr, 0) +
+        remainingMaxValue(encounterRuntime.availableDice.map(dice => dice[0].value ?? null));
+      const needed = encounterRuntime.necessaryDiceboxes.reduce((acc: number, box: DiceBox) => acc + box.neededRoll, 0);
+      if (max < needed) {
+        possible = false;
       }
       setCanWin(possible);
     };
 
     checkWinPossible();
-  }, [state, diceConfig]);
+  }, [state, encounterRuntime]);
 
-  const isEncounterDefeated = Object.keys(diceConfig).every((color) => {
-    const colorState = state[color];
-    const colorBoxes = diceConfig[color as keyof typeof diceConfig].boxes;
-    return colorBoxes.every(
-      (box: any, index: number) => colorState.current[index] >= box.neededRoll
-    );
-  });
+  const isEncounterDefeated = encounterRuntime.necessaryDiceboxes.every(
+    (box: DiceBox, index: number) => state.current[index] >= box.neededRoll
+  );
 
-  const logPunishmentDetails = (box: any) => {
+  const logPunishmentDetails = (box: DiceBox) => {
     console.log(`Punishment Time: ${box.punishmentTime}, Punishment Hearts: ${box.punishmentHearts}`);
   };
 
   const renderDiceAndBoxes = () => {
     return (
-      <div className="flex space-x-2 mt-4">
+      <div className="flex flex-wrap space-x-2 mt-4">
         {/* Dice */}
-        {Array.from({ length: encounterRuntime.availableDice.length ?? 0 }, (_, diceIndex) => (
+        {encounterRuntime.availableDice.map(([dice, used], diceIndex) => (
           <div
-            draggable={
-              encounterRuntime.availableDice[diceIndex][0].beenRolled() &&
-              !encounterRuntime.availableDice[diceIndex][1]
-            }
-
+            key={`dice-${diceIndex}`}
+            draggable={!used && dice.beenRolled()}
             onDragStart={(e) => {
-              if (!encounterRuntime.availableDice[diceIndex][1]) {
-                e.dataTransfer.setData(
-                  "text/plain",
-                  `${encounterRuntime.availableDice[diceIndex][0].idNum}`
-                );
+              if (!used && dice.value !== null) {
+                e.dataTransfer.setData("text/plain", `${dice.idNum}`);
               }
             }}
           >
-            <Dice
-              size={50}
-              faces={Util.diceTypeToFacesAndClasses(encounterRuntime.availableDice[diceIndex][0].type)[0]}
-              onRoll={(value: number) => {
-                encounterRuntime.availableDice[diceIndex][0].value = value;
-                //code to trigger the useeffect
-              }}
-              disabled={encounterRuntime.availableDice[diceIndex][0].beenRolled()}
-            />
+          <Dice
+            size={50}
+            faces={Util.diceTypeToFacesAndClasses(dice.type)[0]}
+            onRoll={(value: number) => {
+              dice.value = value; // Set dice value
+              setState((prevState) => ({ ...prevState })); // Trigger re-render
+            }}
+            disabled={dice.beenRolled()}
+          />
           </div>
         ))}
         {/* Boxes */}
         {encounterRuntime.necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => (
           <div
-            className={`${Util.diceTypeToFacesAndClasses(box.type)[1]} p-2 rounded-md border-dotted border-2`}
+            key={`box-${boxIndex}`}
+            className={`bg-${Util.diceTypeToFacesAndClasses(box.type)[1]}-500 p-2 rounded-md border-2`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
+              e.preventDefault();
               const data = e.dataTransfer.getData("text/plain");
-              // const [droppedColor, value, diceIndex] = data.split("-");
-              const foundDice = Util.findDiceWithID(encounterRuntime.availableDice.map(v => v[0]), Number.parseInt(data));
+              console.log(data)
+              const foundDice = Util.findDiceWithID(
+                encounterRuntime.availableDice.map((v) => v[0]),
+                Number.parseInt(data)
+              );
+              console.log(foundDice)
               if (foundDice) {
                 encounterRuntime.useDiceOnBox(foundDice, box);
+
+                setState((prevState) => {
+                  const newCurrent = [...prevState.current];
+                  newCurrent[boxIndex] += foundDice.value ?? 0;
+                  console.log(newCurrent);
+                  return { ...prevState, current: newCurrent };
+                });
               }
             }}
           >
-            {state[color].current[boxIndex]}/{box.neededRoll} Box
+            {state.current[boxIndex]}/{box.neededRoll} Box
             {box.punishmentTime === 0 ? " *" : ""}
-            {state[color].current[boxIndex] < box.neededRoll && box.punishmentTime > 0 && (
-              <button onClick={() => logPunishmentDetails(box)}>Log Punishment</button>
+            {state.current[boxIndex] < box.neededRoll && box.punishmentTime > 0 && (
+              <button onClick={() => logPunishmentDetails(box)}>
+                Log Punishment
+              </button>
             )}
           </div>
         ))}
+
       </div>
     );
   };
-
-  // const renderFloorBoxes = () => {
-  //   return (
-  //     <div className="flex space-x-2 mt-4">
-  //       {floorBoxes.map((box: any, index: number) => {
-  //         const neededRoll = box._neededRoll; // Access the neededRoll from the private property
-  //         console.log(`Floor Box ${index}:`, box);
-  //         console.log(neededRoll);
-  //         return (
-  //           <div
-  //             key={`floor-box-${index}`}
-  //             className={`${box.boxClass} p-2 rounded-md border-dotted border-2`}
-  //           >
-  //             {state.floor.current[index]}/{neededRoll} Floor Box
-  //           </div>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // };
 
   return (
     <EncounterBase isOpen={true} onClose={onClick}>
@@ -225,18 +144,11 @@ const EncounterCard: React.FC<EncounterProps> = ({
           <span key={index} className="text-red-500 text-2xl">❤️</span>
         ))}
       </div>
-      {/* Dice Section */}
+      {/* Dice and Boxes Section */}
       <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
-        <h2 className="text-2xl font-bold mb-2">Dice</h2>
-        <div className="flex flex-col items-center">
-          {Object.keys(diceConfig).map((color) => renderDiceAndBoxes(color))}
-        </div>
-      </div>
-      {/* Floor Boxes Section */}
-      <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md mt-4">
-        <h2 className="text-2xl font-bold mb-2">Floor Boxes</h2>
-        <div className="flex flex-col items-center">
-          {renderFloorBoxes()}
+        <h2 className="text-2xl font-bold mb-2">Dice & Boxes</h2>
+        <div className="flex flex-wrap justify-center">
+          {renderDiceAndBoxes()}
         </div>
       </div>
       {/* Action Buttons */}
@@ -266,6 +178,6 @@ const EncounterCard: React.FC<EncounterProps> = ({
       </div>
     </EncounterBase>
   );
-};
+}
 
 export default EncounterCard;
