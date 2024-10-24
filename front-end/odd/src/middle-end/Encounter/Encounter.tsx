@@ -100,7 +100,7 @@ export class Encounter {
 
     public static readonly Bandit2 : Encounter = new Encounter(3, "Bandit2", 1, 
         new Item([0, 1, 0, 0]),
-        Skill.Backstab,
+        Skill.Cleave,
         Debuff.Dodge,
         new Array<DiceBox>(
             new DiceBox(8, 1, false, 0, 2),
@@ -655,13 +655,12 @@ export class Encounter {
         Skill.Null,
         Debuff.Null,
         new Array<DiceBox>(
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(6, 1, true, 1, 1),
-            new DiceBox(16, 2, false, 0, 4),
-            new DiceBox(6, 2, true, 1, 1),
-            new DiceBox(17, 0, false, 0, 4),
-            new DiceBox(6, 0, true, 1, 1),
+            new DiceBox(3, 0, true, 0, 1),
+            new DiceBox(3, 1, true, 0, 1),
+            new DiceBox(3, 2, true, 0, 1),
+            new DiceBox(17, 0, false, 0, 3),
+            new DiceBox(16, 1, false, 0, 4),
+            new DiceBox(15, 2, false, 0, 5),
         )
     );
 
@@ -670,13 +669,12 @@ export class Encounter {
         Skill.Null,
         Debuff.Null,
         new Array<DiceBox>(
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(6, 1, true, 1, 1),
-            new DiceBox(16, 2, false, 0, 4),
-            new DiceBox(6, 2, true, 1, 1),
-            new DiceBox(17, 0, false, 0, 4),
-            new DiceBox(6, 0, true, 1, 1),
+            new DiceBox(13, 0, false, 0, 3),
+            new DiceBox(19, 0, false, 0, 3),
+            new DiceBox(13, 1, false, 0, 3),
+            new DiceBox(6, 2, true, 0, 2),
+            new DiceBox(6, 2, true, 0, 2),
+            new DiceBox(6, 1, true, 0, 2),
         )
     );
 
@@ -685,13 +683,14 @@ export class Encounter {
         Skill.Null,
         Debuff.Null,
         new Array<DiceBox>(
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(6, 1, true, 1, 1),
-            new DiceBox(16, 2, false, 0, 4),
-            new DiceBox(6, 2, true, 1, 1),
-            new DiceBox(17, 0, false, 0, 4),
-            new DiceBox(6, 0, true, 1, 1),
+            new DiceBox(12, 0, false, 0, 4),
+            new DiceBox(6, 0, true, 0, 2),
+            new DiceBox(5, 0, true, 0, 1),
+            new DiceBox(5, 2, true, 0, 1),
+            new DiceBox(6, 2, true, 0, 2),
+            new DiceBox(5, 0, true, 0, 1),
+            new DiceBox(5, 1, true, 0, 1),
+            new DiceBox(6, 1, true, 0, 2)
         )
     );
 
@@ -700,13 +699,14 @@ export class Encounter {
         Skill.Null,
         Debuff.Null,
         new Array<DiceBox>(
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(5, 1, true, 0, 0),
-            new DiceBox(6, 1, true, 1, 1),
-            new DiceBox(16, 2, false, 0, 4),
-            new DiceBox(6, 2, true, 1, 1),
-            new DiceBox(17, 0, false, 0, 4),
-            new DiceBox(6, 0, true, 1, 1),
+            new DiceBox(24, 0, false, 0, 0),
+            new DiceBox(4, 0, true, 0, 1),
+            new DiceBox(5, 0, true, 0, 1),
+            new DiceBox(5, 2, true, 0, 2),
+            new DiceBox(6, 2, true, 0, 2),
+            new DiceBox(6, 0, true, 0, 1),
+            new DiceBox(5, 1, true, 0, 2),
+            new DiceBox(6, 1, true, 0, 2),
         )
     );
 }
