@@ -66,74 +66,80 @@ export class Dungeon {
     );
 
     public static readonly LichTomb = new Dungeon("LichTomb", Encounter.Lich1, 
-        new Floor(Debuff.HallOfStatues, [
-            new DiceBox(2, 3, true, 0, 0)
+        new Floor(new Debuff("Undying Legions"), [
+            new DiceBox(4, 3, true, 0, 0)
         ],[
-            new DiceBox(3, 0, true, 0, 1)
+            new DiceBox(2, 2, true, 0, 0),
+            new DiceBox(5, 0, true, 2, 0)
+        ], ),
+        new Floor(new Debuff("Weakness Curse"), [
+            new DiceBox(6, 3, true, 1, 1)
+        ],[
+            new DiceBox(3, 2, true, 0, 0)
         ]),
-        new Floor(Debuff.FlameAura, [
-            new DiceBox(6, 3, true, 0, 1)
+        new Floor(new Debuff("Blade Storm"), [
+            new DiceBox(4, 3, true, 0, 1)
         ],[
-            new DiceBox(5, 2, true, 0, 2)
-        ]),
-        new Floor(Debuff.Dragonskin, [
-            new DiceBox(5, 3, true, 0, 0)
-        ],[
-            new DiceBox(10, 0, false, 0, 0)
+            new DiceBox(10, 2, false, 0, 2)
         ])
     );
 
     public static readonly HydraReef = new Dungeon("HydraReef", Encounter.Hydra1, 
-        new Floor(Debuff.HallOfStatues, [
-            new DiceBox(2, 3, true, 0, 0)
+        new Floor(new Debuff("Sticky Surrounding"), [
+            new DiceBox(5, 3, true, 1, 1)
         ],[
-            new DiceBox(3, 0, true, 0, 1)
+            new DiceBox(3, 1, true, 0, 1)
         ]),
-        new Floor(Debuff.FlameAura, [
-            new DiceBox(6, 3, true, 0, 1)
+        new Floor(new Debuff("Regeneration"), [
+            new DiceBox(3, 3, true, 0, 0)
         ],[
-            new DiceBox(5, 2, true, 0, 2)
+            new DiceBox(5, 1, true, 0, 1),
+            new DiceBox(5, 2, true, 1, 1)
         ]),
-        new Floor(Debuff.Dragonskin, [
+        new Floor(new Debuff("Poison Aura"), [
             new DiceBox(5, 3, true, 0, 0)
         ],[
-            new DiceBox(10, 0, false, 0, 0)
+            new DiceBox(5, 2, true, 1, 1)
         ])
     );
 
     public static readonly YetiCavern = new Dungeon("YetiCavern", Encounter.Yeti1, 
-        new Floor(Debuff.HallOfStatues, [
-            new DiceBox(2, 3, true, 0, 0)
+        new Floor(new Debuff("Freezing Winds"), [
+            new DiceBox(4, 3, true, 0, 0)
         ],[
-            new DiceBox(3, 0, true, 0, 1)
+            new DiceBox(3, 2, true, 1, 0),
+            new DiceBox(4, 2, true, 1, 0)
         ]),
-        new Floor(Debuff.FlameAura, [
-            new DiceBox(6, 3, true, 0, 1)
+        new Floor(new Debuff("Brutal Strength"), [
+            new DiceBox(5, 3, true, 1, 1)
         ],[
-            new DiceBox(5, 2, true, 0, 2)
+            new DiceBox(5, 0, true, 0, 2)
         ]),
-        new Floor(Debuff.Dragonskin, [
-            new DiceBox(5, 3, true, 0, 0)
+        new Floor(new Debuff("Biting Cold"), [
+            new DiceBox(4, 3, true, 0, 0)
         ],[
-            new DiceBox(10, 0, false, 0, 0)
+            new DiceBox(3, 0, true, 0, 1),
+            new DiceBox(3, 0, true, 0, 1),
         ])
     );
 
     public static readonly MinotaurMaze = new Dungeon("MinotaurMaze", Encounter.Minotaur1, 
-        new Floor(Debuff.HallOfStatues, [
-            new DiceBox(2, 3, true, 0, 0)
+        new Floor(new Debuff("Deadly Maze"), [
+            new DiceBox(5, 3, true, 0, 1)
         ],[
-            new DiceBox(3, 0, true, 0, 1)
+            new DiceBox(2, 1, true, 0, 1),
+            new DiceBox(2, 1, true, 0, 1)
         ]),
-        new Floor(Debuff.FlameAura, [
-            new DiceBox(6, 3, true, 0, 1)
+        new Floor(new Debuff("Crumbling Walls"), [
+            new DiceBox(3, 3, true, 0, 0)
         ],[
-            new DiceBox(5, 2, true, 0, 2)
+            new DiceBox(3, 0, true, 0, 0),
+            new DiceBox(3, 0, true, 0, 0)
         ]),
-        new Floor(Debuff.Dragonskin, [
-            new DiceBox(5, 3, true, 0, 0)
+        new Floor(new Debuff("Poison Dart Traps"), [
+            new DiceBox(6, 3, true, 1, 1)
         ],[
-            new DiceBox(10, 0, false, 0, 0)
+            new DiceBox(12, 1, false, 0, 3)
         ])
     );
 

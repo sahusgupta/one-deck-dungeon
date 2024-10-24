@@ -53,11 +53,14 @@ export class Util {
     }
 
     public static findDiceWithID(arr: Array<Dice>, id: number) : Dice | undefined {
+      let ret = undefined
       arr.forEach(d => {
+        console.log(d)
           if (d.idNum == id) {
-              return d;
+            console.log("found it", d)
+            ret = d
           }
       });
-      return undefined;
+      return ret;
     }
 }
