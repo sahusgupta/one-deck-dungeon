@@ -72,7 +72,7 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
       });
     }
 
-    if ((dice.type == box.type || dice.type == 3) && dice.value) {
+    if ((dice.type == box.type || dice.type == 3 || box.type == 3) && dice.value) {
       this._diceInBox.push([dice, dice.value, box]);
     }
   }
@@ -116,25 +116,20 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   //1: Mandatory slots covered
   //2: All slots covered
   public checkState() : number { 
+    let ret : number = -1;
     this._necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => {
-      let neededRoll: number = box.neededRoll;
-      let partialAdder: number = 0;
-      this._diceInBox.map((value: [Dice, number, DiceBox], valueIndex: number) => {
-        if (box.equals(value[2])) {
-          partialAdder += value[1];
-        }
-      });
-
-      if (partialAdder < neededRoll) {
-        if (box.punishmentHearts == 0) {
-          return 0;
-        } else {
-          return 1;
+      if (this.findFillAmount(box.idNum) < box.neededRoll) {
+        if (box.punishmentHearts == 0 && ret == -1) {
+          ret = 0;
+        } else if (ret == -1) {
+          ret = 1;
         }
       }
     });
-
-    return 2;
+    if (ret == -1) {
+      ret = 2;
+    }
+    return ret;
   }
 
 

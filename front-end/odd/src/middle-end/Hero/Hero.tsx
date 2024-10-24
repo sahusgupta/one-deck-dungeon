@@ -5,21 +5,7 @@ import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
 import { skills } from "../../backend/mappings";
 
-function generateHeroID(length: number) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters.charAt(randomIndex);
-    }
-    return result;
-}
-
 export class Hero {
-    private _id: string;
-    public get id(): string { return this._id; }
-    public set id(value: string) { this._id = value; }
-
     private _feat: Skill;
     public get feat(): Skill {return this._feat;}
     public set feat(value: Skill) {this._feat = value;}
@@ -50,7 +36,6 @@ export class Hero {
 
     public constructor(feat: Skill, basicSkill: Skill, basicItem: Item, name: string, heroName: string, campaign: Campaign) {
         this._feat = feat;
-        this._id = generateHeroID(10)
         this._basicSkill = basicSkill;
         this._basicItem = basicItem;
         this._name = name;
@@ -195,7 +180,7 @@ export class Hero {
     public static readonly Witch1P : Hero = new Hero(
         Skill.HammerSmash1P,
         Skill.InnerFire,
-        new Item([2, 2, 2, 5]),
+        new Item([7, 7, 7, 7]),
         "", 
         "Witch1P",
         new Campaign(new Array<CampaignSkill>(CampaignSkill.Veteran, CampaignSkill.Durability, CampaignSkill.Crafty, CampaignSkill.Prepared, CampaignSkill.FirstAid, CampaignSkill.Recovery, CampaignSkill.Grit, CampaignSkill.Guile, CampaignSkill.Fortitude, CampaignSkill.Planning, CampaignSkill.DirectHit, CampaignSkill.Cunning,CampaignSkill.Speed, CampaignSkill.Knowledge, CampaignSkill.Foresight), 0)   

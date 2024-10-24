@@ -84,6 +84,9 @@ const EncounterCard: React.FC<EncounterProps> = ({
               if (foundDice) {
                 encounterRuntime.useDiceOnBox(foundDice, box);
               }
+
+              console.log("humma cavula");
+              console.log(encounterRuntime.checkState());
               updateRuntimeEasy();
             }}
           >
