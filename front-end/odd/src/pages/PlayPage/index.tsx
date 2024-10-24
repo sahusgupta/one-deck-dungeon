@@ -272,7 +272,7 @@ const PlayPage: React.FC = () => {
                 ))}
               </div>
             </div>
-            {isEncounterFacing && (
+            {isEncounterFacing && gameInstance.activeEncounterRuntime && (
               <EncounterCard
                 encounterRuntime={gameInstance.activeEncounterRuntime}
                 onClick= {() => console.log("running the encounter")}

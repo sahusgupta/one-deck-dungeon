@@ -7,9 +7,10 @@ import { Player } from "../../middle-end/RuntimeFiles/Player";
 import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
 import { Util } from "../../middle-end/Util/Util";
 import { EncounterRuntime } from "../../middle-end/RuntimeFiles/EncounterRuntime";
+import { DiceBox } from "../../middle-end/Dice/DiceBox";
 
 interface EncounterProps {
-  encounterRuntime: EncounterRuntime | undefined;
+  encounterRuntime: EncounterRuntime;
   onClick: () => void;
   onWin: () => void;
   player: Player;
@@ -127,94 +128,56 @@ const EncounterCard: React.FC<EncounterProps> = ({
     );
   });
 
-  const handleRoll = (color: string, diceIndex: number, value: number) => {
-    setState((prevState) => {
-      const newState = { ...prevState };
-      if (!newState[color].diceRolled[diceIndex]) {
-        newState[color].rolledDice[diceIndex] = value;
-        newState[color].diceRolled[diceIndex] = true;
-      }
-      return newState;
-    });
-  };
-
-  const handleDrop = (
-    color: string,
-    value: number,
-    diceIndex: number,
-    boxIndex: number
-  ) => {
-    setState((prevState) => {
-      const newState = { ...prevState };
-      const box = diceConfig[color as keyof typeof diceConfig].boxes[boxIndex];
-      if (!newState[color].diceDropped[diceIndex]) {
-        if (box.constrainedToOne && newState[color].current[boxIndex] === 0) {
-          newState[color].current[boxIndex] += value;
-          newState[color].diceDropped[diceIndex] = true;
-        } else if (!box.constrainedToOne) {
-          newState[color].current[boxIndex] += value;
-          newState[color].diceDropped[diceIndex] = true;
-        }
-      }
-      return newState;
-    });
-  };
-
   const logPunishmentDetails = (box: any) => {
     console.log(`Punishment Time: ${box.punishmentTime}, Punishment Hearts: ${box.punishmentHearts}`);
   };
 
-  const renderDiceAndBoxes = (color: string) => {
-    const { amount, faces, boxes, boxClass } = diceConfig[color as keyof typeof diceConfig];
-    const colorState = state[color];
-
+  const renderDiceAndBoxes = () => {
     return (
-      <div className="flex space-x-2 mt-4" key={color}>
+      <div className="flex space-x-2 mt-4">
         {/* Dice */}
-        {Array.from({ length: amount ?? 0 }, (_, diceIndex) => (
+        {Array.from({ length: encounterRuntime.availableDice.length ?? 0 }, (_, diceIndex) => (
           <div
-            key={`${color}-dice-${diceIndex}`}
             draggable={
-              colorState.diceRolled[diceIndex] &&
-              !colorState.diceDropped[diceIndex]
+              encounterRuntime.availableDice[diceIndex][0].beenRolled() &&
+              !encounterRuntime.availableDice[diceIndex][1]
             }
+
             onDragStart={(e) => {
-              if (!colorState.diceDropped[diceIndex]) {
+              if (!encounterRuntime.availableDice[diceIndex][1]) {
                 e.dataTransfer.setData(
                   "text/plain",
-                  `${color}-${colorState.rolledDice[diceIndex]}-${diceIndex}`
+                  `${encounterRuntime.availableDice[diceIndex][0].idNum}`
                 );
               }
             }}
           >
             <Dice
               size={50}
-              faces={faces}
-              onRoll={(value: number) => handleRoll(color, diceIndex, value)}
-              disabled={colorState.diceRolled[diceIndex]}
+              faces={Util.diceTypeToFacesAndClasses(encounterRuntime.availableDice[diceIndex][0].type)[0]}
+              onRoll={(value: number) => {
+                encounterRuntime.availableDice[diceIndex][0].value = value;
+                //code to trigger the useeffect
+              }}
+              disabled={encounterRuntime.availableDice[diceIndex][0].beenRolled()}
             />
           </div>
         ))}
         {/* Boxes */}
-        {boxes.map((box: any, boxIndex: number) => (
+        {encounterRuntime.necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => (
           <div
-            key={`${color}-box-${boxIndex}`}
-            className={`${boxClass} p-2 rounded-md border-dotted border-2`}
+            className={`${Util.diceTypeToFacesAndClasses(box.type)[1]} p-2 rounded-md border-dotted border-2`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               const data = e.dataTransfer.getData("text/plain");
-              const [droppedColor, value, diceIndex] = data.split("-");
-              if (droppedColor === color) {
-                handleDrop(
-                  color,
-                  parseInt(value),
-                  parseInt(diceIndex),
-                  boxIndex
-                );
+              // const [droppedColor, value, diceIndex] = data.split("-");
+              const foundDice = Util.findDiceWithID(encounterRuntime.availableDice.map(v => v[0]), Number.parseInt(data));
+              if (foundDice) {
+                encounterRuntime.useDiceOnBox(foundDice, box);
               }
             }}
           >
-            {state[color].current[boxIndex]}/{box.neededRoll} {color} Box
+            {state[color].current[boxIndex]}/{box.neededRoll} Box
             {box.punishmentTime === 0 ? " *" : ""}
             {state[color].current[boxIndex] < box.neededRoll && box.punishmentTime > 0 && (
               <button onClick={() => logPunishmentDetails(box)}>Log Punishment</button>
@@ -225,34 +188,34 @@ const EncounterCard: React.FC<EncounterProps> = ({
     );
   };
 
-  const renderFloorBoxes = () => {
-    return (
-      <div className="flex space-x-2 mt-4">
-        {floorBoxes.map((box: any, index: number) => {
-          const neededRoll = box._neededRoll; // Access the neededRoll from the private property
-          console.log(`Floor Box ${index}:`, box);
-          console.log(neededRoll);
-          return (
-            <div
-              key={`floor-box-${index}`}
-              className={`${box.boxClass} p-2 rounded-md border-dotted border-2`}
-            >
-              {state.floor.current[index]}/{neededRoll} Floor Box
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  // const renderFloorBoxes = () => {
+  //   return (
+  //     <div className="flex space-x-2 mt-4">
+  //       {floorBoxes.map((box: any, index: number) => {
+  //         const neededRoll = box._neededRoll; // Access the neededRoll from the private property
+  //         console.log(`Floor Box ${index}:`, box);
+  //         console.log(neededRoll);
+  //         return (
+  //           <div
+  //             key={`floor-box-${index}`}
+  //             className={`${box.boxClass} p-2 rounded-md border-dotted border-2`}
+  //           >
+  //             {state.floor.current[index]}/{neededRoll} Floor Box
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // };
 
   return (
     <EncounterBase isOpen={true} onClose={onClick}>
       <div className="text-white">
-        <h1 className="text-3xl font-bold mb-4">{encounter.name}</h1>
+        <h1 className="text-3xl font-bold mb-4">{encounterRuntime.encounter.name}</h1>
         <img
           className="w-full h-auto mb-4"
-          src={`Encounters/${encounter.name}.jpg`}
-          alt={encounter.name}
+          src={`Encounters/${encounterRuntime.encounter.name}.jpg`}
+          alt={encounterRuntime.encounter.name}
         />
       </div>
       {/* Heart Section */}
@@ -287,7 +250,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
         {isEncounterDefeated && (
           <button
             className="px-4 py-2 bg-green-600 text-white rounded"
-            onClick={onDefeat}
+            onClick={onWin}
           >
             Beat Encounter
           </button>

@@ -22,12 +22,12 @@ export class Dice {
             this._idNum = Dice.incrementor++;
         }
     }
-    public roll(): number {
-        this._value = Math.floor(Math.random() * 6) + 1
-        return this._value;
-    }
 
     public equals(other: Dice) : boolean {
-        return other.idNum == this._idNum;
+        return other.idNum === this._idNum && other.type === this._type;
+    }
+
+    public beenRolled() : boolean {
+        return this._value != undefined;
     }
 }
