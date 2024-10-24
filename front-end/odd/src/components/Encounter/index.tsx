@@ -147,10 +147,10 @@ const EncounterCard: React.FC<EncounterProps> = ({
       const newState = { ...prevState };
       const box = diceConfig[color as keyof typeof diceConfig].boxes[boxIndex];
       if (!newState[color].diceDropped[diceIndex]) {
-        if (box.getConstrainedToOne() && newState[color].current[boxIndex] === 0) {
+        if (box.constrainedToOne && newState[color].current[boxIndex] === 0) {
           newState[color].current[boxIndex] += value;
           newState[color].diceDropped[diceIndex] = true;
-        } else if (!box.getConstrainedToOne()) {
+        } else if (!box.constrainedToOne) {
           newState[color].current[boxIndex] += value;
           newState[color].diceDropped[diceIndex] = true;
         }
