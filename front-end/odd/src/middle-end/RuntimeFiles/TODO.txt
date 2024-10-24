@@ -1,9 +1,9 @@
- - rewrite encounter index to use EncounterRuntime system - daniel period
+ - rewrite encounter index to use EncounterRuntime system - daniel period - DONE
  - also include level card, lookup card, dungeon dicebox card, make potions clickable and alter player item
  - ending encounters should have proper effects on player's health / discard
  - should be able to configure card as players item - based on level restrictions - determine which player gets it
  - Attach all 2P functionality
 
 PARALLEL:
- - update all numbers and constants for bosses, dungeons
- - setup firebase system
+ - update all numbers and constants for bosses, dungeons - DONE
+ - setup firebase system - PUSHING IS DONE

@@ -44,12 +44,18 @@ export class Player {
         this._hero = value;
     }
 
+    private _damage: number;
+    public get damage(): number {return this._damage;}
+    public set damage(value: number) {this._damage = value;}
+    public damageInc() {this._damage++;}
+
     public constructor(id: string, hero: Hero) {
         this._id = id;
         this._hero = hero;
         this._skills = new Array<Skill>(hero.feat, hero.basicSkill);
         this._items = new Array<Item>(hero.basicItem);
         this._defeatedEncounters = new Array<[Encounter, boolean]>();
+        this._damage = 0;
     }
 
     public static getFromId (id: string, hero: Hero) : Player {

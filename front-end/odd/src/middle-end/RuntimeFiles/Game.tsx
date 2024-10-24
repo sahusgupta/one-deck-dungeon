@@ -5,7 +5,6 @@ import { Player } from "./Player";
 import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../backend/firebase/firebase_utils';
 import { EncounterRuntime } from "./EncounterRuntime";
-import { JSONHelper } from "./JSONHelper";
 
 export class Game {
 
@@ -133,7 +132,7 @@ export class Game {
     //TUPLE ARRAYS: DASH SEPERATES TUPLE ITEMS, COMMA SEPERATED Ex: "turtle-2,frog-1,fox-3,monkey-4" 
     public async pushToFirebase() {
         if (this._gameId) {
-            await setDoc(doc(db, "games", this._gameId.toString()), JSONHelper.stringifiedGame(this));
+            await setDoc(doc(db, "games", this._gameId.toString()), this.stringifyGame());
         } else {
             console.error("gameId is null");
         }
@@ -142,5 +141,66 @@ export class Game {
     // public pullFromFirebase(gameId: number) { //this is hard bc it involved parsing literally every value from firebase
 
     // }
+
+    private stringifyGame() : any {
+        return { //seperator sequence, from shallowest to deepest: , - | * # ^
+            active: this.active,
+            playerList: this.playerList.map(p => ({
+                id: p.id,
+                skills: p.skills.map(s => s.name),
+                items: p.items.map(i => ({
+                    values: i.values
+                })),
+                defeatedEncounters: p.defeatedEncounters.map(d => ({
+                    encounter: d[0].name,
+                    isItem: d[1]
+                })),
+                damage: p.damage,
+                hero: p.hero.heroName
+            })),
+            dungeon: this.dungeon.name,
+            potions: this.potions,
+            level: this.level,
+            playerNum: this.playerNum,
+            chatLog: this.chatLog,
+            activeEncounterRuntime: this.activeEncounterRuntime ? {  
+                encounter: this.activeEncounterRuntime.encounter.name,
+                workspaceIndex: this.activeEncounterRuntime.workspaceIndex,
+                availableDice: this.activeEncounterRuntime.availableDice.map(a => ({
+                    dice: [a[0].type, a[0].value ?? 0, a[0].idNum],
+                    used: a[1]
+                })),
+                diceInBox: this.activeEncounterRuntime.diceInBox.map(a => ({
+                    dice: [a[0].type, a[0].value ?? 0, a[0].idNum],
+                    contribution: a[1],
+                    box: [
+                        a[2].neededRoll, 
+                        a[2].type, 
+                        a[2].constrainedToOne, 
+                        a[2].punishmentTime,
+                        a[2].punishmentHearts,
+                        a[2].idNum
+                    ]
+                })),
+                necessaryDice: this.activeEncounterRuntime.necessaryDiceboxes.map(a => ({
+                    box: [
+                        a.neededRoll, 
+                        a.type, 
+                        a.constrainedToOne, 
+                        a.punishmentTime,
+                        a.punishmentHearts,
+                        a.idNum
+                    ]
+                }))
+
+            } : {},
+            workspace: this.workspace.map(w => ({
+                encounter: w[0].name,
+                revealed: w[1]
+            })),
+            deck: this.deck.map(d => d.name),
+            discard: this.discard.map(d => d.name)
+        }
+    }
 
 }
