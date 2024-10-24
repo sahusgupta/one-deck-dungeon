@@ -8,54 +8,36 @@ import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
 import { Util } from "../../middle-end/Util/Util";
 import { EncounterRuntime } from "../../middle-end/RuntimeFiles/EncounterRuntime";
 import { DiceBox } from "../../middle-end/Dice/DiceBox";
+import cloneDeep from "lodash/cloneDeep";
+
 
 interface EncounterProps {
-  encounterRuntime: EncounterRuntime;
+  encounterRuntimeInit: EncounterRuntime;
   onClick: () => void;
   onWin: () => void;
   player: Player;
   onLose: () => void;
+  updateGameEasy: (encounterRuntime? : EncounterRuntime) => void;
 }
 
 const EncounterCard: React.FC<EncounterProps> = ({
-  encounterRuntime,
+  encounterRuntimeInit,
   onClick,
   onWin,
   player,
   onLose,
+  updateGameEasy,
 }) => {
   const hearts = player.itemSum().values[3];
-  console.log(encounterRuntime);
-  const [state, setState] = useState(() => {
-    const initialState: Record<string, any> = {
-      current: Array(encounterRuntime.necessaryDiceboxes.length).fill(0),
-    };
-    return initialState;
-  });
+  const [encounterRuntime, updateEncounterRuntime] = useState<EncounterRuntime>(encounterRuntimeInit);
 
-  const [canWin, setCanWin] = useState<boolean>(true);
+  const updateRuntimeEasy = () => {
+    updateEncounterRuntime(cloneDeep(encounterRuntime))
+  }
 
   useEffect(() => {
-    const remainingMaxValue = (diceArray: (number | null)[]) =>
-      diceArray.filter((val) => val === null).length * 6;
-
-    const checkWinPossible = () => {
-      let possible = true;
-      const max = state.current.reduce((acc: number, curr: number) => acc + curr, 0) +
-        remainingMaxValue(encounterRuntime.availableDice.map(dice => dice[0].value ?? null));
-      const needed = encounterRuntime.necessaryDiceboxes.reduce((acc: number, box: DiceBox) => acc + box.neededRoll, 0);
-      if (max < needed) {
-        possible = false;
-      }
-      setCanWin(possible);
-    };
-
-    checkWinPossible();
-  }, [state, encounterRuntime]);
-
-  const isEncounterDefeated = encounterRuntime.necessaryDiceboxes.every(
-    (box: DiceBox, index: number) => state.current[index] >= box.neededRoll
-  );
+    updateGameEasy(cloneDeep(encounterRuntime));
+  }, [encounterRuntime])
 
   const logPunishmentDetails = (box: DiceBox) => {
     console.log(`Punishment Time: ${box.punishmentTime}, Punishment Hearts: ${box.punishmentHearts}`);
@@ -80,7 +62,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
             faces={Util.diceTypeToFacesAndClasses(dice.type)[0]}
             onRoll={(value: number) => {
               dice.value = value; // Set dice value
-              setState((prevState) => ({ ...prevState })); // Trigger re-render
+              updateRuntimeEasy();
             }}
             disabled={dice.beenRolled()}
           />
@@ -95,31 +77,18 @@ const EncounterCard: React.FC<EncounterProps> = ({
             onDrop={(e) => {
               e.preventDefault();
               const data = e.dataTransfer.getData("text/plain");
-              console.log(data)
               const foundDice = Util.findDiceWithID(
                 encounterRuntime.availableDice.map((v) => v[0]),
                 Number.parseInt(data)
               );
-              console.log(foundDice)
               if (foundDice) {
                 encounterRuntime.useDiceOnBox(foundDice, box);
-
-                setState((prevState) => {
-                  const newCurrent = [...prevState.current];
-                  newCurrent[boxIndex] += foundDice.value ?? 0;
-                  console.log(newCurrent);
-                  return { ...prevState, current: newCurrent };
-                });
               }
+              updateRuntimeEasy();
             }}
           >
-            {state.current[boxIndex]}/{box.neededRoll} Box
+            {encounterRuntime.findFillAmount(box.idNum)}/{box.neededRoll} Box
             {box.punishmentTime === 0 ? " *" : ""}
-            {state.current[boxIndex] < box.neededRoll && box.punishmentTime > 0 && (
-              <button onClick={() => logPunishmentDetails(box)}>
-                Log Punishment
-              </button>
-            )}
           </div>
         ))}
 
@@ -154,27 +123,12 @@ const EncounterCard: React.FC<EncounterProps> = ({
       {/* Action Buttons */}
       <div className="flex space-x-4 mt-4">
         <button
-          className="px-4 py-2 bg-red-600 text-white rounded"
-          onClick={onClick}
+          className={`px-4 py-2 bg-${encounterRuntime.checkState() <= 1 ? `red` : `green`}-600 text-white rounded`}
+          onClick={onWin}
+          disabled={encounterRuntime.checkState() == 0}
         >
-          Cancel
+          Leave Encounter
         </button>
-        {isEncounterDefeated && (
-          <button
-            className="px-4 py-2 bg-green-600 text-white rounded"
-            onClick={onWin}
-          >
-            Beat Encounter
-          </button>
-        )}
-        {!canWin && (
-          <button
-            className="px-4 py-2 bg-yellow-600 text-white rounded"
-            onClick={onLose}
-          >
-            I Lost
-          </button>
-        )}
       </div>
     </EncounterBase>
   );

@@ -1,7 +1,7 @@
 import { Game } from "./Game";
 
 export class JSONHelper {
-    public static stringifiedGame(game: Game) : string {
+    public static stringifiedGame(game: Game) : any {
         const jsonRep = { //seperator sequence, from shallowest to deepest: , - | * # ^
             active: game.active,
             playerList: game.playerList.map(p => ({
@@ -59,7 +59,7 @@ export class JSONHelper {
             deck: game.deck.map(d => d.name),
             discard: game.discard.map(d => d.name)
         }
-        return JSON.stringify(jsonRep);
+        return jsonRep;
 
     }
 }

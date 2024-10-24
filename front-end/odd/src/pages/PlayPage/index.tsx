@@ -22,13 +22,17 @@ const PlayPage: React.FC = () => {
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
   const [isEncounterFacing, setEncounterFacing] = useState(false);
   
-  const updateGameEasy = () => {
+  const updateGameEasy = (encounterRunTime?: EncounterRuntime) => {
+    if (encounterRunTime) {
+      gameInstance.activeEncounterRuntime = encounterRunTime;
+    }
     updateGameInstance(cloneDeep(gameInstance));
   }
 
   useEffect(() => {
     console.log("use effect working");
-    // gameInstance.pushToFirebase
+    // console.log(gameInstance.activeEncounterRuntime?.diceInBox);
+    gameInstance.pushToFirebase();
   
   }, [gameInstance]);
 
@@ -274,11 +278,12 @@ const PlayPage: React.FC = () => {
             </div>
             {isEncounterFacing && gameInstance.activeEncounterRuntime && (
               <EncounterCard
-                encounterRuntime={gameInstance.activeEncounterRuntime}
+                encounterRuntimeInit={gameInstance.activeEncounterRuntime}
                 onClick= {() => console.log("running the encounter")}
                 onWin={() => onEncounterWin()}
                 player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
                 onLose={() => onEncounterLose(1)}
+                updateGameEasy={updateGameEasy}
               />
             )
 

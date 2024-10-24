@@ -9,9 +9,9 @@ import { JSONHelper } from "./JSONHelper";
 
 export class Game {
 
-    private _gameId: string | null;
-    public get gameId(): string | null { return this._gameId; }
-    public set gameId(value: string | null) { this._gameId = value; }
+    private _gameId: string | undefined;
+    public get gameId(): string | undefined { return this._gameId; }
+    public set gameId(value: string | undefined) { this._gameId = value; }
     
     private _active: boolean = false;
     public get active(): boolean { return this._active; }
@@ -59,7 +59,7 @@ export class Game {
     
     private static _instance : Game;
   
-    public constructor(gameId: string | null, dungeon: Dungeon, players: Array<string>, heros: Array<string>) {
+    public constructor(gameId: string | undefined, dungeon: Dungeon, players: Array<string>, heros: Array<string>) {
         this.active = true;
         this._playerList = new Array<Player>();
         players.map((player : string, index : number)  => {
@@ -105,7 +105,7 @@ export class Game {
         return this._instance;
     }
 
-    public static createGame(gameId: string | null, dungeon: Dungeon, players: Array<string>, heros: Array<string>) : void {
+    public static createGame(gameId: string | undefined, dungeon: Dungeon, players: Array<string>, heros: Array<string>) : void {
         this._instance = new Game(gameId, dungeon, players, heros);
     }
 
@@ -131,8 +131,12 @@ export class Game {
     }
     //ARRAYS: COMMA SEPERATED NO SPACES Ex: "turtle,frog,fox,monkey"
     //TUPLE ARRAYS: DASH SEPERATES TUPLE ITEMS, COMMA SEPERATED Ex: "turtle-2,frog-1,fox-3,monkey-4" 
-    public pushToFirebase(gameId: number) {
-        console.log(JSONHelper.stringifiedGame(this));
+    public async pushToFirebase() {
+        if (this._gameId) {
+            await setDoc(doc(db, "games", this._gameId.toString()), JSONHelper.stringifiedGame(this));
+        } else {
+            console.error("gameId is null");
+        }
     }
 
     // public pullFromFirebase(gameId: number) { //this is hard bc it involved parsing literally every value from firebase

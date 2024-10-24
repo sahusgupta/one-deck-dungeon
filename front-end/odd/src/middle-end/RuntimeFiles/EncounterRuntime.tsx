@@ -103,6 +103,15 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
     return false;
   }
 
+  public findFillAmount(diceBoxId: number) : number {
+    let ret : number = 0;
+    this.diceInBox.forEach(d => {
+      if (d[2].idNum == diceBoxId && d[0].value) {
+        ret += d[0].value;
+      }
+    })
+    return ret;
+  }
   //0: Mandatory slots not covered
   //1: Mandatory slots covered
   //2: All slots covered

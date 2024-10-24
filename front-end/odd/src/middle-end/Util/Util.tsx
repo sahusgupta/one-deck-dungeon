@@ -35,19 +35,19 @@ export class Util {
     public static diceTypeToFacesAndClasses(type : number) : [string[], string] {
       switch (type) {
         case 0: //strength
-          return [Util.yellowDiceFaces, "yellow"];
+          return [Util.yellowDiceFaces, `yellow`];
           break;
         case 1: //speed
-          return [Util.pinkDiceFaces, "pink"];
+          return [Util.pinkDiceFaces, `pink`];
           break;
         case 2: //magic
-          return [Util.blueDiceFaces, "blue"];
+          return [Util.blueDiceFaces, `blue`];
           break;
         case 3: //black
-          return [Util.blackDiceFaces, "black"];
+          return [Util.blackDiceFaces, `black`];
           break;
         default:
-          return [Util.blackDiceFaces, "black"];
+          return [Util.blackDiceFaces, `black`];
           break;
       }
     }
@@ -55,9 +55,7 @@ export class Util {
     public static findDiceWithID(arr: Array<Dice>, id: number) : Dice | undefined {
       let ret = undefined
       arr.forEach(d => {
-        console.log(d)
           if (d.idNum == id) {
-            console.log("found it", d)
             ret = d
           }
       });
