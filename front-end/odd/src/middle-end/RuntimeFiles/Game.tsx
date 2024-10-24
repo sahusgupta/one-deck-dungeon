@@ -5,6 +5,7 @@ import { Player } from "./Player";
 import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../backend/firebase/firebase_utils';
 import { EncounterRuntime } from "./EncounterRuntime";
+import { JSONHelper } from "./JSONHelper";
 
 export class Game {
 
@@ -130,23 +131,9 @@ export class Game {
     }
     //ARRAYS: COMMA SEPERATED NO SPACES Ex: "turtle,frog,fox,monkey"
     //TUPLE ARRAYS: DASH SEPERATES TUPLE ITEMS, COMMA SEPERATED Ex: "turtle-2,frog-1,fox-3,monkey-4" 
-    // public async pushToFirebase(gameId: number) {
-    //     if (gameId) {
-    //         await setDoc(doc(db, "games", gameId.toString()), {
-    //           gameId: gameId,
-    //           active: this._active,
-    //           players: this._playerList.map(player => player.id).join(","),
-    //           active: this._dungeon.name,
-    //           boss: dungeon.boss.name,
-    //           deck: dungeon.floors[0].deck.map(card => card.name).join(", "),
-    //           hero1: characterSelected,
-    //           player1dice: [],
-    //           player2dice: []
-    //         });
-    //       } else {
-    //         console.error("gameId is null");
-    //       }
-    // }
+    public pushToFirebase(gameId: number) {
+        console.log(JSONHelper.stringifiedGame(this));
+    }
 
     // public pullFromFirebase(gameId: number) { //this is hard bc it involved parsing literally every value from firebase
 

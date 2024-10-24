@@ -32,7 +32,7 @@ export class Player {
         this._items = value;
     }
 
-    private _defeatedEncounters: Array<[Encounter, boolean]>;
+    private _defeatedEncounters: Array<[Encounter, boolean]>; //isItem
     public get defeatedEncounters(): Array<[Encounter, boolean]> {return this._defeatedEncounters;}
     public set defeatedEncounters(value: Array<[Encounter, boolean]>) {this._defeatedEncounters = value;}
 
