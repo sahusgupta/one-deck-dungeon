@@ -6,19 +6,20 @@ import { Hero } from "../../middle-end/Hero/Hero";
 import { Player } from "../../middle-end/RuntimeFiles/Player";
 import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
 import { Util } from "../../middle-end/Util/Util";
+import { EncounterRuntime } from "../../middle-end/RuntimeFiles/EncounterRuntime";
 
 interface EncounterProps {
-  encounter: Encounter;
+  encounterRuntime: EncounterRuntime | undefined;
   onClick: () => void;
-  onDefeat: () => void;
+  onWin: () => void;
   player: Player;
   onLose: () => void;
 }
 
 const EncounterCard: React.FC<EncounterProps> = ({
-  encounter,
+  encounterRuntime,
   onClick,
-  onDefeat,
+  onWin,
   player,
   onLose,
 }) => {

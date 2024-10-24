@@ -48,8 +48,13 @@ const PlayPage: React.FC = () => {
   }
 
   const onEncounterWin = () => {
-    // setEncounterFacing(false);
-    onEncounterLose(2); //temporarily while we build out functionality - all it should do is take you away from the screen
+    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
+    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
+
+    gameInstance.activeEncounterRuntime = undefined;
+
+    setEncounterFacing(false);
+    updateGameEasy()
   }
 
   // onLose functionality for the encounter window
@@ -269,9 +274,9 @@ const PlayPage: React.FC = () => {
             </div>
             {isEncounterFacing && (
               <EncounterCard
-                encounter={gameInstance.activeEncounter[0]}
+                encounterRuntime={gameInstance.activeEncounterRuntime}
                 onClick= {() => console.log("running the encounter")}
-                onDefeat={() => onEncounterWin()}
+                onWin={() => onEncounterWin()}
                 player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
                 onLose={() => onEncounterLose(1)}
               />
