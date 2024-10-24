@@ -39,12 +39,6 @@ const EncounterCard: React.FC<EncounterProps> = ({
     gameInstance.pushToFirebase();
   }, [gameInstance]);
 
-  const logPunishmentDetails = (box: DiceBox) => {
-    console.log(
-      `Punishment Time: ${box.punishmentTime}, Punishment Hearts: ${box.punishmentHearts}`
-    );
-  };
-
   const renderDiceAndBoxes = () => {
     return (
       <div className="flex flex-wrap space-x-2 mt-4">
@@ -152,10 +146,9 @@ const EncounterCard: React.FC<EncounterProps> = ({
       <div className="flex justify-center space-x-4 mt-4">
         <button
           className={`px-4 py-2 bg-${
-            (gameInstance.activeEncounterRuntime?.checkState() ?? 0) <= 1 ? `red` : `green`
+            (gameInstance.activeEncounterRuntime?.checkState() ?? 0) === 0 || gameInstance.activeEncounterRuntime?.checkState() === undefined ? `gray` : (gameInstance.activeEncounterRuntime?.checkState() === 1 ? `red` : `green`)
           }-500 text-white rounded`}
           onClick={onWin}
-          disabled={gameInstance.activeEncounterRuntime?.checkState() == 0}
         >
           Leave Encounter
         </button>

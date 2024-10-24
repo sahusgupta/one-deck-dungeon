@@ -291,6 +291,7 @@ const PlayPage: React.FC = () => {
                 content={gameInstance.activeEncounterRuntime? Util.convertEncounterNameToShowName(gameInstance.activeEncounterRuntime.encounter.name) : "NULL ENCOUNTER ERROR"}
                 onAction={encounterAccepted}
                 actionLabel="Encounter"
+                encounter={gameInstance.activeEncounterRuntime ? gameInstance.activeEncounterRuntime.encounter : Encounter.EmptyEncounter}
               />
             )}
             <div className="flex justify-center mt-8"></div>
