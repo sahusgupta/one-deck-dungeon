@@ -7,11 +7,11 @@ const DeathScreen: React.FC = () => {
   const navigate = useNavigate();
 
   const handleRestart = () => {
-    navigate('/play'); // Restart game route
+    navigate('/homepage'); // Restart game route
   };
 
   const handleHome = () => {
-    navigate('/'); // Navigate back to home
+    navigate('/homepage'); // Navigate back to home
   };
 
   return (

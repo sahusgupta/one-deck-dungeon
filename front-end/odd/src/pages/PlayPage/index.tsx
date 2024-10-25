@@ -94,7 +94,7 @@ const PlayPage: React.FC = () => {
   useEffect(() => {
     if (gameInstance) {
       const player = gameInstance.findPlayer();
-      if (player && player.damage > (player.itemSum()?.values[3] || 0)) {
+      if (player && player.damage >= (player.itemSum()?.values[3])) {
         navigate("/death");
       }
     }
