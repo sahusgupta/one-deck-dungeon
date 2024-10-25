@@ -47,7 +47,7 @@ export class Player {
     private _damage: number;
     public get damage(): number {return this._damage;}
     public set damage(value: number) {this._damage = value;}
-    public damageInc() {this._damage++;}
+    public damageInc(value: number) {this._damage+=value;}
 
     public constructor(id: string, hero: Hero) {
         this._id = id;

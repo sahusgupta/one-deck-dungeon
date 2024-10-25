@@ -15,7 +15,6 @@ interface EncounterProps {
   onClick: () => void;
   onWin: () => void;
   player: Player;
-  onLose: () => void;
   gameInstanceImport: Game;
 }
 
@@ -23,10 +22,8 @@ const EncounterCard: React.FC<EncounterProps> = ({
   onClick,
   onWin,
   player,
-  onLose,
   gameInstanceImport,
 }) => {
-  const hearts = player.itemSum().values[3];
   const [gameInstance, updateGameInstance] = useState<Game>(
     gameInstanceImport
   );
@@ -151,8 +148,8 @@ const EncounterCard: React.FC<EncounterProps> = ({
       {/* Heart Section */}
       <div className="flex items-center justify-center space-x-2 my-4">
         <span className="text-xl font-semibold text-white">Hearts:</span>
-        {hearts &&
-          Array.from({ length: hearts }).map((_, index) => (
+        {player.itemSum().values[3] &&
+          Array.from({ length: player.itemSum().values[3] - gameInstance.playerList[0].damage }).map((_, index) => (
             <span key={index} className="text-red-500 text-2xl">
               ❤️
             </span>

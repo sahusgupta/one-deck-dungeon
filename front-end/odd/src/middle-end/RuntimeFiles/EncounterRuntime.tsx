@@ -58,7 +58,19 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
     this.necessaryDiceboxes.push(...this._encounter.boxes);
 
   }
+  public calculatePunishment(): [number, number] {
+    let totalHearts = 0;
+    let totalTime = 0;
 
+    this._necessaryDiceboxes.forEach((box: DiceBox) => {
+      if (this.findFillAmount(box.idNum) < box.neededRoll) {
+        totalHearts += box.punishmentHearts;
+        totalTime += box.punishmentTime;
+      }
+    });
+
+    return [totalHearts, totalTime];
+  }
   public useDiceOnBox(dice: Dice, box: DiceBox) {
 
     if (box.constrainedToOne) {
