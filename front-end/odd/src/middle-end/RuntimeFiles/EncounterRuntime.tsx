@@ -70,6 +70,8 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
 
     this._necessaryDiceboxes.forEach((box: DiceBox) => {
       if (this.findFillAmount(box.idNum) < box.neededRoll) {
+        console.log(box)
+        console.log(box.neededRoll + " - " + this.findFillAmount(box.idNum))
         totalHearts += box.punishmentHearts;
         totalTime += box.punishmentTime;
       }
