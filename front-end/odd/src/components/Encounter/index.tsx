@@ -46,51 +46,58 @@ const EncounterCard: React.FC<EncounterProps> = ({
       <div className="flex flex-wrap space-x-2 mt-4">
         {/* Dice */}
         {gameInstance.activeEncounterRuntime?.availableDice.map(
-          ([dice, used], diceIndex) => (
-            <div
-              key={`dice-${diceIndex}`}
-              draggable={!used && dice.beenRolled()}
-              onDragStart={(e) => {
-                if (!used && dice.value !== null) {
-                  e.dataTransfer.setData("text/plain", `${dice.idNum}`);
-                }
-              }}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const data = e.dataTransfer.getData("text/plain");
-                const draggedDice = Util.findDiceWithID(
-                  gameInstance.activeEncounterRuntime?.availableDice.map(
-                    (v) => v[0]
-                  ) ?? new Array(),
-                  Number.parseInt(data)
-                );
-                if (draggedDice && dice.beenRolled()) {
-                  gameInstance.activeEncounterRuntime?.combineDice(
-                    draggedDice,
-                    dice
-                  );
-                  updateGameEasy();
-                }
-              }}
-            >
-              <Dice
-                ref={(el) => {
-                  if (el) {
-                    diceRefs.current[dice.idNum] = el;
+          ([dice, used], diceIndex) => {
+            const borderColor = dice.beenRolled()
+              ? Util.diceTypeToFacesAndClasses(dice.type)[1]
+              : "transparent"; // Set color only if rolled
+  
+            return (
+              <div
+                key={`dice-${diceIndex}`}
+                draggable={!used && dice.beenRolled()}
+                onDragStart={(e) => {
+                  if (!used && dice.value !== null) {
+                    e.dataTransfer.setData("text/plain", `${dice.idNum}`);
                   }
                 }}
-                size={50}
-                faces={Util.diceTypeToFacesAndClasses(dice.type)[0]}
-                defaultValue={(dice.value ?? 6) as 1 | 2 | 3 | 4 | 5 | 6}
-                onRoll={(value: number) => {
-                  dice.value = value; // Set dice value
-                  updateGameEasy();
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const data = e.dataTransfer.getData("text/plain");
+                  const draggedDice = Util.findDiceWithID(
+                    gameInstance.activeEncounterRuntime?.availableDice.map(
+                      (v) => v[0]
+                    ) ?? new Array(),
+                    Number.parseInt(data)
+                  );
+                  if (draggedDice && dice.beenRolled()) {
+                    gameInstance.activeEncounterRuntime?.combineDice(
+                      draggedDice,
+                      dice
+                    );
+                    updateGameEasy();
+                  }
                 }}
-                disabled={dice.beenRolled()}
-              />
-            </div>
-          )
+                className={`border-4 border-${borderColor}-500 rounded-md`}
+              >
+                <Dice
+                  ref={(el) => {
+                    if (el) {
+                      diceRefs.current[dice.idNum] = el;
+                    }
+                  }}
+                  size={50}
+                  faces={Util.diceTypeToFacesAndClasses(dice.type)[0]}
+                  defaultValue={(dice.value ?? 6) as 1 | 2 | 3 | 4 | 5 | 6}
+                  onRoll={(value: number) => {
+                    dice.value = value; // Set dice value
+                    updateGameEasy();
+                  }}
+                  disabled={dice.beenRolled()}
+                />
+              </div>
+            );
+          }
         )}
         {/* Boxes */}
         {gameInstance.activeEncounterRuntime?.necessaryDiceboxes.map(
@@ -111,13 +118,11 @@ const EncounterCard: React.FC<EncounterProps> = ({
                   Number.parseInt(data)
                 );
                 if (foundDice) {
-                  console.log();
                   gameInstance.activeEncounterRuntime?.useDiceOnBox(
                     foundDice,
                     box
                   );
                 }
-                console.log(gameInstance.activeEncounterRuntime?.checkState());
                 updateGameEasy();
               }}
               onClick={() => {
@@ -127,15 +132,14 @@ const EncounterCard: React.FC<EncounterProps> = ({
             >
               {gameInstance.activeEncounterRuntime?.findFillAmount(box.idNum)}/
               {box.neededRoll} Box
-              {box.punishmentTime === 0 && box.punishmentHearts == 0
-                ? " *"
-                : ""}
+              {box.punishmentTime === 0 && box.punishmentHearts == 0 ? " *" : ""}
             </div>
           )
         )}
       </div>
     );
   };
+
 
   return (
     <EncounterBase isOpen={true} onClose={onClick}>
