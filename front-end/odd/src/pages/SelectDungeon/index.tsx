@@ -58,7 +58,7 @@ const SelectDungeon: React.FC = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
         {/* Username Display */}
-        <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-lg px-6 py-3 rounded-full shadow-lg transform transition-transform duration-300 hover:scale-105">
+        <div className="bg-gradient-to-r from-orange-500 to-orange-500 text-lg px-6 py-3 rounded-full shadow-lg transform transition-transform duration-300 hover:scale-105">
           {userName}
         </div>
 
