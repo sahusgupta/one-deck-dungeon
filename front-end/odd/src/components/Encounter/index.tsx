@@ -178,7 +178,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
           </div>
           <div
             className="flex flex-col items-center"
-            onClick={gameInstance.usePotion}
+            onClick={() => {gameInstance.usePotion(false); updateGameEasy()}}
           >
             <img
               src="https://drive.google.com/thumbnail?id=1eF9CUtN2PHmpr2dWZnIMcdZgE2TS8cVs&sz=w1000"

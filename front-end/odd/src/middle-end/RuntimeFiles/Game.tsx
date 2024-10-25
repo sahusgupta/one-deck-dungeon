@@ -109,8 +109,22 @@ export class Game {
         }
     }
 
-    public usePotion() {
-        console.log("I used a potion")
+    public usePotion(inPlayPage: boolean) {
+        if(this.potions>=1){
+            const credentials = localStorage.getItem("credentials");
+            if (!credentials) return;
+    
+            const player = this._playerList.find(p => p.id === credentials);
+            if (!player) return;
+    
+            if (inPlayPage) {
+                console.log(player.damage)
+                player.damage = Math.max(0, player.damage - 3);
+            } else {
+                player.damage = Math.max(0, player.damage - 2);
+            }
+            this.potions-=1;
+        }
     }
     public static getInstance() : Game {
         return this._instance;
