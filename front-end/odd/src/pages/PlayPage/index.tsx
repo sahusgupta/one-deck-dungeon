@@ -21,7 +21,7 @@ import PostEncounterModal from "../../components/Encounter/postEncounter";
 import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
 
 const PlayPage: React.FC = () => {
-  const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
+  const [gameInstance, updateGameInstance] = useState<Game | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
@@ -41,25 +41,27 @@ const PlayPage: React.FC = () => {
             const gameData = snapshot.data();
             console.log(gameData); // Logs correctly
             if (gameInstance) {
-              console.log("if gameinstance exists", gameData);
+              console.log("if gameInstance exists", gameData);
               gameInstance.updateGame(gameData);
               updateGameInstance(cloneDeep(gameInstance)); // Avoids calling updateGameEasy to prevent loop
             } else {
-              console.log("if gameinstnace not exist", gameData)
+              console.log("if gameInstance does not exist", gameData);
               const newGameInstance = Game.initializeFromGameData(gameData);
-              console.log(newGameInstance);
-            }      
+              updateGameInstance(newGameInstance); // Set the new game instance in state
+            }
+            isGameCreated.current = true; // Set game as created after loading initial data
           }
         }
         isLocalUpdate.current = false; // Reset the flag after processing
       },
       (error) => {
-        console.log("lol error", error);
+        console.log("Error in onSnapshot listener", error);
       }
     );
-
+  
     return () => unsubscribe(); // Clean up the subscription
   }, []);
+  
 
   const updateGameEasy = (encounterRunTime?: EncounterRuntime) => {
     if (gameInstance) {
@@ -69,13 +71,20 @@ const PlayPage: React.FC = () => {
       isLocalUpdate.current = true; // Set the flag before updating
       updateGameInstance(cloneDeep(gameInstance));
     }
-  }
+  };
+  
 
   useEffect(() => {
-    if (gameInstance && isGameCreated.current) {
-      gameInstance.pushToFirebase();
+    if (gameInstance) {
+      if (!isGameCreated.current) {
+        isGameCreated.current = true;
+      } else {
+        isLocalUpdate.current = true; // Set the flag before pushing
+        gameInstance.pushToFirebase();
+      }
     }
   }, [gameInstance]);
+  
   
   const closeChatModal = () => {
     setModalOpen(false);
