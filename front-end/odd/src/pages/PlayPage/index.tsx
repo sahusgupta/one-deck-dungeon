@@ -21,7 +21,7 @@ import PostEncounterModal from "../../components/Encounter/postEncounter";
 import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
 
 const PlayPage: React.FC = () => {
-  const [gameInstance, updateGameInstance] = useState<Game | null>(null);
+  const [gameInstance, updateGameInstance] = useState<Game | undefined>(undefined);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
@@ -39,13 +39,10 @@ const PlayPage: React.FC = () => {
         if (!isLocalUpdate.current) {
           if (snapshot.exists()) {
             const gameData = snapshot.data();
-            console.log(gameData); // Logs correctly
             if (gameInstance) {
-              console.log("if gameInstance exists", gameData);
               gameInstance.updateGame(gameData);
               updateGameInstance(cloneDeep(gameInstance)); // Avoids calling updateGameEasy to prevent loop
             } else {
-              console.log("if gameInstance does not exist", gameData);
               const newGameInstance = Game.initializeFromGameData(gameData);
               updateGameInstance(newGameInstance); // Set the new game instance in state
             }
@@ -93,7 +90,8 @@ const PlayPage: React.FC = () => {
   const closingPostEncounterModal= (gameInstanceExport : Game) => {
     setPostEncounterModalOpen(false);
     // updateGameInstance(cloneDeep(gameInstanceExport));
-    gameInstance.activeEncounterRuntime = undefined;
+    if (gameInstance)
+      gameInstance.activeEncounterRuntime = undefined;
     updateGameEasy();
   }
   const encounterStay = () => {
@@ -128,9 +126,10 @@ const PlayPage: React.FC = () => {
   const onLeaveEncounter = (gameInstanceExport: Game) => {
     // updateGameInstance(cloneDeep(gameInstanceExport));
     setEncounterFacing(false);
-    if (gameInstance.activeEncounterRuntime) {
+    if (gameInstance && gameInstance.activeEncounterRuntime) {
       gameInstance.activeEncounterRuntime.rewardDecision = [0, gameInstance.playerList[0]];
       let punishment : [number, number] = gameInstance.activeEncounterRuntime.calculatePunishment(); //hearts, time
+      console.log(punishment);
       gameInstance.activeEncounterRuntime.punishmentDecision = [punishment[1], punishment[0], 0]
     }
     updateGameEasy();
