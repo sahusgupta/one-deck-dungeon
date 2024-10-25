@@ -95,9 +95,13 @@ const EncounterCard: React.FC<EncounterProps> = ({
               console.log(gameInstance.activeEncounterRuntime?.checkState());
               updateGameEasy();
             }}
+            onClick={() => {
+              gameInstance.activeEncounterRuntime?.clearDicebox(box);
+              updateGameEasy();
+            }}
           >
             {gameInstance.activeEncounterRuntime?.findFillAmount(box.idNum)}/{box.neededRoll} Box
-            {box.punishmentTime === 0 ? " *" : ""}
+            {box.punishmentTime === 0 && box.punishmentHearts == 0 ? " *" : ""}
           </div>
         ))}
       </div>

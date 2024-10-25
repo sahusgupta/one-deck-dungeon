@@ -32,10 +32,7 @@ const PlayPage: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log("use effect working");
-    // console.log(gameInstance.activeEncounterRuntime?.diceInBox);
     gameInstance.pushToFirebase();
-  
   }, [gameInstance]);
 
   const closeChatModal = () => {

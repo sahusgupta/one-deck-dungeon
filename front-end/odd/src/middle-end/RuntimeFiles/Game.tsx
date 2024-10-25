@@ -32,6 +32,10 @@ export class Game {
     public get level(): number { return this._level; }
     public set level(value: number) { this._level = value; }
 
+    private _xp: number;
+    public get xp(): number {return this._xp;}
+    public set xp(value: number) {this._xp = value;}
+
     private _playerNum: number;
     public get playerNum(): number { return this._playerNum; }
     public set playerNum(value: number) { this._playerNum = value; }
@@ -68,6 +72,7 @@ export class Game {
         this._gameId = gameId;
         this._potions = 1;
         this._level = 1;
+        this._xp = 0;
         this._playerNum = this._playerList.length;
         this._chatLog = new Array<string>();
         this._activeEncounterRuntime = undefined;
@@ -168,6 +173,7 @@ export class Game {
             dungeon: this.dungeon.name,
             potions: this.potions,
             level: this.level,
+            xp: this.xp,
             playerNum: this.playerNum,
             chatLog: this.chatLog,
             activeEncounterRuntime: this.activeEncounterRuntime ? {  
