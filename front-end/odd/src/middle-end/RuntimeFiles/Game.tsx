@@ -137,8 +137,8 @@ export class Game {
             this._discard.push(this._deck.pop() ?? Encounter.EmptyEncounter);
         }
     }
-    public findPlayer(){
-        const credentials = localStorage.getItem("credentials");
+    public findPlayer(id? : string){
+        const credentials = id ? id : localStorage.getItem("credentials");
             if (!credentials) return undefined;
     
         const player = this._playerList.find(p => p.id === credentials);
@@ -289,10 +289,16 @@ export class Game {
                 return new DiceBox(neededRoll, boxType, constrainedToOne, punishmentTime, punishmentHearts, boxIdNum);
             });
 
-            // let rewardDecision = gameData.activeEncounterRuntime ? [
-            //     gameData.activeEncounterRuntime.rewardDecision.type,
+            let rewardDecision = gameData.activeEncounterRuntime.rewardDecision ? [
+                gameData.activeEncounterRuntime.rewardDecision.type,
+                this.findPlayer(gameData.activeEncounterRuntime.rewardDecision.playerId)
+            ] : undefined
 
-            // ]
+            let punishmentDecision = gameData.activeEncounterRuntime.punishmentDecision ? [
+                gameData.activeEncounterRuntime.punishmentDecision.timePunishment,
+                gameData.activeEncounterRuntime.punishmentDecision.player1Punishment,
+                gameData.activeEncounterRuntime.punishmentDecision.player2Punishment,
+            ] : undefined
     
             // Create the EncounterRuntime
             this._activeEncounterRuntime = new EncounterRuntime(
@@ -304,7 +310,11 @@ export class Game {
                     availableDice,
                     diceInBox,
                     necessaryDiceboxes
-                ]
+                ],
+                rewardDecision && punishmentDecision ? [
+                    rewardDecision,
+                    punishmentDecision
+                ] : []
             );
         } else {
             this._activeEncounterRuntime = undefined;
@@ -382,7 +392,7 @@ export class Game {
                 punishmentDecision: this.activeEncounterRuntime.punishmentDecision ? {
                     timePunishment: this.activeEncounterRuntime.punishmentDecision[0],
                     player1Punishment: this.activeEncounterRuntime.punishmentDecision[1],
-                    player2Punishment: this.activeEncounterRuntime.punishmentDecision[1],
+                    player2Punishment: this.activeEncounterRuntime.punishmentDecision[2],
                 } : {},
             } : {},
             workspace: this.workspace.map(w => ({
