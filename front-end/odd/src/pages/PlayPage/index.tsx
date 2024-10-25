@@ -31,7 +31,16 @@ const PlayPage: React.FC = () => {
   const gameRef = doc(db, 'games', localStorage.getItem("gameId") ?? "");
   const isLocalUpdate = useRef(false);
   const isGameCreated = useRef(false);
-
+  useEffect(() => {
+    if (gameInstance && gameInstance.playerNum === 2) {
+      if (gameInstance.activeEncounterRuntime && !isEncounterFacing) {
+        setEncounterFacing(true);
+      } else if (!gameInstance.activeEncounterRuntime && isEncounterFacing) {
+        setEncounterFacing(false);
+      }
+    }
+  }, [gameInstance?.activeEncounterRuntime]);
+  
   useEffect(() => {
     const unsubscribe = onSnapshot(
       gameRef,
@@ -125,15 +134,24 @@ const PlayPage: React.FC = () => {
 
   const onLeaveEncounter = (gameInstanceExport: Game) => {
     setEncounterFacing(false);
-
+  
     if (gameInstanceExport.activeEncounterRuntime) {
-      gameInstanceExport.activeEncounterRuntime.rewardDecision = [0, gameInstanceExport.playerList[0]];
-      let punishment : [number, number] = gameInstanceExport.activeEncounterRuntime.calculatePunishment(); //hearts, time
-      gameInstanceExport.activeEncounterRuntime.punishmentDecision = [punishment[1], punishment[0], 0]
+      gameInstanceExport.activeEncounterRuntime.rewardDecision = [
+        0,
+        gameInstanceExport.playerList[0],
+      ];
+      let punishment: [number, number] =
+        gameInstanceExport.activeEncounterRuntime.calculatePunishment(); // hearts, time
+      gameInstanceExport.activeEncounterRuntime.punishmentDecision = [
+        punishment[1],
+        punishment[0],
+        0,
+      ];
     }
     updateGameEasy(gameInstanceExport);
     setPostEncounterModalOpen(true); // Open the modal here
   };
+  
   
   // onLose functionality for the encounter window
   const submitChat = async (inputText: string) => {
