@@ -86,6 +86,8 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
       return;
     }
     if (diceOne.value && diceTwo.value) {
+      console.log(diceOne.value);
+      console.log(diceTwo.value);
       this._availableDice.push([new Dice(3, Math.min(diceOne.value, diceTwo.value)), false])
     }
   }

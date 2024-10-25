@@ -52,10 +52,24 @@ const EncounterCard: React.FC<EncounterProps> = ({
                 e.dataTransfer.setData("text/plain", `${dice.idNum}`);
               }
             }}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              const data = e.dataTransfer.getData("text/plain");
+              const draggedDice = Util.findDiceWithID(
+                gameInstance.activeEncounterRuntime?.availableDice.map((v) => v[0]) ?? new Array(),
+                Number.parseInt(data)
+              );
+              if (draggedDice && dice.beenRolled()) {
+                gameInstance.activeEncounterRuntime?.combineDice(draggedDice, dice);
+                updateGameEasy();
+              }
+            }}
           >
             <Dice
               size={50}
               faces={Util.diceTypeToFacesAndClasses(dice.type)[0]}
+              defaultValue={(dice.value ?? 6) as 1 | 2 | 3 | 4 | 5 | 6}
               onRoll={(value: number) => {
                 dice.value = value; // Set dice value
                 updateGameEasy();
