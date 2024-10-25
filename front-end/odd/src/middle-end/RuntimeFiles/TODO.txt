@@ -3,5 +3,4 @@
  - Attach all 2P functionality
 
 PARALLEL:
- - update all numbers and constants for bosses, dungeons - DONE
- - setup firebase system - PUSHING IS DONE
+ - setup firebase system - PUSHING IS DONE - PULLING NEEDS TO BE TESTED

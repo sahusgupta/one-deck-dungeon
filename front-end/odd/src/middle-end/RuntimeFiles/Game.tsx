@@ -109,10 +109,6 @@ export class Game {
         }
     }
 
-    public handlePunishment(heartsLost: number, timeBurnt:number){
-        this.playerList[0].damageInc(heartsLost)
-        this.burn(timeBurnt)
-    }
     public usePotion() {
         console.log("I used a potion")
     }

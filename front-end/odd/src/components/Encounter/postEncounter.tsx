@@ -1,26 +1,34 @@
-//postEncounter modal 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { Game } from "../../middle-end/RuntimeFiles/Game";
 import { Encounter } from "../../middle-end/Encounter/Encounter";
+import cloneDeep from "lodash/cloneDeep";
 
 interface PostEncounterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  gameInstance: Game;
+  gameInstanceImport: Game;
 }
 
-const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ isOpen, onClose, gameInstance }) => {
+const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  gameInstanceImport 
+}) => {
+
+    const [gameInstance, updateGameInstance] = useState<Game>(gameInstanceImport);
+
+    const updateGameEasy = () => {
+      updateGameInstance(cloneDeep(gameInstance));
+    };
+
+    useEffect(() => {
+      gameInstance.pushToFirebase();
+    }, [gameInstance]);
     // State variables for damage allocation and reward selection
     const [playerOneDamage, setPlayerOneDamage] = useState(0);
     const [playerTwoDamage, setPlayerTwoDamage] = useState(0);
     const [rewardType, setRewardType] = useState("XP");
-  
-    // Get total punishment from the encounter
-    const totalPunishment = gameInstance.activeEncounterRuntime?.calculatePunishment();
-    console.log(totalPunishment);
-    const totalDamage = totalPunishment ? totalPunishment[0] : 0;
-    const totalTimeBurnt = totalPunishment ? totalPunishment[1] : 0;
 
     // Handle changes in damage allocation
     const handleDamageChange = (playerIndex: number, value: number) => {
@@ -29,21 +37,22 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ isOpen, onClose
       } else {
         setPlayerTwoDamage(value);
       }
+      updateGameEasy();
     };
   
     // Handle changes in reward selection
     const handleRewardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       setRewardType(event.target.value);
+      updateGameEasy();
     };
-  
-    // Calculate remaining damage to allocate
-    const remainingDamage = totalDamage - playerOneDamage - playerTwoDamage;
-  
-    // Determine if the "Apply" button should be disabled
-    const isApplyDisabled = remainingDamage > 0;
   
     // Function to apply punishments and rewards
     const applyPunishmentAndReward = () => {
+      const totalPunishment = gameInstance.activeEncounterRuntime?.calculatePunishment();
+      const totalTimeBurnt = totalPunishment ? totalPunishment[1] : 0;
+      console.log("humma kavula")
+      console.log(totalPunishment);
+  
       if (totalPunishment) {
         // Apply damage to players
         gameInstance.playerList[0].damageInc(playerOneDamage);
@@ -60,7 +69,6 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ isOpen, onClose
         case "XP":
           // Add encounter's XP to the game's XP
           gameInstance.xp += gameInstance.activeEncounterRuntime?.encounter.xp || 0;
-          console.log(gameInstance.xp)
           break;
         case "Item":
           // Add the encounter's item to the player's items
@@ -87,7 +95,8 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ isOpen, onClose
       }
       gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
       gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
-      console.log(gameInstance.workspace);
+      // console.log(gameInstance.workspace);
+      updateGameEasy();
       onClose();
     };
     return (
@@ -112,7 +121,7 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ isOpen, onClose
                     value={playerOneDamage}
                     onChange={(e) => handleDamageChange(0, parseInt(e.target.value))}
                     min="0"
-                    max={totalDamage}
+                    max={gameInstance.activeEncounterRuntime?.calculatePunishment()[0]}
                   />
                 </div>
                 {/* Player 2 Damage Input (if applicable) */}
@@ -125,13 +134,13 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ isOpen, onClose
                       value={playerTwoDamage}
                       onChange={(e) => handleDamageChange(1, parseInt(e.target.value))}
                       min="0"
-                      max={totalDamage}
+                      max={gameInstance.activeEncounterRuntime?.calculatePunishment()[0]}
                     />
                   </div>
                 )}
                 {/* Remaining Damage Display */}
                 <div className="text-right">
-                  Remaining Damage to Allocate: {remainingDamage}
+                  Remaining Damage to Allocate: {gameInstance.activeEncounterRuntime?.calculatePunishment()[0] ?? 0 - playerOneDamage - playerTwoDamage}
                 </div>
               </div>
             </div>
@@ -158,9 +167,10 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({ isOpen, onClose
               </button>
               <button
                 onClick={applyPunishmentAndReward}
-                disabled={isApplyDisabled}
+                disabled={(gameInstance.activeEncounterRuntime?.calculatePunishment()[0] ?? 0 - playerOneDamage - playerTwoDamage) > 0}
                 className={`px-4 py-2 ${
-                  isApplyDisabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
+                  (gameInstance.activeEncounterRuntime?.calculatePunishment()[0] ?? 0 - playerOneDamage - playerTwoDamage) > 0 
+                  ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
                 } text-white rounded transition duration-200`}
               >
                 Apply

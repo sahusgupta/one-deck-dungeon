@@ -33,13 +33,14 @@ const EncounterCard: React.FC<EncounterProps> = ({
     updateGameInstance(cloneDeep(gameInstance));
   };
 
-  const handleLeaveEncounter = () => {
-    onLeaveEncounter(); // Call the prop function
-  };
-
   useEffect(() => {
     gameInstance.pushToFirebase();
   }, [gameInstance]);
+
+  const handleLeaveEncounter = () => {
+    updateGameEasy();
+    onLeaveEncounter(); // Call the prop function
+  };
 
   const renderDiceAndBoxes = () => {
     return (

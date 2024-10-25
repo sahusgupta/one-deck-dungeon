@@ -26,15 +26,15 @@ const PlayPage: React.FC = () => {
   const [modalTitle, setModalTitle] = useState("Error");
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
   const [isEncounterFacing, setEncounterFacing] = useState(false);
-
-  const gameRef = doc(db, 'games', localStorage.getItem("gameId") ?? "");
-  const unsubscribe = onSnapshot(gameRef, (snapshot) => {
-    if (snapshot.exists())
-      gameInstance.updateGame(snapshot.data())
-  }, (error) => {
-    console.log("lol error")
-  });
   const [isPostEncounterModalOpen, setPostEncounterModalOpen] = useState(false);
+
+  // const gameRef = doc(db, 'games', localStorage.getItem("gameId") ?? "");
+  // const unsubscribe = onSnapshot(gameRef, (snapshot) => {
+  //   if (snapshot.exists())
+  //     gameInstance.updateGame(snapshot.data())
+  // }, (error) => {
+  //   console.log("lol error")
+  // });
 
   
 
@@ -52,6 +52,7 @@ const PlayPage: React.FC = () => {
   const closeChatModal = () => {
     setModalOpen(false);
   };
+
   const closingPostEncounterModal= () => {
     setPostEncounterModalOpen(false)
     updateGameEasy();
@@ -85,9 +86,7 @@ const PlayPage: React.FC = () => {
     setEncounterModalOpen(false);
   }
 
-  
   const onLeaveEncounter = () => {
-    updateGameEasy();
     setEncounterFacing(false);
     setPostEncounterModalOpen(true); // Open the modal here
   };
@@ -313,7 +312,7 @@ const PlayPage: React.FC = () => {
               <PostEncounterModal
                 isOpen={isPostEncounterModalOpen}
                 onClose={() => closingPostEncounterModal()}
-                gameInstance={gameInstance}
+                gameInstanceImport={gameInstance}
               />
             )}
 
