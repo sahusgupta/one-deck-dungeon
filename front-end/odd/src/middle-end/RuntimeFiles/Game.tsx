@@ -37,8 +37,37 @@ export class Game {
     public set level(value: number) { this._level = value; }
 
     private _xp: number;
-    public get xp(): number {return this._xp;}
-    public set xp(value: number) {this._xp = value;}
+    public get xp(): number { return this._xp; }
+    public set xp(value: number) {
+        this._xp = value;
+        if (this._xp >= 6 && this._level === 1) {
+            this._xp -= 6;
+            this.level = 2;
+            this._potions += 1;
+            const newItem = new Item([1, 0, 0, 0]);
+            this.findPlayer()?.items.push(newItem);
+            this.findPlayer()?.items.push(newItem);
+        }
+        if (this._xp >= 8 && this._level === 2) {
+            this._xp -= 8;
+            this.level = 3;
+            this._potions += 1;
+        }
+        if (this._xp >= 10 && this._level === 3) {
+            this._xp -= 10;
+            this.level = 4;
+            this._potions += 1;
+            const newItem = new Item([1, 0, 0, 0]);
+            this.findPlayer()?.items.push(newItem);
+            this.findPlayer()?.items.push(newItem);
+        }
+        if (this._level === 4) {
+            while (this._xp >= 5) {
+                this._xp -= 5;
+                this._potions += 1;
+            }
+        }
+    }
 
     private _playerNum: number;
     public get playerNum(): number { return this._playerNum; }
@@ -108,7 +137,13 @@ export class Game {
             this._discard.push(this._deck.pop() ?? Encounter.EmptyEncounter);
         }
     }
-
+    public findPlayer(){
+        const credentials = localStorage.getItem("credentials");
+            if (!credentials) return undefined;
+    
+        const player = this._playerList.find(p => p.id === credentials);
+        return player;
+    }
     public usePotion(inPlayPage: boolean) {
         if(this.potions>=1){
             const credentials = localStorage.getItem("credentials");

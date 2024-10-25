@@ -208,36 +208,35 @@ const PlayPage: React.FC = () => {
   if (!gameInstance) {
     return <div>Loading...</div>;
   }
-
   return (
     <PageLayout>
       <div className="p-6 bg-gray-900 text-white min-h-screen">
-          <button className="w-10 h-10 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80" onClick={() => {
-            let gameInfo = ['boss', 'characterSelected', 'dungeon', 'gameId', 'playerCount']
-            for (let key in gameInfo){
-              localStorage.removeItem(key);
-            }
+        <button
+          className="w-10 h-10 bg-black bg-opacity-70 flex flex-col items-center justify-center px-6 py-4 rounded-lg space-y-2 hover:bg-opacity-80"
+          onClick={() => {
+            const gameInfo = ['boss', 'characterSelected', 'dungeon', 'gameId', 'playerCount'];
+            gameInfo.forEach((key) => localStorage.removeItem(key));
             onPage = true;
-          }}>
-            <span className="text-xl font-bold">Exit</span>
-          </button>
+          }}
+        >
+          <span className="text-xl font-bold">Exit</span>
+        </button>
         <div className="container mx-auto">
-          {/* Game Title and Player Info - problem , not able to update from firebase for username - takes data from google auth*/}
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold">Game: {localStorage.getItem("gameId")}</h1>
             <div className="text-xl">
               Player:{" "}
-              <span className="font-semibold">{gameInstance.playerList[0].id}</span> 
+              <span className="font-semibold">
+                {gameInstance.findPlayer()?.id || "Unknown Player"}
+              </span>
             </div>
           </div>
 
-          {/* Game Content Section */}
           <div className="mt-8 grid grid-cols-3 gap-6">
-            {/* Boss Section */}
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">Information</h2>
               <div className="flex flex-col items-center">
-              <iframe
+                <iframe
                   src="https://drive.google.com/file/d/1XR1kNiGFQH-u8CV4cU42KvZEquhRNqGW/preview"
                   width="480"
                   height="360"
@@ -250,18 +249,18 @@ const PlayPage: React.FC = () => {
                   className="w-48 h-48 object-contain rounded-md"
                 />
                 <img
-                  src={`/Leveling/Level${gameInstance.level}-${gameInstance.playerNum == 1 ? "1P" : "2P"}.jpg`}
+                  src={`/Leveling/Level${gameInstance.level}-${gameInstance.playerNum === 1 ? "1P" : "2P"}.jpg`}
                   alt={gameInstance.level.toString()}
                   className="w-48 h-48 object-contain rounded-md"
                 />
               </div>
             </div>
-            {/* Chat Section */}
-            {gameInstance.playerNum == 2 && (
+
+            {gameInstance.playerNum === 2 && (
               <div className="fixed left-0 top-50 h-3/4 w-1/4 bg-gray-800 p-4 shadow-md">
                 <h2 className="text-xl font-bold mb-4">Chat</h2>
                 <div className="flex flex-col h-3/4 overflow-y-scroll bg-gray-700 p-2 rounded-md shadow-inner">
-                  {gameInstance.chatLog.map((message : string, index : number) => (
+                  {gameInstance.chatLog.map((message: string, index: number) => (
                     <div key={index} className="text-sm text-gray-200 mb-2">
                       {message}
                     </div>
@@ -269,7 +268,7 @@ const PlayPage: React.FC = () => {
                 </div>
               </div>
             )}
-            
+
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">
                 Deck - Discard: {gameInstance.discard.length}
@@ -281,7 +280,7 @@ const PlayPage: React.FC = () => {
                     src={
                       encounterOptional[1]
                         ? `/Encounters/${encounterOptional[0].name}.jpg`
-                        : encounterOptional[0].name == Encounter.EmptyEncounter.name
+                        : encounterOptional[0].name === Encounter.EmptyEncounter.name
                         ? "Empty.jpg"
                         : "ClosedDoor.jpg"
                     }
@@ -299,53 +298,88 @@ const PlayPage: React.FC = () => {
                 />
               </div>
             </div>
-            {/* Players Section */}
+
             <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-              <h2 className="text-2xl font-bold mb-4">Players</h2>
-              <div className="grid grid-cols-2 gap-4">
-                {gameInstance.playerList.map((player: Player, index: number) => (
-                  <div
-                    key={index}
-                    className="p-4 bg-gray-700 rounded-lg text-center"
-                  >
-                    <p className="text-lg font-semibold">Player {index + 1}</p>
-                    <p className="text-lg font-semibold">
-                      {" "}
-                      Name: {player.id}
-                    </p>
-                    <p className="text-sm text-gray-400">{player.id}</p>
+              <h2 className="text-2xl font-bold mb-4">Player Info</h2>
+              <div className="flex flex-wrap justify-center">
+                <div className="flex flex-col">
+                  <div className="bg-gray-700 p-4 rounded-md mb-4">
+                    <h3 className="text-lg font-bold text-white mb-2">Experience Points (XP)</h3>
+                    <div className="text-center text-white">
+                      {gameInstance.xp} XP
+                    </div>
+                    <div className="text-center text-white">
+                      {gameInstance.level} Level
+                    </div>
                   </div>
-                ))}
+                  <div className="bg-gray-700 p-4 rounded-md mb-4">
+                    <h3 className="text-lg font-bold text-white mb-2">Items</h3>
+                    <div className="flex flex-wrap">
+                      {gameInstance.findPlayer()?.defeatedEncounters
+                        .filter(([_, isItem]) => isItem)
+                        .map(([encounter], index) => (
+                          <div key={index} className="m-2">
+                            <img
+                              src={`/Encounters/${encounter.name}.jpg`}
+                              alt={encounter.name}
+                              className="w-24 h-24 object-cover rounded-md shadow-md"
+                            />
+                            <span className="block text-center text-sm text-white mt-1">
+                              {encounter.name}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                  <div className="bg-gray-700 p-4 rounded-md">
+                    <h3 className="text-lg font-bold text-white mb-2">Skills</h3>
+                    <div className="flex flex-wrap">
+                      {gameInstance.findPlayer()?.defeatedEncounters
+                        .filter(([_, isItem]) => !isItem)
+                        .map(([encounter], index) => (
+                          <div key={index} className="m-2">
+                            <img
+                              src={`/Encounters/${encounter.name}.jpg`}
+                              alt={encounter.name}
+                              className="w-24 h-24 object-cover rounded-md shadow-md"
+                            />
+                            <span className="block text-center text-sm text-white mt-1">
+                              {encounter.name}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col items-center" onClick={() => {gameInstance.usePotion(true); updateGameEasy()}}>
-            <img
-              src="https://drive.google.com/thumbnail?id=1eF9CUtN2PHmpr2dWZnIMcdZgE2TS8cVs&sz=w1000"
-              alt="Additional Image"
-              className="w-32 h-32 object-contain rounded-md mb-2"
-            />
-            <span className="text-sm"> {gameInstance.potions} Potions Left</span>
-          </div>
-          <div className="flex items-center justify-center space-x-2 my-4">
-        <span className="text-xl font-semibold text-white">Hearts:</span>
-        {gameInstance.playerList[0].itemSum().values[3] &&
-          Array.from({ length: gameInstance.playerList[0].itemSum().values[3] - gameInstance.playerList[0].damage }).map((_, index) => (
-            <span key={index} className="text-red-500 text-2xl">
-              ❤️
-            </span>
-          ))}
-      </div>
+              <div className="flex flex-col items-center" onClick={() => { gameInstance.usePotion(true); updateGameEasy(); }}>
+                <img
+                  src="https://drive.google.com/thumbnail?id=1eF9CUtN2PHmpr2dWZnIMcdZgE2TS8cVs&sz=w1000"
+                  alt="Additional Image"
+                  className="w-32 h-32 object-contain rounded-md mb-2"
+                />
+                <span className="text-sm"> {gameInstance.potions} Potions Left</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 my-4">
+                <span className="text-xl font-semibold text-white">Hearts:</span>
+                {gameInstance.findPlayer()?.itemSum()?.values[3] !== undefined &&
+                  Array.from({ length: (gameInstance.findPlayer()?.itemSum()?.values[3] || 0) - (gameInstance.findPlayer()?.damage || 0) }).map((_, index) => (
+                    <span key={index} className="text-red-500 text-2xl">
+                      ❤️
+                    </span>
+                  ))}
+              </div>
             </div>
+
             {isEncounterFacing && (
               <EncounterCard
-                onClick= {() => console.log("running the encounter")}
-                onLeaveEncounter={onLeaveEncounter} // Pass the function here
-                player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
+                onClick={() => console.log("running the encounter")}
+                onLeaveEncounter={onLeaveEncounter}
                 gameInstanceImport={gameInstance}
               />
-            )
+            )}
 
-            }
-            {gameInstance.playerNum == 2 && (
+            {gameInstance.playerNum === 2 && (
               <div
                 onClick={() =>
                   showChat(
@@ -358,6 +392,7 @@ const PlayPage: React.FC = () => {
                 <FontAwesomeIcon icon={faComment} size="5x" />
               </div>
             )}
+
             {isPostEncounterModalOpen && (
               <PostEncounterModal
                 isOpen={isPostEncounterModalOpen}
@@ -376,12 +411,13 @@ const PlayPage: React.FC = () => {
                 actionLabel="Submit"
               />
             )}
-            {isEncounterModalOpen &&(
+
+            {isEncounterModalOpen && (
               <EncounterModal
-              isOpen={isEncounterModalOpen}
-              onClose={encounterStay}
+                isOpen={isEncounterModalOpen}
+                onClose={encounterStay}
                 title={"You have encountered"}
-                content={gameInstance.activeEncounterRuntime? Util.convertEncounterNameToShowName(gameInstance.activeEncounterRuntime.encounter.name) : "NULL ENCOUNTER ERROR"}
+                content={gameInstance.activeEncounterRuntime ? Util.convertEncounterNameToShowName(gameInstance.activeEncounterRuntime.encounter.name) : "NULL ENCOUNTER ERROR"}
                 onAction={encounterAccepted}
                 actionLabel="Encounter"
                 encounter={gameInstance.activeEncounterRuntime ? gameInstance.activeEncounterRuntime.encounter : Encounter.EmptyEncounter}
