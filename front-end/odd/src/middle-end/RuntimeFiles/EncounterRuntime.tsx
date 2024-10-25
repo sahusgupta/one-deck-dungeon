@@ -60,34 +60,28 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   }
 
   public useDiceOnBox(dice: Dice, box: DiceBox) {
-    if (this.makeDiceUsed(dice)) {
-      return;
-    }
 
     if (box.constrainedToOne) {
       this._diceInBox.forEach((value: [Dice, number, DiceBox]) => {
-        if (value[0].equals(dice) || value[2].equals(box)) {
+        if (value[2].equals(box)) {
           return;
         }
       });
     }
 
     if ((dice.type == box.type || dice.type == 3 || box.type == 3) && dice.value) {
+      if (box.constrainedToOne && dice.value < box.neededRoll) {
+        return;
+      }
+      this.makeDiceUsed(dice);
       this._diceInBox.push([dice, dice.value, box]);
     }
   }
 
   public combineDice(diceOne: Dice, diceTwo: Dice) {
-    if (this.makeDiceUsed(diceOne)) {
-      return;
-    }
-
-    if (this.makeDiceUsed(diceTwo)) {
-      return;
-    }
     if (diceOne.value && diceTwo.value) {
-      console.log(diceOne.value);
-      console.log(diceTwo.value);
+      this.makeDiceUsed(diceOne);
+      this.makeDiceUsed(diceTwo);
       this._availableDice.push([new Dice(3, Math.min(diceOne.value, diceTwo.value)), false])
     }
   }
@@ -120,14 +114,25 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   public checkState() : number { 
     let ret : number = -1;
     this._necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => {
-      if (this.findFillAmount(box.idNum) < box.neededRoll) {
-        if (box.punishmentHearts == 0 && ret == -1) {
-          ret = 0;
-        } else if (ret == -1) {
-          ret = 1;
-        }
+      if (this.findFillAmount(box.idNum) < box.neededRoll && box.punishmentHearts == 0 && ret == -1) {
+        ret = 0;
       }
     });
+
+    if (ret != -1) {
+      return ret;
+    }
+
+    this._necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => {
+      if (this.findFillAmount(box.idNum) < box.neededRoll && ret == -1) {
+        ret = 1;
+      }
+    });
+
+    if (ret != -1) {
+      return ret;
+    }
+
     if (ret == -1) {
       ret = 2;
     }
