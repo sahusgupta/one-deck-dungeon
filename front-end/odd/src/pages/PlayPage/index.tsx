@@ -23,6 +23,7 @@ const PlayPage: React.FC = () => {
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
   const [isEncounterFacing, setEncounterFacing] = useState(false);
   
+
   const updateGameEasy = (encounterRunTime?: EncounterRuntime) => {
     if (encounterRunTime) {
       gameInstance.activeEncounterRuntime = encounterRunTime;
@@ -68,7 +69,11 @@ const PlayPage: React.FC = () => {
   const onEncounterWin = () => {
     gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
     gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
-
+    const punishments = gameInstance.activeEncounterRuntime?.calculatePunishment()
+    if(punishments){
+      gameInstance.handlePunishment(punishments[0], punishments[1])
+    }
+    gameInstance.activeEncounterRuntime = undefined;
     gameInstance.activeEncounterRuntime = undefined;
 
     setEncounterFacing(false);
@@ -76,17 +81,6 @@ const PlayPage: React.FC = () => {
   }
 
   // onLose functionality for the encounter window
-  const onEncounterLose = async (heartsLost: number) => {
-
-    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
-    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
-
-    gameInstance.activeEncounterRuntime = undefined;
-
-    setEncounterFacing(false);
-    updateGameEasy()
-  };
-  
   const submitChat = async (inputText: string) => {
     gameInstance.chatLog.push(
       (localStorage.getItem("userdata") || "undefined user") +
@@ -270,13 +264,21 @@ const PlayPage: React.FC = () => {
             />
             <span className="text-sm"> {gameInstance.potions} Potions Left</span>
           </div>
+          <div className="flex items-center justify-center space-x-2 my-4">
+        <span className="text-xl font-semibold text-white">Hearts:</span>
+        {gameInstance.playerList[0].itemSum().values[3] &&
+          Array.from({ length: gameInstance.playerList[0].itemSum().values[3] - gameInstance.playerList[0].damage }).map((_, index) => (
+            <span key={index} className="text-red-500 text-2xl">
+              ❤️
+            </span>
+          ))}
+      </div>
             </div>
             {isEncounterFacing && (
               <EncounterCard
                 onClick= {() => console.log("running the encounter")}
                 onWin={() => onEncounterWin()}
                 player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
-                onLose={() => onEncounterLose(1)}
                 gameInstanceImport={gameInstance}
               />
             )
