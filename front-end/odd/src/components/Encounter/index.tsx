@@ -78,6 +78,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
                 Number.parseInt(data)
               );
               if (foundDice) {
+                console.log()
                 gameInstance.activeEncounterRuntime?.useDiceOnBox(foundDice, box);
               }
 
