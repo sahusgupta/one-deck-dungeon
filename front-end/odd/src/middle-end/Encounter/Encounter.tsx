@@ -4,7 +4,7 @@ import { Item } from "../Loot/Item";
 import { Skill } from "../Loot/Skill";
 
 export class Encounter {
-    private _xp: number;
+    private _xp: number; //the bosses health
     public get xp(): number {return this._xp;}
     public set xp(value: number) {this._xp = value;}
 
@@ -646,7 +646,7 @@ export class Encounter {
     );
 
     //bosses
-    public static readonly Dragon1 : Encounter = new Encounter(0, "Dragon1", 0, 
+    public static readonly Dragon1 : Encounter = new Encounter(6, "Dragon1", 0, 
         new Item([0, 0, 0, 0]),
         Skill.Null,
         Debuff.Null,
@@ -661,7 +661,7 @@ export class Encounter {
         )
     );
 
-    public static readonly Lich1 : Encounter = new Encounter(0, "Lich1", 0, 
+    public static readonly Lich1 : Encounter = new Encounter(5, "Lich1", 0, 
         new Item([0, 0, 0, 0]),
         Skill.Null,
         Debuff.Null,
@@ -675,7 +675,7 @@ export class Encounter {
         )
     );
 
-    public static readonly Hydra1 : Encounter = new Encounter(0, "Hydra1", 0, 
+    public static readonly Hydra1 : Encounter = new Encounter(5, "Hydra1", 0, 
         new Item([0, 0, 0, 0]),
         Skill.Null,
         Debuff.Null,
@@ -689,7 +689,7 @@ export class Encounter {
         )
     );
 
-    public static readonly Minotaur1 : Encounter = new Encounter(0, "Minotaur1", 0, 
+    public static readonly Minotaur1 : Encounter = new Encounter(10, "Minotaur1", 0, 
         new Item([0, 0, 0, 0]),
         Skill.Null,
         Debuff.Null,
@@ -705,7 +705,7 @@ export class Encounter {
         )
     );
 
-    public static readonly Yeti1 : Encounter = new Encounter(0, "Yeti1", 0, 
+    public static readonly Yeti1 : Encounter = new Encounter(6, "Yeti1", 0, 
         new Item([0, 0, 0, 0]),
         Skill.Null,
         Debuff.Null,
