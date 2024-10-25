@@ -43,6 +43,16 @@ export class Dungeon {
         return this.DragonCave;
     }
 
+    public static findDungeon(name: string): Dungeon {
+        for (let dungeon of this.dungeonList) {
+            if (dungeon.name === name) {
+                return dungeon;
+            }
+        }
+        // Return a default Dungeon or handle as per your logic
+        return this.DragonCave; // Assuming DragonCave is the default
+    }
+
     public getCurrFloor() : Floor {
         return this._floors[this._currFloor];
     }
@@ -150,5 +160,4 @@ export class Dungeon {
         this.MinotaurMaze,
         this.YetiCavern
     );
-
 }

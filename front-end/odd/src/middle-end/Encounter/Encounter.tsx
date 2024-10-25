@@ -58,6 +58,17 @@ export class Encounter {
         return ret;
     }
 
+    public static findEncounter(name : string) : Encounter {
+        let ret : Encounter = Encounter.EmptyEncounter;
+        this.encounterList.forEach(e => {
+            if (e.name == name) {
+                ret = e;
+            }
+        });
+
+        return ret;
+    }
+
     public static readonly EmptyEncounter : Encounter = new Encounter(0, "EmptyEncounter1", 0,
         new Item([0, 0, 0, 0]),
         Skill.Null,

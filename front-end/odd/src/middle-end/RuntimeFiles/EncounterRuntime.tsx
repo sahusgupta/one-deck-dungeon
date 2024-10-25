@@ -27,7 +27,13 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   public get necessaryDiceboxes(): Array<DiceBox> {return this._necessaryDiceboxes;}
   public set necessaryDiceboxes(value: Array<DiceBox>) {this._necessaryDiceboxes = value;}
 
-  public constructor (dungeon: Dungeon, _encounter: Encounter, players: Array<Player>, _workspaceIndex: number) {
+  public constructor (
+    dungeon: Dungeon, 
+    _encounter: Encounter, 
+    players: Array<Player>, 
+    _workspaceIndex: number, 
+    _tripleArrays?: [Array<[Dice, boolean]>, Array<[Dice, number, DiceBox]>, Array<DiceBox>]
+  ) {
     this._encounter = _encounter;
     this._workspaceIndex = _workspaceIndex;
 

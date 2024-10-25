@@ -87,4 +87,93 @@ export class Skill {
     public static readonly StaticBurst : Skill = new Skill("StaticBurst");
 
     public static readonly Null : Skill = new Skill("Null");
+
+    public static readonly skillList: Array<Skill> = [
+        // Aquamancer Skills
+        this.Tsunami1P,
+        this.Tsunami2P,
+        this.BubblesWaterSpirit,
+        this.WaterBlessing,
+
+        // Archer Skills
+        this.EagleEye1P,
+        this.EagleEye2P,
+        this.Kiting,
+        this.CombinedShot,
+
+        // Dragoon Skills
+        this.Stalwart1P,
+        this.Stalwart2P,
+        this.Trident,
+        this.ForkedStrike,
+
+        // Mage Skills
+        this.ManaCharge1P,
+        this.ManaCharge2P,
+        this.ShieldAura,
+        this.PowerTransfer,
+
+        // Paladin Skills
+        this.Valiant1P,
+        this.Valiant2P,
+        this.Armor,
+        this.SupportAura,
+
+        // Rogue Skills
+        this.DaringGamble1P,
+        this.DaringGamble2P,
+        this.Stealth,
+        this.Dungeoneering,
+
+        // Warrior Skills
+        this.Frenzy1P,
+        this.Frenzy2P,
+        this.SecondWind,
+        this.FearlessCharge,
+
+        // Witch Skills
+        this.HammerSmash1P,
+        this.HammerSmash2P,
+        this.InnerFire,
+        this.AntiHex,
+
+        // General Skills
+        this.Dodge,
+        this.Mana,
+        this.Backstab,
+        this.Cleave,
+        this.Invisibility,
+        this.Accuracy,
+        this.CrushingBlow,
+        this.Valor,
+        this.CriticalStrikes,
+        this.Flameweave,
+        this.Consistency,
+        this.ManaFountain,
+        this.Haste,
+        this.CrushingFist,
+        this.Poison,
+        this.ArmorCrush,
+        this.Heroism,
+        this.Shimmerblast,
+        this.LuckyFamiliar,
+        this.Flurry,
+        this.ChaoticAura,
+        this.BruteForce,
+        this.SteadyHands,
+        this.TripleStrike,
+        this.Dexterity,
+        this.Persistence,
+        this.Clarity,
+        this.StaticBurst,
+    ];
+
+    public static findSkill(name: string): Skill {
+        for (let skill of this.skillList) {
+            if (skill.name === name) {
+                return skill;
+            }
+        }
+        return this.Null; // Return Null if not found
+    }
 }

@@ -5,6 +5,10 @@ import { Player } from "./Player";
 import { getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../backend/firebase/firebase_utils';
 import { EncounterRuntime } from "./EncounterRuntime";
+import { Dice } from "../Dice/Dice";
+import { DiceBox } from "../Dice/DiceBox";
+import { Item } from "../Loot/Item";
+import { Skill } from "../Loot/Skill";
 
 export class Game {
 
@@ -150,9 +154,113 @@ export class Game {
         }
     }
 
-    // public pullFromFirebase(gameId: number) { //this is hard bc it involved parsing literally every value from firebase
+    public async pullFromFirebase() { //this is hard bc it involved parsing literally every value from firebase
+        if (this._gameId) {
+            const gameRef = doc(db, "games", this._gameId.toString());
+            const gameSnap = await getDoc(gameRef);
+            if (gameSnap.exists()) {
+              const gamedata = gameSnap.data();
+              this.updateGame(gamedata);
+            }    
+        }
+    }
 
-    // }
+    public updateGame(gameData: any) {
+        this._active = gameData.active;
+    
+        // Update playerList
+        this._playerList = gameData.playerList.map((pData: any) => {
+            // Find the hero associated with the player
+            let hero = Hero.findHero(pData.hero, this._playerList.length === 1 ? "1P" : "2P");
+    
+            // Create a new Player instance
+            let player = Player.getFromId(pData.id, hero);
+    
+            // Assign skills to the player
+            player.skills = pData.skills.map((skillName: string) => Skill.findSkill(skillName));
+    
+            // Assign items to the player
+            player.items = pData.items.map((itemData: any) => new Item(itemData.values));
+    
+            // Assign defeated encounters
+            player.defeatedEncounters = pData.defeatedEncounters.map((d: any) => {
+                let encounter = Encounter.findEncounter(d.encounter);
+                return [encounter, d.isItem];
+            });
+    
+            // Assign damage
+            player.damage = pData.damage;
+    
+            return player;
+        });
+    
+        // Update dungeon
+        this._dungeon = Dungeon.findDungeon(gameData.dungeon);
+    
+        // Update simple properties
+        this._potions = gameData.potions;
+        this._level = gameData.level;
+        this._xp = gameData.xp;
+        this._playerNum = gameData.playerNum;
+        this._chatLog = gameData.chatLog;
+    
+        // Update activeEncounterRuntime if it exists
+        if (gameData.activeEncounterRuntime && Object.keys(gameData.activeEncounterRuntime).length > 0) {
+            let encounter = Encounter.findEncounter(gameData.activeEncounterRuntime.encounter);
+            let workspaceIndex = gameData.activeEncounterRuntime.workspaceIndex;
+    
+            // Reconstruct availableDice
+            let availableDice = gameData.activeEncounterRuntime.availableDice.map((a: any) => {
+                let [type, value, idNum] = a.dice;
+                let dice = new Dice(type, value, idNum);
+                let used = a.used;
+                return [dice, used];
+            });
+    
+            // Reconstruct diceInBox
+            let diceInBox = gameData.activeEncounterRuntime.diceInBox.map((a: any) => {
+                let [type, value, idNum] = a.dice;
+                let dice = new Dice(type, value, idNum);
+                let contribution = a.contribution;
+                let [neededRoll, boxType, constrainedToOne, punishmentTime, punishmentHearts, boxIdNum] = a.box;
+                let box = new DiceBox(neededRoll, boxType, constrainedToOne, punishmentTime, punishmentHearts, boxIdNum);
+                return [dice, contribution, box];
+            });
+    
+            // Reconstruct necessaryDiceboxes
+            let necessaryDiceboxes = gameData.activeEncounterRuntime.necessaryDice.map((a: any) => {
+                let [neededRoll, boxType, constrainedToOne, punishmentTime, punishmentHearts, boxIdNum] = a.box;
+                return new DiceBox(neededRoll, boxType, constrainedToOne, punishmentTime, punishmentHearts, boxIdNum);
+            });
+    
+            // Create the EncounterRuntime
+            this._activeEncounterRuntime = new EncounterRuntime(
+                this._dungeon, 
+                encounter, 
+                this._playerList, 
+                workspaceIndex, 
+                [
+                    availableDice,
+                    diceInBox,
+                    necessaryDiceboxes
+                ]
+            );
+        } else {
+            this._activeEncounterRuntime = undefined;
+        }
+    
+        // Update workspace
+        this._workspace = gameData.workspace.map((w: any) => {
+            let encounter = Encounter.findEncounter(w.encounter);
+            let revealed = w.revealed;
+            return [encounter, revealed];
+        });
+    
+        // Update deck and discard
+        this._deck = gameData.deck.map((d: string) => Encounter.findEncounter(d));
+        this._discard = gameData.discard.map((d: string) => Encounter.findEncounter(d));
+    }
+    
 
     private stringifyGame() : any {
         return { //seperator sequence, from shallowest to deepest: , - | * # ^
