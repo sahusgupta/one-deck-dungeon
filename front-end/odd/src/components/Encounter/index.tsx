@@ -1,5 +1,5 @@
 //index.tsx for encounters
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Encounter } from "../../middle-end/Encounter/Encounter";
 import EncounterBase from "./encounterBase";
 import Dice from "react-dice-roll";
@@ -20,7 +20,6 @@ interface EncounterProps {
   gameInstanceImport: Game;
 }
 
-
 const EncounterCard: React.FC<EncounterProps> = ({
   onClick,
   onLeaveEncounter,
@@ -28,7 +27,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
   gameInstanceImport,
 }) => {
   const [gameInstance, updateGameInstance] = useState<Game>(gameInstanceImport);
-
+  const diceRefs = useRef<{ [key: number]: any }>({});
   const updateGameEasy = () => {
     updateGameInstance(cloneDeep(gameInstance));
   };
@@ -76,6 +75,11 @@ const EncounterCard: React.FC<EncounterProps> = ({
               }}
             >
               <Dice
+                ref={(el) => {
+                  if (el) {
+                    diceRefs.current[dice.idNum] = el;
+                  }
+                }}
                 size={50}
                 faces={Util.diceTypeToFacesAndClasses(dice.type)[0]}
                 defaultValue={(dice.value ?? 6) as 1 | 2 | 3 | 4 | 5 | 6}
@@ -215,9 +219,28 @@ const EncounterCard: React.FC<EncounterProps> = ({
               ? `red`
               : `green`
           }-500 text-white rounded`}
-          onClick={() => {handleLeaveEncounter(gameInstance)}}
+          onClick={() => {
+            handleLeaveEncounter(gameInstance);
+          }}
         >
           Leave Encounter
+        </button>
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+          onClick={() => {
+            gameInstance.activeEncounterRuntime?.availableDice.forEach(
+              ([dice, used]) => {
+                if (!dice.beenRolled()) {
+                  const diceComponent = diceRefs.current[dice.idNum];
+                  if (diceComponent) {
+                    diceComponent.rollDice();
+                  }
+                }
+              }
+            );
+          }}
+        >
+          Roll All
         </button>
       </div>
     </EncounterBase>
