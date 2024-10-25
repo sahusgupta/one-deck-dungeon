@@ -30,7 +30,21 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
       gameInstance.activeEncounterRuntime?.updateDamageDistribution(playerIndex, value);
       updateGameEasy();
     };
-  
+
+    // Check if player can add item
+    const canAddItem = () => {
+      const player = gameInstance.findPlayer();
+      const isTwoPlayer = gameInstance.playerNum === 2;
+      return player ? (player.items.length-1) < player.getItemLimit(gameInstance.level, isTwoPlayer) : false;
+    };
+
+    // Check if player can add skill
+    const canAddSkill = () => {
+      const player = gameInstance.findPlayer();
+      const isTwoPlayer = gameInstance.playerNum === 2;
+      return player ? (player.skills.length-2) < player.getSkillLimit(gameInstance.level, isTwoPlayer) : false;
+    };
+
     // Handle changes in reward selection
     const handleRewardChange = (rewardType: number) => {
       if (gameInstance.activeEncounterRuntime?.rewardDecision) {
@@ -38,7 +52,7 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
       }
       updateGameEasy();
     };
-  
+
     // Function to apply punishments and rewards
     const applyPunishmentAndReward = (playerIndex: number) => {
       if (
@@ -66,23 +80,19 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
           gameInstance.xp += gameInstance.activeEncounterRuntime.encounter.xp;
           break;
         case 1:
-          // Add the encounter's item to the player's items
+          // Add the encounter's item to the player's items, if allowed
           const encounterItem = gameInstance.activeEncounterRuntime?.encounter.item;
-          if (encounterItem) {
+          if (encounterItem && canAddItem()) {
             rewardDecision[1].items.push(encounterItem);
-          }
-          if(gameInstance.activeEncounterRuntime){
-            rewardDecision[1].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, true])
+            rewardDecision[1].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, true]);
           }
           break;
         case 2:
-          // Placeholder for skill logic
+          // Add the encounter's skill to the player's skills, if allowed
           const encounterSkill = gameInstance.activeEncounterRuntime?.encounter.skill;
-          if (encounterSkill) {
+          if (encounterSkill && canAddSkill()) {
             rewardDecision[1].skills.push(encounterSkill);
-          }
-          if(gameInstance.activeEncounterRuntime){
-            rewardDecision[1].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, false])
+            rewardDecision[1].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, false]);
           }
           break;
         default:
@@ -94,6 +104,7 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
       updateGameEasy();
       onClose(gameInstance);
     };
+
     return (
         <Modal
           isOpen={isOpen}
@@ -147,8 +158,8 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
                 className="bg-gray-700 rounded px-2 py-1 w-full"
               >
                 <option value="0">XP</option>
-                <option value="1">Item</option>
-                <option value="2">Skill</option>
+                {canAddItem() && <option value="1">Item</option>}
+                {canAddSkill() && <option value="2">Skill</option>}
               </select>
             </div>
             {/* Action Buttons */}
@@ -174,4 +185,3 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
     };
     
     export default PostEncounterModal;
-    
