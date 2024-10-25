@@ -9,7 +9,7 @@ type EncounterModalProps = {
   onClose: () => void;
   title: string;
   content: string;
-  onAction: (inputValue: string) => void;
+  onAction: (encounter?: Encounter, index?: number) => void;
   actionLabel: string;
   children?: React.ReactNode;
   encounter: Encounter;
@@ -49,7 +49,7 @@ const EncounterModal: React.FC<EncounterModalProps> = ({
                 Util.diceTypeToFacesAndClasses(box.type)[1]
               }-500
               focus:outline-none focus:ring-2 focus:ring-offset-2 mt-2 w-full`}
-              onClick={() => onAction(`Encounter DiceBox ${index + 1}`)}
+              onClick={() => onAction(encounter, index)}
             >
               Encounter DiceBox {index + 1}
             </button>
@@ -83,7 +83,7 @@ const EncounterModal: React.FC<EncounterModalProps> = ({
             className={`inline-flex justify-center rounded-md border border-transparent
             shadow-sm px-4 py-2 text-base font-medium text-black bg-white
             focus:outline-none focus:ring-2 focus:ring-offset-2 mt-2 w-full`}
-            onClick={() => onAction(inputValue)}
+            onClick={() => onAction()}
           >
             {actionLabel}
           </button>

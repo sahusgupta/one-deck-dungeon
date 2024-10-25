@@ -13,6 +13,7 @@ import EncounterModal from "../../components/Modals/encounterModal";
 import EncounterCard from "../../components/Encounter";
 import cloneDeep from "lodash/cloneDeep";
 import { EncounterRuntime } from "../../middle-end/RuntimeFiles/EncounterRuntime";
+import { DiceBox } from "../../middle-end/Dice/DiceBox";
 
 const PlayPage: React.FC = () => {
   const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
@@ -46,7 +47,26 @@ const PlayPage: React.FC = () => {
     updateGameEasy();
   }
 
-  const encounterAccepted = () => {
+  const encounterAccepted = (encounter? : Encounter, index?: number) => {
+    console.log(encounter)
+    console.log(index)
+    console.log(gameInstance.activeEncounterRuntime)
+    if (encounter && (index || index === 0) && gameInstance.activeEncounterRuntime) {
+      console.log('truly inside')
+      let idToRemove: number = encounter.boxes[index * -1 + 1].idNum;
+      let indexToRemove: number | undefined = undefined;
+      gameInstance.activeEncounterRuntime.necessaryDiceboxes.map((box: DiceBox, necessaryDBIndex: number) => {
+        if (box.idNum == idToRemove) {
+          indexToRemove = necessaryDBIndex;
+        }
+      });
+      console.log(indexToRemove);
+      if (indexToRemove) {
+        gameInstance.activeEncounterRuntime.necessaryDiceboxes.splice(indexToRemove, 1);
+      }
+    }
+     console.log("ecnounter acepted" + index)
+    updateGameEasy();
     setEncounterFacing(true);
     setEncounterModalOpen(false);
   }
