@@ -146,11 +146,12 @@ export class Game {
     //TUPLE ARRAYS: DASH SEPERATES TUPLE ITEMS, COMMA SEPERATED Ex: "turtle-2,frog-1,fox-3,monkey-4" 
     public async pushToFirebase() {
         if (this._gameId) {
-            await setDoc(doc(db, "games", this._gameId.toString()), this.stringifyGame());
+          await setDoc(doc(db, "games", this._gameId.toString()), this.stringifyGame());
         } else {
-            console.error("gameId is null");
+          console.error("gameId is null");
         }
-    }
+      }
+      
 
     public async pullFromFirebase() { //this is hard bc it involved parsing literally every value from firebase
         if (this._gameId) {
