@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-75"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-600 opacity-50"></div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">

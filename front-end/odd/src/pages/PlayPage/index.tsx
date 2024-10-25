@@ -321,7 +321,7 @@ const PlayPage: React.FC = () => {
 
             <div className="col-span-1 bg-gray-800 rounded-lg p-4 shadow-md">
               <h2 className="text-2xl font-bold mb-2">
-                Deck - Discard: {gameInstance.discard.length}
+                Deck - Discard: {gameInstance.deck.length} - {gameInstance.discard.length}
               </h2>
               <div className="flex flex-wrap justify-center">
                 {gameInstance.workspace.map((encounterOptional: [Encounter, boolean], index: number) => (
