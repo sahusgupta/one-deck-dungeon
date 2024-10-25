@@ -35,14 +35,22 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
     const canAddItem = () => {
       const player = gameInstance.findPlayer();
       const isTwoPlayer = gameInstance.playerNum === 2;
-      return player ? (player.items.length-1) < player.getItemLimit(gameInstance.level, isTwoPlayer) : false;
+      const level : number = gameInstance.level;
+      const subtractor: number = 
+        level == 1 ? 1 : 
+        level == 2 ? 3 :
+        level == 3 ? 3 :
+        level == 4 ? 5 : 1;
+      let ret : boolean = player ? (player.items.length-subtractor) < player.getItemLimit(gameInstance.level, isTwoPlayer) : false;
+      return ret;
     };
 
     // Check if player can add skill
     const canAddSkill = () => {
       const player = gameInstance.findPlayer();
       const isTwoPlayer = gameInstance.playerNum === 2;
-      return player ? (player.skills.length-2) < player.getSkillLimit(gameInstance.level, isTwoPlayer) : false;
+      let ret : boolean = player ? (player.skills.length-2) < player.getSkillLimit(gameInstance.level, isTwoPlayer) : false;
+      return ret;
     };
 
     // Handle changes in reward selection

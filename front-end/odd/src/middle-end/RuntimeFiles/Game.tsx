@@ -134,7 +134,9 @@ export class Game {
 
     public burn(num : number) {
         for (let i : number = 0; i < num ; i++) {
-            this._discard.push(this._deck.pop() ?? Encounter.EmptyEncounter);
+            let topCard = this._deck.pop();
+            if (topCard)
+                this._discard.push(topCard);
         }
     }
     public findPlayer(id? : string){

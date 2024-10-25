@@ -94,11 +94,27 @@ const PlayPage: React.FC = () => {
   };
 
   const closingPostEncounterModal= (gameInstanceExport : Game) => {
+    let bossFightTime : boolean = false;
     if (gameInstanceExport)
       gameInstanceExport.activeEncounterRuntime = undefined;
 
     if (gameInstanceExport.workspaceAndDeckEmpty()) {
-      gameInstanceExport.upgradeFloor();
+      if (gameInstanceExport.dungeon.currFloor == 2) {
+        //launch boss battle
+        bossFightTime = true;
+      } else {
+        gameInstanceExport.upgradeFloor();
+      }
+    }
+
+    if (bossFightTime) {
+      gameInstanceExport.activeEncounterRuntime = new EncounterRuntime(
+        gameInstanceExport.dungeon, 
+        gameInstanceExport.dungeon.boss, 
+        gameInstanceExport.playerList, 
+        0
+      );
+      setEncounterModalOpen(true);
     }
     updateGameEasy(gameInstanceExport);
     setPostEncounterModalOpen(false);

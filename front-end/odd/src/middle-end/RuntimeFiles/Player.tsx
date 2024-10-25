@@ -65,7 +65,6 @@ export class Player {
             3: isTwoPlayer ? 3 : 4,
             4: isTwoPlayer ? 4 : 5
         };
-        console.log(limits[level as keyof typeof limits] || 0);
         return limits[level as keyof typeof limits] || 0;
     }
 

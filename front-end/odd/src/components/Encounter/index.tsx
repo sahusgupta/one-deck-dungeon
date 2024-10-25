@@ -164,7 +164,9 @@ const EncounterCard: React.FC<EncounterProps> = ({
           </div>
           <div className="flex flex-col items-center">
             <img
-              src={`/Encounters/${gameInstance.activeEncounterRuntime?.encounter.name}.jpg`}
+              src={gameInstance.activeEncounterRuntime?.encounter.type != 0 ?
+                 `/Encounters/${gameInstance.activeEncounterRuntime?.encounter.name}.jpg`
+                : `${gameInstance.activeEncounterRuntime?.encounter.name}.jpg`}
               alt={gameInstance.activeEncounterRuntime?.encounter.name}
               className="w-32 h-32 object-contain rounded-md mb-2"
             />
