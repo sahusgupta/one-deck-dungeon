@@ -40,14 +40,21 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
     _encounter: Encounter, 
     players: Array<Player>, 
     _workspaceIndex: number, 
-    _tripleArrays?: [Array<[Dice, boolean]>, Array<[Dice, number, DiceBox]>, Array<DiceBox>]
+    _tripleArrays?: [Array<[Dice, boolean]>, Array<[Dice, number, DiceBox]>, Array<DiceBox>],
+    _postEncounterDecisions?: [[number, Player] | undefined, [number, number, number] | undefined]
   ) {
     this._encounter = _encounter;
     this._workspaceIndex = _workspaceIndex;
 
-    this._availableDice = new Array<[Dice, boolean]>();
-    this._diceInBox = new Array<[Dice, number, DiceBox]>();
-    this._necessaryDiceboxes = new Array<DiceBox>();
+    if (_tripleArrays) {
+      this._availableDice = _tripleArrays[0];
+      this._diceInBox = _tripleArrays[1];
+      this._necessaryDiceboxes = _tripleArrays[2];  
+    } else {
+      this._availableDice = new Array<[Dice, boolean]>();
+      this._diceInBox = new Array<[Dice, number, DiceBox]>();
+      this._necessaryDiceboxes = new Array<DiceBox>();  
+    }
 
     players.forEach((p : Player) => {
       for (let i = 0; i < 3; i++) {
@@ -71,8 +78,13 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
 
     this._necessaryDiceboxes.push(...this._encounter.boxes);
 
-    this._rewardDecision = undefined;
-    this._punishmentDecision = undefined;
+    if (_postEncounterDecisions) {
+      this._rewardDecision = _postEncounterDecisions[0]
+      this._punishmentDecision = _postEncounterDecisions[1]
+    } else {
+      this._rewardDecision = undefined;
+      this._punishmentDecision = undefined;  
+    }
 
   }
 

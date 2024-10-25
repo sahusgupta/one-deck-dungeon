@@ -201,6 +201,7 @@ export class Game {
     
         // Update dungeon
         this._dungeon = Dungeon.findDungeon(gameData.dungeon);
+        this._dungeon.currFloor = gameData.currFloor;
     
         // Update simple properties
         this._potions = gameData.potions;
@@ -208,6 +209,7 @@ export class Game {
         this._xp = gameData.xp;
         this._playerNum = gameData.playerNum;
         this._chatLog = gameData.chatLog;
+
     
         // Update activeEncounterRuntime if it exists
         if (gameData.activeEncounterRuntime && Object.keys(gameData.activeEncounterRuntime).length > 0) {
@@ -237,6 +239,11 @@ export class Game {
                 let [neededRoll, boxType, constrainedToOne, punishmentTime, punishmentHearts, boxIdNum] = a.box;
                 return new DiceBox(neededRoll, boxType, constrainedToOne, punishmentTime, punishmentHearts, boxIdNum);
             });
+
+            // let rewardDecision = gameData.activeEncounterRuntime ? [
+            //     gameData.activeEncounterRuntime.rewardDecision.type,
+
+            // ]
     
             // Create the EncounterRuntime
             this._activeEncounterRuntime = new EncounterRuntime(
@@ -284,6 +291,7 @@ export class Game {
                 hero: p.hero.heroName
             })),
             dungeon: this.dungeon.name,
+            currFloor: this.dungeon.currFloor,
             potions: this.potions,
             level: this.level,
             xp: this.xp,
@@ -317,8 +325,16 @@ export class Game {
                         a.punishmentHearts,
                         a.idNum
                     ]
-                }))
-
+                })),
+                rewardDecision: this.activeEncounterRuntime.rewardDecision ? {
+                    type: this.activeEncounterRuntime.rewardDecision[0],
+                    playerId: this.activeEncounterRuntime.rewardDecision[1].id
+                } : {},
+                punishmentDecision: this.activeEncounterRuntime.punishmentDecision ? {
+                    timePunishment: this.activeEncounterRuntime.punishmentDecision[0],
+                    player1Punishment: this.activeEncounterRuntime.punishmentDecision[1],
+                    player2Punishment: this.activeEncounterRuntime.punishmentDecision[1],
+                } : {},
             } : {},
             workspace: this.workspace.map(w => ({
                 encounter: w[0].name,
@@ -327,6 +343,24 @@ export class Game {
             deck: this.deck.map(d => d.name),
             discard: this.discard.map(d => d.name)
         }
+    }
+
+    public workspaceAndDeckEmpty() : boolean {
+        let ret : boolean = true;
+        this.workspace.forEach(w => {
+            if (w[0].name != Encounter.EmptyEncounter.name) {
+                ret = false;
+            }
+        })
+
+        return ret && this.deck.length == 0;
+    }
+
+    public upgradeFloor() {
+        this._dungeon.currFloor++;
+        this._discard = new Array<Encounter>();
+        this._deck = Array.from<Encounter>(Encounter.encounterList);
+        this.shuffle(this._deck);
     }
 
 }

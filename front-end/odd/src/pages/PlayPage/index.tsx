@@ -87,6 +87,10 @@ const PlayPage: React.FC = () => {
   const closingPostEncounterModal= (gameInstanceExport : Game) => {
     if (gameInstanceExport)
       gameInstanceExport.activeEncounterRuntime = undefined;
+
+    if (gameInstanceExport.workspaceAndDeckEmpty()) {
+      gameInstanceExport.upgradeFloor();
+    }
     updateGameEasy(gameInstanceExport);
     setPostEncounterModalOpen(false);
   }
@@ -146,6 +150,8 @@ const PlayPage: React.FC = () => {
   const exploreDeck = () => { //DOESNT HANDLE IF FLOORS RUN OUT
     if (!gameInstance) return;
 
+    if (gameInstance.deck.length == 0) return;
+
     let hasEmpty : boolean = false;
     const workspace : Array<[Encounter, boolean]> = gameInstance.workspace;
     workspace.forEach((w: [Encounter, boolean]) => {
@@ -196,7 +202,7 @@ const PlayPage: React.FC = () => {
     setModalOpen(true);
   };
 
-  let onPage: boolean = false; //this is retarded please make this better
+  let onPage: boolean = false;
 
   useEffect(() => {
     if (onPage){
@@ -293,7 +299,7 @@ const PlayPage: React.FC = () => {
               </div>
               <div>
                 <img
-                  src="ClosedDoor.jpg"
+                  src={gameInstance.deck.length != 0 ? "ClosedDoor.jpg" : "Stairs.jpg"}
                   className="w-50 h-32 m-1 object-cover rounded-md shadow-lg m-auto mt-10"
                   onClick={() => exploreDeck()}
                 />
