@@ -55,11 +55,10 @@ const PlayPage: React.FC = () => {
   }
 
   const encounterAccepted = (encounter? : Encounter, index?: number) => {
-    console.log(encounter)
-    console.log(index)
-    console.log(gameInstance.activeEncounterRuntime)
     if (encounter && (index || index === 0) && gameInstance.activeEncounterRuntime) {
-      console.log('truly inside')
+      if (index == 0) {
+        gameInstance.burn(encounter.type - 2);
+      }
       let idToRemove: number = encounter.boxes[index * -1 + 1].idNum;
       let indexToRemove: number | undefined = undefined;
       gameInstance.activeEncounterRuntime.necessaryDiceboxes.map((box: DiceBox, necessaryDBIndex: number) => {
@@ -67,12 +66,10 @@ const PlayPage: React.FC = () => {
           indexToRemove = necessaryDBIndex;
         }
       });
-      console.log(indexToRemove);
       if (indexToRemove) {
         gameInstance.activeEncounterRuntime.necessaryDiceboxes.splice(indexToRemove, 1);
       }
     }
-     console.log("ecnounter acepted" + index)
     updateGameEasy();
     setEncounterFacing(true);
     setEncounterModalOpen(false);
