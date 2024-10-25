@@ -42,6 +42,7 @@ const SelectDungeon: React.FC = () => {
     const gameId = localStorage.getItem("gameId");
     const dungeon = Dungeon.getFromBossName(localStorage.getItem("boss"));
     const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
+    console.log(players);
     const charactersSelected : Array<string> = [localStorage.getItem("characterSelected") || "Warrior", "Aquamancer"] //need to expand for 2P somehow
     Game.createGame(gameId || undefined, dungeon, players, charactersSelected);
     const gameInstance = Game.getInstance();

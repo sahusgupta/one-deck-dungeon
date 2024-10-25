@@ -7,7 +7,7 @@ import SelectPlayerPage from "./pages/SelectChar.tsx";
 import SelectDungeon from "./pages/SelectDungeon";
 import PlayPage from "./pages/PlayPage";
 import WaitingPage from "./pages/WaitingPage";
-import SelectCampaign from "./pages/SelectCampaign";
+// import SelectCampaign from "./pages/SelectCampaign";
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function PageTrackingApp() {
         <Route path="/dungeon-select" element = {<SelectDungeon/>} />
         <Route path="/play" element = {<PlayPage/>} />
         <Route path="/waiting" element = {<WaitingPage/>}/>
-        <Route path="/selectBuild" element = {<SelectCampaign/>}/>
+        {/* <Route path="/selectBuild" element = {<SelectCampaign/>}/> */}
       </Routes>
     </div>
   );

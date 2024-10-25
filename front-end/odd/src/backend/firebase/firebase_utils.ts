@@ -9,13 +9,13 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCHLmR5K6nDZCMzsF7OuhoaEWQZ8_hX2Pg",
-  authDomain: "one-deck-dungeon-fd061.firebaseapp.com",
-  projectId: "one-deck-dungeon-fd061",
-  storageBucket: "one-deck-dungeon-fd061.appspot.com",
-  messagingSenderId: "929996213919",
-  appId: "1:929996213919:web:b3db0bcf07ad01fada9caa",
-  measurementId: "G-NYJNDVJ4C5"
+  apiKey: "AIzaSyBL28_d_xUOwK5hlxeVAswAgkZvFI6xGXA",
+  authDomain: "one-deck-2.firebaseapp.com",
+  projectId: "one-deck-2",
+  storageBucket: "one-deck-2.appspot.com",
+  messagingSenderId: "24270877900",
+  appId: "1:24270877900:web:132b0a30b2d5171ca1fe69",
+  measurementId: "G-Q50H64M0HJ"
 };
 
 // Initialize Firebase

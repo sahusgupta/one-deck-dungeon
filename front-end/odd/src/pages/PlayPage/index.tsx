@@ -1,5 +1,5 @@
 //playpage 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../../components/PageLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,37 +18,65 @@ import { DiceBox } from "../../middle-end/Dice/DiceBox";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../backend/firebase/firebase_utils";
 import PostEncounterModal from "../../components/Encounter/postEncounter";
+import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
 
 const PlayPage: React.FC = () => {
-  const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
+  const [gameInstance, updateGameInstance] = useState<Game | null>(Game.getInstance());
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
   const [isEncounterFacing, setEncounterFacing] = useState(false);
   const [isPostEncounterModalOpen, setPostEncounterModalOpen] = useState(false);
+  const gameRef = doc(db, 'games', localStorage.getItem("gameId") ?? "");
+  const isLocalUpdate = useRef(false);
+  const isGameCreated = useRef(false);
 
-  // const gameRef = doc(db, 'games', localStorage.getItem("gameId") ?? "");
-  // const unsubscribe = onSnapshot(gameRef, (snapshot) => {
-  //   if (snapshot.exists())
-  //     gameInstance.updateGame(snapshot.data())
-  // }, (error) => {
-  //   console.log("lol error")
-  // });
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      gameRef,
+      (snapshot) => {
+        if (!isLocalUpdate.current) {
+          if (snapshot.exists()) {
+            const gameData = snapshot.data();
+            console.log(gameData); // Logs correctly
+            if (gameInstance) {
+              console.log("if gameinstance exists", gameData);
+              gameInstance.updateGame(gameData);
+              updateGameInstance(cloneDeep(gameInstance)); // Avoids calling updateGameEasy to prevent loop
+            } else {
+              console.log("if gameinstnace not exist", gameData)
+              const newGameInstance = Game.initializeFromGameData(gameData);
+              console.log(newGameInstance);
+            }      
+          }
+        }
+        isLocalUpdate.current = false; // Reset the flag after processing
+      },
+      (error) => {
+        console.log("lol error", error);
+      }
+    );
 
-  
+    return () => unsubscribe(); // Clean up the subscription
+  }, []);
 
   const updateGameEasy = (encounterRunTime?: EncounterRuntime) => {
-    if (encounterRunTime) {
-      gameInstance.activeEncounterRuntime = encounterRunTime;
+    if (gameInstance) {
+      if (encounterRunTime) {
+        gameInstance.activeEncounterRuntime = encounterRunTime;
+      }
+      isLocalUpdate.current = true; // Set the flag before updating
+      updateGameInstance(cloneDeep(gameInstance));
     }
-    updateGameInstance(cloneDeep(gameInstance));
   }
 
   useEffect(() => {
-    gameInstance.pushToFirebase();
+    if (gameInstance && isGameCreated.current) {
+      gameInstance.pushToFirebase();
+    }
   }, [gameInstance]);
-
+  
   const closeChatModal = () => {
     setModalOpen(false);
   };
@@ -60,13 +88,15 @@ const PlayPage: React.FC = () => {
     updateGameEasy();
   }
   const encounterStay = () => {
-    gameInstance.activeEncounterRuntime = undefined;
+    if (gameInstance) {
+      gameInstance.activeEncounterRuntime = undefined;
+    }
     setEncounterModalOpen(false);
     updateGameEasy();
   }
 
   const encounterAccepted = (encounter? : Encounter, index?: number) => {
-    if (encounter && (index || index === 0) && gameInstance.activeEncounterRuntime) {
+    if (gameInstance && encounter && (index || index === 0) && gameInstance.activeEncounterRuntime) {
       if (index == 0) {
         gameInstance.burn(encounter.type - 2);
       }
@@ -100,15 +130,19 @@ const PlayPage: React.FC = () => {
   
   // onLose functionality for the encounter window
   const submitChat = async (inputText: string) => {
-    gameInstance.chatLog.push(
-      (localStorage.getItem("userdata") || "undefined user") +
-        ": " +
-        inputText
-    );
-    updateGameEasy()
+    if (gameInstance) {
+      gameInstance.chatLog.push(
+        (localStorage.getItem("userdata") || "undefined user") +
+          ": " +
+          inputText
+      );
+      updateGameEasy();
+    }
   };
 
   const exploreDeck = () => { //DOESNT HANDLE IF FLOORS RUN OUT
+    if (!gameInstance) return;
+
     let hasEmpty : boolean = false;
     const workspace : Array<[Encounter, boolean]> = gameInstance.workspace;
     workspace.forEach((w: [Encounter, boolean]) => {
@@ -118,7 +152,7 @@ const PlayPage: React.FC = () => {
     });
 
     if (!hasEmpty) {
-      updateGameEasy()
+      updateGameEasy();
       return;
     }
 
@@ -132,10 +166,12 @@ const PlayPage: React.FC = () => {
         }
       }
     );
-    updateGameEasy()
+    updateGameEasy();
   };
   
   const activeClick = (index: number) => {
+    if (!gameInstance) return;
+
     const workspace : Array<[Encounter, boolean]> = gameInstance.workspace;
     if (workspace[index][0] == Encounter.EmptyEncounter) { //only keep going if they clicked on something that exists
       return;
@@ -148,7 +184,7 @@ const PlayPage: React.FC = () => {
 
     gameInstance.activeEncounterRuntime = new EncounterRuntime(gameInstance.dungeon, workspace[index][0], gameInstance.playerList, index);
     setEncounterModalOpen(true);
-    updateGameEasy()
+    updateGameEasy();
   };
 
   const showChat = async (gameId: string, title: string, message: string) => {
@@ -165,6 +201,10 @@ const PlayPage: React.FC = () => {
       navigate('/')
     }
   }, [onPage])
+  
+  if (!gameInstance) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <PageLayout>
