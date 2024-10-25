@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
       localStorage.setItem("gameId", inputValue);
       reRoute("2P", inputValue);
     } else {
-      console.log("Invalid game code");
+      reRoute("2P", inputValue);
     }
   };
 
