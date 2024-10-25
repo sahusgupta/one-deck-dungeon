@@ -15,7 +15,7 @@ import PostEncounterModal from "./postEncounter";
 
 interface EncounterProps {
   onClick: () => void;
-  onLeaveEncounter: () => void; // Add this line
+  onLeaveEncounter: (gameInstanceExport: Game) => void; // Add this line
   player: Player;
   gameInstanceImport: Game;
 }
@@ -37,9 +37,9 @@ const EncounterCard: React.FC<EncounterProps> = ({
     gameInstance.pushToFirebase();
   }, [gameInstance]);
 
-  const handleLeaveEncounter = () => {
+  const handleLeaveEncounter = (gameInstanceExport: Game) => {
     updateGameEasy();
-    onLeaveEncounter(); // Call the prop function
+    onLeaveEncounter(gameInstanceExport); // Call the prop function
   };
 
   const renderDiceAndBoxes = () => {
@@ -215,7 +215,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
               ? `red`
               : `green`
           }-500 text-white rounded`}
-          onClick={handleLeaveEncounter}
+          onClick={() => {handleLeaveEncounter(gameInstance)}}
         >
           Leave Encounter
         </button>

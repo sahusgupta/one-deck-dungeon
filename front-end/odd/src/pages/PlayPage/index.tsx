@@ -53,9 +53,9 @@ const PlayPage: React.FC = () => {
     setModalOpen(false);
   };
 
-  const closingPostEncounterModal= () => {
-    setPostEncounterModalOpen(false)
-    updateGameEasy();
+  const closingPostEncounterModal= (gameInstanceExport : Game) => {
+    setPostEncounterModalOpen(false);
+    updateGameInstance(cloneDeep(gameInstanceExport));
     gameInstance.activeEncounterRuntime = undefined;
     updateGameEasy();
   }
@@ -86,8 +86,15 @@ const PlayPage: React.FC = () => {
     setEncounterModalOpen(false);
   }
 
-  const onLeaveEncounter = () => {
+  const onLeaveEncounter = (gameInstanceExport: Game) => {
+    updateGameInstance(cloneDeep(gameInstanceExport));
     setEncounterFacing(false);
+    if (gameInstance.activeEncounterRuntime) {
+      gameInstance.activeEncounterRuntime.rewardDecision = [0, gameInstance.playerList[0]];
+      let punishment : [number, number] = gameInstance.activeEncounterRuntime.calculatePunishment(); //hearts, time
+      gameInstance.activeEncounterRuntime.punishmentDecision = [punishment[1], punishment[0], 0]
+    }
+    updateGameEasy();
     setPostEncounterModalOpen(true); // Open the modal here
   };
   
@@ -288,7 +295,7 @@ const PlayPage: React.FC = () => {
             {isEncounterFacing && (
               <EncounterCard
                 onClick= {() => console.log("running the encounter")}
-                onLeaveEncounter={() => onLeaveEncounter()} // Pass the function here
+                onLeaveEncounter={onLeaveEncounter} // Pass the function here
                 player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
                 gameInstanceImport={gameInstance}
               />
@@ -311,7 +318,7 @@ const PlayPage: React.FC = () => {
             {isPostEncounterModalOpen && (
               <PostEncounterModal
                 isOpen={isPostEncounterModalOpen}
-                onClose={() => closingPostEncounterModal()}
+                onClose={(gameInstanceExport) => closingPostEncounterModal(gameInstanceExport)}
                 gameInstanceImport={gameInstance}
               />
             )}

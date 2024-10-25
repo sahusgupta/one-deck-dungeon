@@ -6,7 +6,7 @@ import cloneDeep from "lodash/cloneDeep";
 
 interface PostEncounterModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (gameInstanceExport : Game) => void;
   gameInstanceImport: Game;
 }
 
@@ -25,69 +25,66 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
     useEffect(() => {
       gameInstance.pushToFirebase();
     }, [gameInstance]);
-    // State variables for damage allocation and reward selection
-    const [playerOneDamage, setPlayerOneDamage] = useState(0);
-    const [playerTwoDamage, setPlayerTwoDamage] = useState(0);
-    const [rewardType, setRewardType] = useState("XP");
 
     // Handle changes in damage allocation
     const handleDamageChange = (playerIndex: number, value: number) => {
-      if (playerIndex === 0) {
-        setPlayerOneDamage(value);
-      } else {
-        setPlayerTwoDamage(value);
-      }
+      gameInstance.activeEncounterRuntime?.updateDamageDistribution(playerIndex, value);
       updateGameEasy();
     };
   
     // Handle changes in reward selection
-    const handleRewardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setRewardType(event.target.value);
+    const handleRewardChange = (rewardType: number) => {
+      if (gameInstance.activeEncounterRuntime?.rewardDecision) {
+        gameInstance.activeEncounterRuntime.rewardDecision[0] = rewardType;
+      }
       updateGameEasy();
     };
   
     // Function to apply punishments and rewards
-    const applyPunishmentAndReward = () => {
-      const totalPunishment = gameInstance.activeEncounterRuntime?.calculatePunishment();
-      const totalTimeBurnt = totalPunishment ? totalPunishment[1] : 0;
-      console.log("humma kavula")
-      console.log(totalPunishment);
-  
-      if (totalPunishment) {
-        // Apply damage to players
-        gameInstance.playerList[0].damageInc(playerOneDamage);
-        if (gameInstance.playerList.length > 1) {
-          gameInstance.playerList[1].damageInc(playerTwoDamage);
-        }
-  
-        // Burn time (discard cards)
-        gameInstance.burn(totalTimeBurnt);
+    const applyPunishmentAndReward = (playerIndex: number) => {
+      if (
+        gameInstance.activeEncounterRuntime?.punishmentDecision == undefined || 
+        gameInstance.activeEncounterRuntime?.rewardDecision == undefined
+      ) {
+        return;
       }
 
+      const rewardDecision = gameInstance.activeEncounterRuntime.rewardDecision;
+      const punishmentDecision = gameInstance.activeEncounterRuntime.punishmentDecision;
+
+      rewardDecision[1] = gameInstance.playerList[playerIndex];
+      gameInstance.playerList[0].damageInc(punishmentDecision[1]);
+      if (gameInstance.playerList.length > 1) {
+        gameInstance.playerList[1].damageInc(punishmentDecision[2]);
+      }
+
+      // Burn time (discard cards)
+      gameInstance.burn(punishmentDecision[0]);
+
       // Handle reward logic based on rewardType
-      switch (rewardType) {
-        case "XP":
+      switch (rewardDecision[0]) {
+        case 0:
           // Add encounter's XP to the game's XP
-          gameInstance.xp += gameInstance.activeEncounterRuntime?.encounter.xp || 0;
+          gameInstance.xp += gameInstance.activeEncounterRuntime.encounter.xp;
           break;
-        case "Item":
+        case 1:
           // Add the encounter's item to the player's items
           const encounterItem = gameInstance.activeEncounterRuntime?.encounter.item;
           if (encounterItem) {
-            gameInstance.playerList[0].items.push(encounterItem);
+            rewardDecision[1].items.push(encounterItem);
           }
           if(gameInstance.activeEncounterRuntime){
-            gameInstance.playerList[0].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, true])
+            rewardDecision[1].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, true])
           }
           break;
-        case "Skill":
+        case 2:
           // Placeholder for skill logic
-          const skillItem = gameInstance.activeEncounterRuntime?.encounter.skill;
-          if (skillItem) {
-            gameInstance.playerList[0].skills.push(skillItem);
+          const encounterSkill = gameInstance.activeEncounterRuntime?.encounter.skill;
+          if (encounterSkill) {
+            rewardDecision[1].skills.push(encounterSkill);
           }
           if(gameInstance.activeEncounterRuntime){
-            gameInstance.playerList[0].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, false])
+            rewardDecision[1].defeatedEncounters.push([gameInstance.activeEncounterRuntime.encounter, false])
           }
           break;
         default:
@@ -95,14 +92,14 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
       }
       gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
       gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
-      // console.log(gameInstance.workspace);
+
       updateGameEasy();
-      onClose();
+      onClose(gameInstance);
     };
     return (
         <Modal
           isOpen={isOpen}
-          onRequestClose={onClose}
+          onRequestClose={() => {onClose(gameInstance)}}
           contentLabel="Post Encounter Modal"
           overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-300"
           className="bg-gray-800 rounded-lg p-6 w-1/2 mx-auto text-white transform transition-transform duration-300"
@@ -118,10 +115,10 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
                   <input
                     type="number"
                     className="w-2/3 bg-gray-700 rounded px-2 py-1"
-                    value={playerOneDamage}
+                    value={gameInstance.activeEncounterRuntime?.punishmentDecision?.[1]}
                     onChange={(e) => handleDamageChange(0, parseInt(e.target.value))}
                     min="0"
-                    max={gameInstance.activeEncounterRuntime?.calculatePunishment()[0]}
+                    max={gameInstance.activeEncounterRuntime?.maxDamage()}
                   />
                 </div>
                 {/* Player 2 Damage Input (if applicable) */}
@@ -131,51 +128,48 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
                     <input
                       type="number"
                       className="w-2/3 bg-gray-700 rounded px-2 py-1"
-                      value={playerTwoDamage}
+                      value={gameInstance.activeEncounterRuntime?.punishmentDecision?.[2]}
                       onChange={(e) => handleDamageChange(1, parseInt(e.target.value))}
                       min="0"
-                      max={gameInstance.activeEncounterRuntime?.calculatePunishment()[0]}
+                      max={gameInstance.activeEncounterRuntime?.maxDamage()}
                     />
                   </div>
                 )}
                 {/* Remaining Damage Display */}
-                <div className="text-right">
-                  Remaining Damage to Allocate: {gameInstance.activeEncounterRuntime?.calculatePunishment()[0] ?? 0 - playerOneDamage - playerTwoDamage}
-                </div>
               </div>
             </div>
             {/* Reward Selection */}
             <div className="mb-6">
               <h3 className="text-xl font-semibold mb-2">Select Reward</h3>
               <select
-                value={rewardType}
-                onChange={handleRewardChange}
+                value={gameInstance.activeEncounterRuntime?.rewardDecision?.[0]}
+                onChange={(e) => {
+                  handleRewardChange(parseInt(e.target.value))
+                }}
                 className="bg-gray-700 rounded px-2 py-1 w-full"
               >
-                <option value="XP">XP</option>
-                <option value="Item">Item</option>
-                <option value="Skill">Skill</option>
+                <option value="0">XP</option>
+                <option value="1">Item</option>
+                <option value="2">Skill</option>
               </select>
             </div>
             {/* Action Buttons */}
             <div className="flex justify-end space-x-4">
               <button
-                onClick={onClose}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200"
+                onClick={() => {applyPunishmentAndReward(0)}}
+                className={`px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition duration-200`}
               >
-                Cancel
-              </button>
-              <button
-                onClick={applyPunishmentAndReward}
-                disabled={(gameInstance.activeEncounterRuntime?.calculatePunishment()[0] ?? 0 - playerOneDamage - playerTwoDamage) > 0}
-                className={`px-4 py-2 ${
-                  (gameInstance.activeEncounterRuntime?.calculatePunishment()[0] ?? 0 - playerOneDamage - playerTwoDamage) > 0 
-                  ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
-                } text-white rounded transition duration-200`}
-              >
-                Apply
+                Apply{gameInstance.playerList.length > 1 ? " for P1" : ""}
               </button>
             </div>
+            {gameInstance.playerList.length > 1 && (<div className="flex justify-end space-x-4">
+              <button
+                onClick={() => {applyPunishmentAndReward(1)}}
+                className={`px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition duration-200`}
+              >
+                Apply{gameInstance.playerList.length > 1 ? " for P2" : ""}
+              </button>
+            </div>)}
           </div>
         </Modal>
       );
