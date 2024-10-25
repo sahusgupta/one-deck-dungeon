@@ -27,6 +27,14 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   public get necessaryDiceboxes(): Array<DiceBox> {return this._necessaryDiceboxes;}
   public set necessaryDiceboxes(value: Array<DiceBox>) {this._necessaryDiceboxes = value;}
 
+  private _rewardDecision: [number, Player] | undefined; //0 is XP, 1 is Item, 2 is Skill, undefined means hasnt been left yet
+  public get rewardDecision(): [number, Player] | undefined {return this._rewardDecision;}
+  public set rewardDecision(value: [number, Player] | undefined) {this._rewardDecision = value;}
+
+  private _punishmentDecision: [number, number, number] | undefined; //[timePunishment, player 0 hearts, player 1 hearts]
+  public get punishmentDecision(): [number, number, number] | undefined {return this._punishmentDecision;}
+  public set punishmentDecision(value: [number, number, number] | undefined) {this._punishmentDecision = value;}
+
   public constructor (
     dungeon: Dungeon, 
     _encounter: Encounter, 
@@ -52,20 +60,23 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
     dungeon.floors.map((floor : Floor, index : number) => {
       if (index <= dungeon.currFloor) {
         if (this._encounter.type == 1) { //combat
-          this.necessaryDiceboxes.push(...floor.combatBoxes);
+          this._necessaryDiceboxes.push(...floor.combatBoxes);
         } else if (this._encounter.type >= 2) { //peril
-          this.necessaryDiceboxes.push(...floor.perilBoxes);
+          this._necessaryDiceboxes.push(...floor.perilBoxes);
         } else { //boss
           //TODO
         }
       }
     });
 
-    this.necessaryDiceboxes.push(...this._encounter.boxes);
+    this._necessaryDiceboxes.push(...this._encounter.boxes);
+
+    this._rewardDecision = undefined;
+    this._punishmentDecision = undefined;
 
   }
 
-  public calculatePunishment(): [number, number] {
+  public calculatePunishment(): [number, number] { //[hearts, time]
     let totalHearts = 0;
     let totalTime = 0;
 
@@ -159,7 +170,7 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
 
 
   }
-  
+
   //0: Mandatory slots not covered
   //1: Mandatory slots covered
   //2: All slots covered
@@ -190,6 +201,25 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
     }
     return ret;
   }
+
+
+
+  //ALL POST ENCOUNTER METHODS
+  public maxDamage() : number {
+    if (this._punishmentDecision)
+      return (this._punishmentDecision[1] + this._punishmentDecision[2]);
+    console.log("punishment doesnt exist its undefined bro.")
+    return -1;
+  }
+
+  public updateDamageDistribution(player: number, damageValue: number) {
+    if (this._punishmentDecision) {
+      this._punishmentDecision[player + 1] = damageValue;
+      this._punishmentDecision[(player + 2) - player * 2] = this.maxDamage() - damageValue;
+    }
+  }
+
+
 
 
 
