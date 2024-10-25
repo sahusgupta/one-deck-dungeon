@@ -312,14 +312,13 @@ export class Game {
                     necessaryDiceboxes
                 ],
                 rewardDecision && punishmentDecision ? [
-                    rewardDecision,
-                    punishmentDecision
-                ] : []
+                    [rewardDecision[0], rewardDecision[1]],
+                    [punishmentDecision[0], punishmentDecision[1], punishmentDecision[2]]
+                ] : undefined
             );
         } else {
             this._activeEncounterRuntime = undefined;
         }
-    
         // Update workspace
         this._workspace = gameData.workspace.map((w: any) => {
             let encounter = Encounter.findEncounter(w.encounter);
