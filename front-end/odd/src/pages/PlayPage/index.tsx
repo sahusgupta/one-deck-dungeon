@@ -19,6 +19,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../backend/firebase/firebase_utils";
 import PostEncounterModal from "../../components/Encounter/postEncounter";
 import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
+import BossEncounter from "../../components/Encounter/bossEncounter";
 
 const PlayPage: React.FC = () => {
   const [gameInstance, updateGameInstance] = useState<Game | undefined>(undefined);
@@ -31,6 +32,8 @@ const PlayPage: React.FC = () => {
   const gameRef = doc(db, 'games', localStorage.getItem("gameId") ?? "");
   const isLocalUpdate = useRef(false);
   const isGameCreated = useRef(false);
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (gameInstance && gameInstance.playerNum === 2) {
       if (gameInstance.activeEncounterRuntime && !isEncounterFacing) {
@@ -88,7 +91,15 @@ const PlayPage: React.FC = () => {
     }
   }, [gameInstance]);
   
-  
+  // useEffect(() => {
+  //   if (gameInstance) {
+  //     const player = gameInstance.findPlayer();
+  //     if (player && player.damage > (player.itemSum()?.values[3] || 0)) {
+  //       navigate("/death");
+  //     }
+  //   }
+  // }, [gameInstance, navigate]);
+
   const closeChatModal = () => {
     setModalOpen(false);
   };
@@ -240,7 +251,6 @@ const PlayPage: React.FC = () => {
 
   useEffect(() => {
     if (onPage){
-      const navigate = useNavigate()
       navigate('/')
     }
   }, [onPage])
@@ -412,11 +422,19 @@ const PlayPage: React.FC = () => {
             </div>
 
             {isEncounterFacing && (
-              <EncounterCard
-                onClick={() => console.log("running the encounter")}
-                onLeaveEncounter={onLeaveEncounter}
-                gameInstanceImport={gameInstance}
-              />
+              gameInstance.activeEncounterRuntime?.encounter.name === gameInstance.dungeon.boss.name ? (
+                <BossEncounter
+                  onClick={() => console.log("running the boss encounter")}
+                  onLeaveEncounter={onLeaveEncounter}
+                  gameInstanceImport={gameInstance}
+                />
+              ) : (
+                <EncounterCard
+                  onClick={() => console.log("running the encounter")}
+                  onLeaveEncounter={onLeaveEncounter}
+                  gameInstanceImport={gameInstance}
+                />
+              )
             )}
 
             {gameInstance.playerNum === 2 && (

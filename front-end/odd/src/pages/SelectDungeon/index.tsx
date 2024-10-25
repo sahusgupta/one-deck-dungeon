@@ -34,7 +34,7 @@ const SelectDungeon: React.FC = () => {
       startGame();
       navigate("/play")
     } else {
-      navigate('/selectBuild')
+      navigate('/char-select')
     }
   };
 
