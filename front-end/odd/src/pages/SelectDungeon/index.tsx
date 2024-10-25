@@ -43,7 +43,7 @@ const SelectDungeon: React.FC = () => {
     const dungeon = Dungeon.getFromBossName(localStorage.getItem("boss"));
     const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
     const charactersSelected : Array<string> = [localStorage.getItem("characterSelected") || "Warrior", "Aquamancer"] //need to expand for 2P somehow
-    Game.createGame(gameId, dungeon, players, charactersSelected);
+    Game.createGame(gameId || undefined, dungeon, players, charactersSelected);
     const gameInstance = Game.getInstance();
     
     // no firestore for rn, just relying on existing game data
@@ -53,40 +53,43 @@ const SelectDungeon: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black opacity-80"></div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full space-y-8 text-white">
-        {/* Username Input */}
-        <div className="bg-black bg-opacity-70 text-lg px-4 py-2 rounded-md text-center focus:outline-none"> {userName} </div>
+        {/* Username Display */}
+        <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-lg px-6 py-3 rounded-full shadow-lg transform transition-transform duration-300 hover:scale-105">
+          {userName}
+        </div>
 
         {/* Player Options */}
-        <div className="flex space-x-4 w-250">
-          {/* Select Char */}
-          <DungeonTag
-            imgURL='Dragon1.jpg'
-            onClick={() => reRoute(playerCount, "DragonCave", "Dragon1")}
-          />
-          <DungeonTag
-            imgURL='Hydra1.jpg'
-            onClick={() => reRoute(playerCount, "HydraReef", "Hydra1")}
-          />
-          <DungeonTag
-            imgURL='Lich1.jpg'
-            onClick={() => reRoute(playerCount, "LichTomb", "Lich1")}
-          />
-          <DungeonTag
-            imgURL='Minotaur1.jpg'
-            onClick={() => reRoute(playerCount, "MinotaurMaze", "Minotaur1")}
-          />
-          <DungeonTag
-            imgURL='Yeti1.jpg'
-            onClick={() => reRoute(playerCount, "YetiCavern", "Yeti1")}
-          />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 w-full px-4">
+          {/* Select Dungeon */}
+          {[
+            { img: 'Dragon1.jpg', dungeon: 'DragonCave', boss: 'Dragon1' },
+            { img: 'Hydra1.jpg', dungeon: 'HydraReef', boss: 'Hydra1' },
+            { img: 'Lich1.jpg', dungeon: 'LichTomb', boss: 'Lich1' },
+            { img: 'Minotaur1.jpg', dungeon: 'MinotaurMaze', boss: 'Minotaur1' },
+            { img: 'Yeti1.jpg', dungeon: 'YetiCavern', boss: 'Yeti1' },
+          ].map(({ img, dungeon, boss }, index) => (
+            <div
+              key={index}
+              className="relative group cursor-pointer transform transition-transform duration-300 hover:scale-105"
+              onClick={() => reRoute(playerCount, dungeon, boss)}
+            >
+              <img
+                src={img}
+                alt={dungeon}
+                className="w-full h-full object-cover rounded-lg shadow-md"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="text-xl font-bold">{dungeon}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </PageLayout>
   );
 };
-
 export default SelectDungeon
