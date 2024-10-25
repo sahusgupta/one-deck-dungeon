@@ -100,6 +100,9 @@ export class Game {
         }
     }
 
+    public usePotion() {
+        console.log("I used a potion")
+    }
     public static getInstance() : Game {
         return this._instance;
     }

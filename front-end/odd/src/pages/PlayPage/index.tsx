@@ -248,6 +248,14 @@ const PlayPage: React.FC = () => {
                   </div>
                 ))}
               </div>
+              <div className="flex flex-col items-center" onClick={gameInstance.usePotion}>
+            <img
+              src="https://drive.google.com/thumbnail?id=1eF9CUtN2PHmpr2dWZnIMcdZgE2TS8cVs&sz=w1000"
+              alt="Additional Image"
+              className="w-32 h-32 object-contain rounded-md mb-2"
+            />
+            <span className="text-sm"> {gameInstance.potions} Potions Left</span>
+          </div>
             </div>
             {isEncounterFacing && (
               <EncounterCard
