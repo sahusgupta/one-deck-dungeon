@@ -25,10 +25,11 @@ const googleLogin = async () => {
         const auth = getAuth(app);
         const res = await signInWithPopup(auth, provider);
         const user = res.user;
+        localStorage.setItem('imageURL', user.photoURL ? user.photoURL : '');
         if (user.displayName != null && user.email != null && await user.getIdToken() != null){
             creds.name = user.displayName;
             creds.email = user.email;
-            creds.token =  user.uid;
+            creds.token = user.uid;
             creds.imageURL = user.photoURL ? user.photoURL : '';
         }
         if ((await getDoc(doc(db, 'users', creds.token))).exists()){

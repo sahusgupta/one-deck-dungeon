@@ -27,7 +27,7 @@ const SelectPlayerPage: React.FC = () => {
     const dungeon = Dungeon.getFromBossName(localStorage.getItem("boss"));
     const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
     const charactersSelected : Array<string> = [localStorage.getItem("characterSelected") || "Warrior", "Aquamancer"] //need to expand for 2P somehow
-    Game.createGame(gameId, dungeon, players, charactersSelected);
+    Game.createGame(gameId || undefined, dungeon, players, charactersSelected);
     const gameInstance = Game.getInstance();
     
     // no firestore for rn, just relying on existing game data
