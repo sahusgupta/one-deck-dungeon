@@ -68,7 +68,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
                     ) ?? new Array(),
                     Number.parseInt(data)
                   );
-                  if (draggedDice && dice.beenRolled()) {
+                  if (draggedDice && dice.beenRolled() && !used) {
                     gameInstance.activeEncounterRuntime?.combineDice(
                       draggedDice,
                       dice

@@ -136,6 +136,7 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
                     onChange={(e) => handleDamageChange(0, parseInt(e.target.value))}
                     min="0"
                     max={gameInstance.activeEncounterRuntime?.maxDamage()}
+                    disabled={true}
                   />
                 </div>
                 {/* Player 2 Damage Input (if applicable) */}
@@ -149,6 +150,7 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
                       onChange={(e) => handleDamageChange(1, parseInt(e.target.value))}
                       min="0"
                       max={gameInstance.activeEncounterRuntime?.maxDamage()}
+                      disabled={true}
                     />
                   </div>
                 )}

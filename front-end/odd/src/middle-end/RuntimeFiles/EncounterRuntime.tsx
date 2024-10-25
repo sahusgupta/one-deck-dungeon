@@ -169,6 +169,17 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
 
   }
 
+  public diceIsUsed(dice: Dice) : boolean {
+    let ret : boolean = false;
+    this._availableDice.forEach(d => {
+      if (d[0].idNum == dice.idNum) {
+        ret = d[1];
+      }
+    })
+
+    return ret;
+  }
+
   //0: Mandatory slots not covered
   //1: Mandatory slots covered
   //2: All slots covered
