@@ -16,14 +16,12 @@ import PostEncounterModal from "./postEncounter";
 interface EncounterProps {
   onClick: () => void;
   onLeaveEncounter: (gameInstanceExport: Game) => void; // Add this line
-  player: Player;
   gameInstanceImport: Game;
 }
 
 const EncounterCard: React.FC<EncounterProps> = ({
   onClick,
   onLeaveEncounter,
-  player,
   gameInstanceImport,
 }) => {
   const [gameInstance, updateGameInstance] = useState<Game>(gameInstanceImport);
@@ -139,8 +137,6 @@ const EncounterCard: React.FC<EncounterProps> = ({
       </div>
     );
   };
-
-
   return (
     <EncounterBase isOpen={true} onClose={onClick}>
       <div className="text-white">
@@ -178,7 +174,7 @@ const EncounterCard: React.FC<EncounterProps> = ({
           </div>
           <div
             className="flex flex-col items-center"
-            onClick={gameInstance.usePotion}
+            onClick={() => {gameInstance.usePotion(false); updateGameEasy()}}
           >
             <img
               src="https://drive.google.com/thumbnail?id=1eF9CUtN2PHmpr2dWZnIMcdZgE2TS8cVs&sz=w1000"
@@ -195,10 +191,10 @@ const EncounterCard: React.FC<EncounterProps> = ({
       {/* Heart Section */}
       <div className="flex items-center justify-center space-x-2 my-4">
         <span className="text-xl font-semibold text-white">Hearts:</span>
-        {player.itemSum().values[3] &&
+        {gameInstance.findPlayer()?.itemSum().values[3] &&
           Array.from({
             length:
-              player.itemSum().values[3] - gameInstance.playerList[0].damage,
+              (gameInstance.findPlayer()?.itemSum().values[3] ?? 0) - (gameInstance.findPlayer()?.damage ?? 0),
           }).map((_, index) => (
             <span key={index} className="text-red-500 text-2xl">
               ❤️
