@@ -79,6 +79,10 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
   }
 
   public combineDice(diceOne: Dice, diceTwo: Dice) {
+    if (diceOne.idNum == diceTwo.idNum || diceOne.type == 3 && diceTwo.type == 3) { //same dice or two black dice
+      return;
+    }
+
     if (diceOne.value && diceTwo.value) {
       this.makeDiceUsed(diceOne);
       this.makeDiceUsed(diceTwo);
@@ -108,13 +112,40 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
     })
     return ret;
   }
+
+  public clearDicebox(box: DiceBox) {
+    let diceIndexesToChange : Array<number> = new Array<number>();
+    let indexesToRemove: Array<number> = new Array<number>();
+    this.diceInBox.map((d, index) => {
+      if (d[2].idNum == box.idNum) {
+        let x : number = this.availableDice.length;
+        this.availableDice.map((a, index) => {
+          if (a[0].idNum == d[0].idNum) {
+            x = index
+          }
+        })
+        diceIndexesToChange.push(x);
+        indexesToRemove.push(index);
+      }
+    });
+
+    indexesToRemove.forEach(i => {
+      this.diceInBox.splice(i, 1);
+    });
+
+    diceIndexesToChange.forEach(i => {
+      this.availableDice[i][1] = false;
+    });
+
+
+  }
   //0: Mandatory slots not covered
   //1: Mandatory slots covered
   //2: All slots covered
   public checkState() : number { 
     let ret : number = -1;
     this._necessaryDiceboxes.map((box: DiceBox, boxIndex: number) => {
-      if (this.findFillAmount(box.idNum) < box.neededRoll && box.punishmentHearts == 0 && ret == -1) {
+      if (this.findFillAmount(box.idNum) < box.neededRoll && box.punishmentHearts == 0 && box.punishmentTime == 0 && ret == -1) {
         ret = 0;
       }
     });
