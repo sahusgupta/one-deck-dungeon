@@ -1,3 +1,4 @@
+//playpage 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../../components/PageLayout";
@@ -14,6 +15,7 @@ import EncounterCard from "../../components/Encounter";
 import cloneDeep from "lodash/cloneDeep";
 import { EncounterRuntime } from "../../middle-end/RuntimeFiles/EncounterRuntime";
 import { DiceBox } from "../../middle-end/Dice/DiceBox";
+import PostEncounterModal from "../../components/Encounter/postEncounter";
 
 const PlayPage: React.FC = () => {
   const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
@@ -22,6 +24,8 @@ const PlayPage: React.FC = () => {
   const [modalTitle, setModalTitle] = useState("Error");
   const [isEncounterModalOpen, setEncounterModalOpen] = useState(false);
   const [isEncounterFacing, setEncounterFacing] = useState(false);
+  const [isPostEncounterModalOpen, setPostEncounterModalOpen] = useState(false);
+
   
 
   const updateGameEasy = (encounterRunTime?: EncounterRuntime) => {
@@ -38,9 +42,14 @@ const PlayPage: React.FC = () => {
   const closeChatModal = () => {
     setModalOpen(false);
   };
+  const closingPostEncounterModal= () => {
+    setPostEncounterModalOpen(false)
+    updateGameEasy();
+    gameInstance.activeEncounterRuntime = undefined;
+    updateGameEasy();
+  }
   const encounterStay = () => {
     gameInstance.activeEncounterRuntime = undefined;
-
     setEncounterModalOpen(false);
     updateGameEasy();
   }
@@ -69,20 +78,13 @@ const PlayPage: React.FC = () => {
     setEncounterModalOpen(false);
   }
 
-  const onEncounterWin = () => {
-    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][0] = Encounter.EmptyEncounter;
-    gameInstance.workspace[gameInstance.activeEncounterRuntime?.workspaceIndex ?? 4][1] = false;
-    const punishments = gameInstance.activeEncounterRuntime?.calculatePunishment()
-    if(punishments){
-      gameInstance.handlePunishment(punishments[0], punishments[1])
-    }
-    gameInstance.activeEncounterRuntime = undefined;
-    gameInstance.activeEncounterRuntime = undefined;
-
+  
+  const onLeaveEncounter = () => {
+    updateGameEasy();
     setEncounterFacing(false);
-    updateGameEasy()
-  }
-
+    setPostEncounterModalOpen(true); // Open the modal here
+  };
+  
   // onLose functionality for the encounter window
   const submitChat = async (inputText: string) => {
     gameInstance.chatLog.push(
@@ -280,7 +282,7 @@ const PlayPage: React.FC = () => {
             {isEncounterFacing && (
               <EncounterCard
                 onClick= {() => console.log("running the encounter")}
-                onWin={() => onEncounterWin()}
+                onLeaveEncounter={() => onLeaveEncounter()} // Pass the function here
                 player={gameInstance.playerList[0]} //TODO need to add handling for 2P - currently only takes first one
                 gameInstanceImport={gameInstance}
               />
@@ -300,6 +302,14 @@ const PlayPage: React.FC = () => {
                 <FontAwesomeIcon icon={faComment} size="5x" />
               </div>
             )}
+            {isPostEncounterModalOpen && (
+              <PostEncounterModal
+                isOpen={isPostEncounterModalOpen}
+                onClose={() => closingPostEncounterModal()}
+                gameInstance={gameInstance}
+              />
+            )}
+
             {isModalOpen && (
               <ChatModal
                 isOpen={isModalOpen}
