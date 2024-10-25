@@ -139,6 +139,9 @@ const PlayPage: React.FC = () => {
   }
 
   const encounterAccepted = (encounter? : Encounter, index?: number) => {
+    const audio = new Audio('/pokemon-battle-start-sound-effect-made-with-Voicemod.mp3');
+    audio.play();
+
     if (gameInstance && encounter && (index || index === 0) && gameInstance.activeEncounterRuntime) {
       if (index == 0) {
         gameInstance.burn(encounter.type - 2);
