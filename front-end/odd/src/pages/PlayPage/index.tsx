@@ -91,14 +91,14 @@ const PlayPage: React.FC = () => {
     }
   }, [gameInstance]);
   
-  // useEffect(() => {
-  //   if (gameInstance) {
-  //     const player = gameInstance.findPlayer();
-  //     if (player && player.damage > (player.itemSum()?.values[3] || 0)) {
-  //       navigate("/death");
-  //     }
-  //   }
-  // }, [gameInstance, navigate]);
+  useEffect(() => {
+    if (gameInstance) {
+      const player = gameInstance.findPlayer();
+      if (player && player.damage > (player.itemSum()?.values[3] || 0)) {
+        navigate("/death");
+      }
+    }
+  }, [gameInstance, navigate]);
 
   const closeChatModal = () => {
     setModalOpen(false);
