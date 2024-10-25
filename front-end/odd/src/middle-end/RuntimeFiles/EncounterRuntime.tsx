@@ -76,20 +76,6 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
 
   }
 
-  public calculatePunishment(): [number, number] { //[hearts, time]
-    let totalHearts = 0;
-    let totalTime = 0;
-
-    this._necessaryDiceboxes.forEach((box: DiceBox) => {
-      if (this.findFillAmount(box.idNum) < box.neededRoll) {
-        totalHearts += box.punishmentHearts;
-        totalTime += box.punishmentTime;
-      }
-    });
-
-    return [totalHearts, totalTime];
-  }
-
   public useDiceOnBox(dice: Dice, box: DiceBox) {
 
     if (box.constrainedToOne) {
@@ -217,6 +203,20 @@ export class EncounterRuntime { //only creates one instance per encounter per pl
       this._punishmentDecision[player + 1] = damageValue;
       this._punishmentDecision[(player + 2) - player * 2] = this.maxDamage() - damageValue;
     }
+  }
+
+  public calculatePunishment(): [number, number] { //[hearts, time]
+    let totalHearts = 0;
+    let totalTime = 0;
+
+    this._necessaryDiceboxes.forEach((box: DiceBox) => {
+      if (this.findFillAmount(box.idNum) < box.neededRoll) {
+        totalHearts += box.punishmentHearts;
+        totalTime += box.punishmentTime;
+      }
+    });
+
+    return [totalHearts, totalTime];
   }
 
 

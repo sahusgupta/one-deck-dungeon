@@ -89,7 +89,7 @@ const PlayPage: React.FC = () => {
 
   const closingPostEncounterModal= (gameInstanceExport : Game) => {
     setPostEncounterModalOpen(false);
-    // updateGameInstance(cloneDeep(gameInstanceExport));
+    updateGameInstance(cloneDeep(gameInstanceExport));
     if (gameInstance)
       gameInstance.activeEncounterRuntime = undefined;
     updateGameEasy();
@@ -124,7 +124,7 @@ const PlayPage: React.FC = () => {
   }
 
   const onLeaveEncounter = (gameInstanceExport: Game) => {
-    // updateGameInstance(cloneDeep(gameInstanceExport));
+    updateGameInstance(cloneDeep(gameInstanceExport));
     setEncounterFacing(false);
     if (gameInstance && gameInstance.activeEncounterRuntime) {
       gameInstance.activeEncounterRuntime.rewardDecision = [0, gameInstance.playerList[0]];

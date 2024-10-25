@@ -178,7 +178,6 @@ export class Game {
         this._active = gameData.active;
     
         // Update playerList
-        console.log(gameData)
         this._playerList = gameData.playerList.map((pData: any) => {
             // Find the hero associated with the player
             let hero = Hero.findHero(pData.hero, this._playerList.length === 1 ? "1P" : "2P");
