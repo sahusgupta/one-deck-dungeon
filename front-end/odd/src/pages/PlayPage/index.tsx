@@ -21,7 +21,7 @@ import PostEncounterModal from "../../components/Encounter/postEncounter";
 import { Dungeon } from "../../middle-end/Dungeon/Dungeon";
 
 const PlayPage: React.FC = () => {
-  const [gameInstance, updateGameInstance] = useState<Game | null>(Game.getInstance());
+  const [gameInstance, updateGameInstance] = useState<Game>(Game.getInstance());
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("Error");
   const [modalTitle, setModalTitle] = useState("Error");
@@ -83,7 +83,7 @@ const PlayPage: React.FC = () => {
 
   const closingPostEncounterModal= (gameInstanceExport : Game) => {
     setPostEncounterModalOpen(false);
-    updateGameInstance(cloneDeep(gameInstanceExport));
+    // updateGameInstance(cloneDeep(gameInstanceExport));
     gameInstance.activeEncounterRuntime = undefined;
     updateGameEasy();
   }
@@ -117,7 +117,7 @@ const PlayPage: React.FC = () => {
   }
 
   const onLeaveEncounter = (gameInstanceExport: Game) => {
-    updateGameInstance(cloneDeep(gameInstanceExport));
+    // updateGameInstance(cloneDeep(gameInstanceExport));
     setEncounterFacing(false);
     if (gameInstance.activeEncounterRuntime) {
       gameInstance.activeEncounterRuntime.rewardDecision = [0, gameInstance.playerList[0]];
