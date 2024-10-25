@@ -60,13 +60,10 @@ const PlayPage: React.FC = () => {
   }, []);
   
 
-  const updateGameEasy = (encounterRunTime?: EncounterRuntime) => {
+  const updateGameEasy = (gameInstanceExternal?: Game) => {
     if (gameInstance) {
-      if (encounterRunTime) {
-        gameInstance.activeEncounterRuntime = encounterRunTime;
-      }
       isLocalUpdate.current = true; // Set the flag before updating
-      updateGameInstance(cloneDeep(gameInstance));
+      updateGameInstance(cloneDeep(gameInstanceExternal ? gameInstanceExternal : gameInstance));
     }
   };
   
@@ -88,11 +85,10 @@ const PlayPage: React.FC = () => {
   };
 
   const closingPostEncounterModal= (gameInstanceExport : Game) => {
+    if (gameInstanceExport)
+      gameInstanceExport.activeEncounterRuntime = undefined;
+    updateGameEasy(gameInstanceExport);
     setPostEncounterModalOpen(false);
-    updateGameInstance(cloneDeep(gameInstanceExport));
-    if (gameInstance)
-      gameInstance.activeEncounterRuntime = undefined;
-    updateGameEasy();
   }
   const encounterStay = () => {
     if (gameInstance) {
@@ -124,15 +120,14 @@ const PlayPage: React.FC = () => {
   }
 
   const onLeaveEncounter = (gameInstanceExport: Game) => {
-    updateGameInstance(cloneDeep(gameInstanceExport));
     setEncounterFacing(false);
-    if (gameInstance && gameInstance.activeEncounterRuntime) {
-      gameInstance.activeEncounterRuntime.rewardDecision = [0, gameInstance.playerList[0]];
-      let punishment : [number, number] = gameInstance.activeEncounterRuntime.calculatePunishment(); //hearts, time
-      console.log(punishment);
-      gameInstance.activeEncounterRuntime.punishmentDecision = [punishment[1], punishment[0], 0]
+
+    if (gameInstanceExport.activeEncounterRuntime) {
+      gameInstanceExport.activeEncounterRuntime.rewardDecision = [0, gameInstanceExport.playerList[0]];
+      let punishment : [number, number] = gameInstanceExport.activeEncounterRuntime.calculatePunishment(); //hearts, time
+      gameInstanceExport.activeEncounterRuntime.punishmentDecision = [punishment[1], punishment[0], 0]
     }
-    updateGameEasy();
+    updateGameEasy(gameInstanceExport);
     setPostEncounterModalOpen(true); // Open the modal here
   };
   

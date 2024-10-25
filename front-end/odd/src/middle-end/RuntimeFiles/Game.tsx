@@ -69,11 +69,9 @@ export class Game {
     public constructor(gameId: string | undefined, dungeon: Dungeon, players: Array<string>, heros: Array<string>) {
         this.active = true;
         this._playerList = new Array<Player>();
-        console.log(players)
         players.map((player : string, index : number)  => {
             this._playerList.push(Player.getFromId(player, Hero.findHero(heros[index], players.length == 1 ? "1P" : "2P")));
         });
-        console.log(this.playerList)
         this._dungeon = dungeon;
         this._gameId = gameId;
         this._potions = 1;
@@ -165,12 +163,10 @@ export class Game {
     }
     public static initializeFromGameData(gameData: any): Game {
         const players = localStorage.getItem("playerCount") === "1P" ? [localStorage.getItem("credentials") || "playerDNE"] : [localStorage.getItem("credentials") || "playerDNE", "fillerID"];
-    console.log(players);
     const charactersSelected : Array<string> = [localStorage.getItem("characterSelected") || "Warrior", "Aquamancer"] //need to expand for 2P somehow
         Game.createGame(localStorage.getItem("gameId") || undefined, Dungeon.findDungeon(gameData.dungeon), players, charactersSelected);
         const gameInstance = Game.getInstance();
         gameInstance.updateGame(gameData);
-        console.log(gameInstance, gameData)
         return gameInstance;
     }
 

@@ -15,7 +15,6 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
   onClose, 
   gameInstanceImport 
 }) => {
-
     const [gameInstance, updateGameInstance] = useState<Game>(gameInstanceImport);
 
     const updateGameEasy = () => {
@@ -48,7 +47,6 @@ const PostEncounterModal: React.FC<PostEncounterModalProps> = ({
       ) {
         return;
       }
-
       const rewardDecision = gameInstance.activeEncounterRuntime.rewardDecision;
       const punishmentDecision = gameInstance.activeEncounterRuntime.punishmentDecision;
 
